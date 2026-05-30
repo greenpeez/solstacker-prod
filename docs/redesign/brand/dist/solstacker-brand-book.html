@@ -18,15 +18,15 @@
       --dark-panel-2: #2a2926;
       --dark-line: rgba(255, 255, 255, 0.12);
       --dark-muted: rgba(255, 255, 255, 0.62);
-      --accent: #255cff;
+      --accent: #8f46ff;
       --button-bg: #ffffff;
       --button-text: #050505;
-      --success: #3ddc97;
+      --success: #14f195;
       --warning: #ff6b4a;
       --danger: #f05d5e;
       --info: #00c2ff;
-      --violet: #b45cff;
-      --teal: #00d1a7;
+      --violet: #ff4fd8;
+      --teal: #00e5c7;
       --radius: 8px;
       --page: 1080px;
     }
@@ -166,6 +166,39 @@
       gap: 12px;
       color: var(--muted);
       font-size: 14px;
+    }
+
+    .signal-stripes {
+      display: grid;
+      gap: 8px;
+      width: min(210px, 100%);
+      margin-top: 22px;
+    }
+
+    .signal-stripes span {
+      display: block;
+      height: 16px;
+      clip-path: polygon(0 0, 90% 0, 100% 46%, 88% 100%, 0 100%, 8% 52%);
+    }
+
+    .signal-stripes span:nth-child(1) {
+      width: 78%;
+      background: var(--accent);
+    }
+
+    .signal-stripes span:nth-child(2) {
+      width: 92%;
+      background: var(--success);
+    }
+
+    .signal-stripes span:nth-child(3) {
+      width: 70%;
+      background: var(--info);
+    }
+
+    .signal-stripes span:nth-child(4) {
+      width: 86%;
+      background: var(--violet);
     }
 
     .section {
@@ -666,15 +699,26 @@
       <div class="wrap">
         <div class="section-head">
           <h2>Color</h2>
-          <p>Monochrome-first, with a high-contrast accent color for hover, focus, selected detail, and data emphasis. Default buttons stay monochrome.</p>
+          <p>Monochrome-first, with solid spectral accents for hover, focus, selected detail, data emphasis, and controlled jagged stripe motifs. Default buttons stay monochrome.</p>
         </div>
         <div class="swatches">
           <div class="swatch"><div class="chip-color" style="background:#050505"></div><div>neutral.950<br>#050505</div></div>
           <div class="swatch"><div class="chip-color" style="background:#0d0d0b"></div><div>neutral.900<br>#0D0D0B</div></div>
           <div class="swatch"><div class="chip-color" style="background:#f7f6f2"></div><div>neutral.50<br>#F7F6F2</div></div>
-          <div class="swatch"><div class="chip-color" style="background:#255cff"></div><div>accent.500<br>#255CFF</div></div>
-          <div class="swatch"><div class="chip-color" style="background:#ff6b4a"></div><div>warning<br>#FF6B4A</div></div>
-          <div class="swatch"><div class="chip-color" style="background:#f05d5e"></div><div>danger<br>#F05D5E</div></div>
+          <div class="swatch"><div class="chip-color" style="background:#8f46ff"></div><div>accent.500<br>#8F46FF</div></div>
+          <div class="swatch"><div class="chip-color" style="background:#14f195"></div><div>signal.green<br>#14F195</div></div>
+          <div class="swatch"><div class="chip-color" style="background:#00c2ff"></div><div>signal.cyan<br>#00C2FF</div></div>
+        </div>
+        <div class="panel" style="margin-top:16px;">
+          <div class="eyebrow">Expression motif</div>
+          <h3>Jagged signal stripes</h3>
+          <div class="signal-stripes" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <p style="margin-top:18px;">Use solid, hard-edged streaks sparingly for campaign surfaces, hero moments, selected states, and data highlights. Do not turn the primary UI or buttons into striped decoration.</p>
         </div>
       </div>
     </section>
@@ -825,7 +869,7 @@
             <tr><td>color.bg.default</td><td>#050505</td><td>Dark app background</td></tr>
             <tr><td>color.surface.default</td><td>#191917</td><td>Default dark panel</td></tr>
             <tr><td>color.action.default</td><td>#FFFFFF</td><td>Default dark-mode button fill</td></tr>
-            <tr><td>color.action.hover</td><td>#255CFF</td><td>Hover/focus accent</td></tr>
+            <tr><td>color.action.hover</td><td>#8F46FF</td><td>Hover/focus accent</td></tr>
             <tr><td>radius.3</td><td>8px</td><td>Cards and panels</td></tr>
             <tr><td>space.6</td><td>24px</td><td>Common panel padding</td></tr>
             <tr><td>motion.base</td><td>180ms</td><td>Panels and buttons</td></tr>
