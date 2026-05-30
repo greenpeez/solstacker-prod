@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SolStacker Landing Page Concept</title>
+  <title>SolStacker</title>
   <style>
     :root {
       --bg: #050505;
@@ -500,26 +500,53 @@
     }
 
     .ring {
-      --progress: 64deg;
       width: 222px;
       aspect-ratio: 1;
-      border-radius: 50%;
-      background: conic-gradient(var(--accent) 0 var(--progress), rgba(255,255,255,0.08) var(--progress) 360deg);
+      position: relative;
       display: grid;
       place-items: center;
-      transition: background 260ms ease;
+    }
+
+    .ring svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      transform: rotate(-90deg);
+    }
+
+    .ring-track,
+    .ring-progress {
+      fill: none;
+      cx: 111px;
+      cy: 111px;
+      r: 94px;
+    }
+
+    .ring-track {
+      stroke: rgba(255,255,255,0.14);
+      stroke-width: 4;
+    }
+
+    .ring-progress {
+      stroke: var(--accent);
+      stroke-linecap: round;
+      stroke-width: 6;
+      filter: drop-shadow(0 0 8px rgba(143,70,255,0.18));
+      transition: stroke-dashoffset 520ms cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
     .ring-inner {
-      width: 154px;
+      width: 146px;
       aspect-ratio: 1;
       border-radius: 50%;
-      background: var(--surface);
-      border: 1px solid var(--line);
       display: grid;
       place-items: center;
       text-align: center;
       padding: 16px;
+      position: relative;
+      z-index: 1;
     }
 
     .ring-inner span {
@@ -553,8 +580,82 @@
     }
 
     input[type="range"] {
+      --range-fill: 0%;
       width: 100%;
-      accent-color: var(--accent);
+      height: 18px;
+      appearance: none;
+      -webkit-appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-runnable-track {
+      height: 3px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent) 0 var(--range-fill), rgba(255,255,255,0.74) var(--range-fill) 100%);
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      width: 15px;
+      height: 15px;
+      margin-top: -6px;
+      border: 2px solid var(--surface);
+      border-radius: 50%;
+      background: var(--accent);
+      appearance: none;
+      -webkit-appearance: none;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.14);
+    }
+
+    input[type="range"]::-moz-range-track {
+      height: 3px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.74);
+    }
+
+    input[type="range"]::-moz-range-progress {
+      height: 3px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 13px;
+      height: 13px;
+      border: 2px solid var(--surface);
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.14);
+    }
+
+    .core-options {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px;
+      margin-bottom: 18px;
+    }
+
+    .core-option {
+      min-height: 32px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 12px;
+      cursor: pointer;
+      transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
+    }
+
+    .core-option:hover,
+    .core-option:focus-visible {
+      border-color: rgba(143,70,255,0.62);
+      color: #fff;
+    }
+
+    .core-option.active {
+      border-color: rgba(143,70,255,0.78);
+      background: rgba(143,70,255,0.16);
+      color: #fff;
     }
 
     .segments {
@@ -786,7 +887,8 @@
       .stat-strip,
       .product-grid,
       .featured-grid,
-      .process-grid {
+      .process-grid,
+      .core-options {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
@@ -826,6 +928,7 @@
       .product-grid,
       .featured-grid,
       .process-grid,
+      .core-options,
       .sim-summary {
         grid-template-columns: 1fr;
       }
@@ -876,9 +979,8 @@
     <section class="hero">
       <div class="wrap hero-grid">
         <div>
-          <div class="eyebrow">Solana yield allocation</div>
           <h1>Solana yield products curated from multiple sources.</h1>
-          <p class="lead">Choose a Core, understand the strategy, allocate capital, and manage every SolStacker position from one Account.</p>
+          <p class="lead">Choose a Core, review the strategy, allocate capital, and manage every SolStacker position from one Account.</p>
           <div class="hero-actions">
             <a class="button" href="#cores">Explore Cores</a>
             <a class="button secondary" href="#simulator">Simulate Growth</a>
@@ -898,7 +1000,7 @@
             <div class="coin-card"><div class="coin">RWA</div></div>
           </div>
           <div class="core-panel">
-            <div class="eyebrow">Selected Core</div>
+            <div class="eyebrow">Balanced Core</div>
             <h3>Balanced</h3>
             <p class="muted">SOL, stable lending, and RWA yield combined into one managed product.</p>
             <div class="mini-bars">
@@ -922,7 +1024,7 @@
       <div class="wrap">
         <div class="section-head">
           <h2>One product suite for yield allocation.</h2>
-          <p>SolStacker should feel like a financial product layer, not a protocol directory. Each surface has a clear job: discover, accumulate, manage, or inspect.</p>
+          <p>Explore curated Cores, automate SOL accumulation, track positions from Account, and inspect product-level stats before you allocate.</p>
         </div>
         <div class="product-grid">
           <article class="product-card">
@@ -930,28 +1032,28 @@
               <div class="tag">Discover</div>
               <h3 style="margin-top:18px;">Cores</h3>
             </div>
-            <p>Curated yield products with thesis, composition, APY range, risk profile, and liquidity behavior.</p>
+            <p>Compare curated yield products by intent, APY range, risk profile, source composition, and liquidity behavior.</p>
           </article>
           <article class="product-card">
             <div>
               <div class="tag">Accumulate</div>
               <h3 style="margin-top:18px;">Auto Stack</h3>
             </div>
-            <p>Automatic SOL accumulation while waiting capital earns yield before execution.</p>
+            <p>Set recurring SOL accumulation rules while waiting capital continues earning yield before execution.</p>
           </article>
           <article class="product-card">
             <div>
               <div class="tag">Manage</div>
               <h3 style="margin-top:18px;">Account</h3>
             </div>
-            <p>The connected-wallet home for positions, pending executions, activity, allocation, and earned yield.</p>
+            <p>View positions, pending executions, activity, allocation, and earned yield from one connected-wallet home.</p>
           </article>
           <article class="product-card">
             <div>
               <div class="tag">Verify</div>
               <h3 style="margin-top:18px;">Stats</h3>
             </div>
-            <p>Protocol and product-level metrics for TVL, yield distribution, volume, APY history, and composition.</p>
+            <p>Inspect TVL, yield distribution, product volume, APY history, and Core composition before you decide.</p>
           </article>
         </div>
       </div>
@@ -960,8 +1062,8 @@
     <section class="section" id="cores">
       <div class="wrap">
         <div class="section-head">
-          <h2>Featured Cores, with commitment modeled beside them.</h2>
-          <p>Users can compare a small set of Cores while the simulator keeps the outcome concrete. The simulator is a prompt to explore, not a promise of returns.</p>
+          <h2>Compare Cores with a monthly commitment.</h2>
+          <p>Start with a $500 monthly commitment, adjust the amount, and see how each Core changes the projected result over time.</p>
         </div>
         <div class="featured-layout">
           <div class="featured-grid" aria-label="Featured Cores">
@@ -1026,11 +1128,22 @@
 
             <div class="ring-wrap">
               <div class="ring" id="ring">
+                <svg viewBox="0 0 222 222" aria-hidden="true">
+                  <circle class="ring-track" cx="111" cy="111" r="94"></circle>
+                  <circle class="ring-progress" id="ringProgress" cx="111" cy="111" r="94"></circle>
+                </svg>
                 <div class="ring-inner">
                   <span>Projected value</span>
                   <strong id="projectedValue">$44,720</strong>
                 </div>
               </div>
+            </div>
+
+            <div class="core-options" role="group" aria-label="Select Core for simulator">
+              <button class="core-option active" type="button" data-core="Balanced" data-apy="0.098">Balanced</button>
+              <button class="core-option" type="button" data-core="Cashflow" data-apy="0.074">Cashflow</button>
+              <button class="core-option" type="button" data-core="Liquid Staking" data-apy="0.082">Liquid Staking</button>
+              <button class="core-option" type="button" data-core="Boost" data-apy="0.142">Boost</button>
             </div>
 
             <div class="control-group">
@@ -1067,7 +1180,7 @@
       <div class="wrap">
         <div class="section-head">
           <h2>How capital moves through SolStacker.</h2>
-          <p>The landing page should explain the user journey without exposing the raw machinery first. A user picks a product, reviews the strategy, then confirms with their wallet.</p>
+          <p>Choose the product that matches your intent, review where yield comes from, then confirm the allocation with your wallet.</p>
         </div>
         <div class="process-grid">
           <article class="process-card" style="background:#fff;border-color:rgba(5,5,5,0.12);color:#050505;">
@@ -1099,7 +1212,7 @@
       <div class="wrap">
         <div class="section-head">
           <h2>Account turns yield into a position you can manage.</h2>
-          <p>After wallet connection, Account becomes the user's home for Cores, Auto Stack, pending executions, activity, allocation, and product actions.</p>
+          <p>Connect your wallet to track Cores, Auto Stack, pending executions, activity, allocation, and product actions in one place.</p>
         </div>
         <div class="account-preview">
           <div class="account-card">
@@ -1110,7 +1223,7 @@
               <div class="donut" aria-label="Product allocation chart"></div>
               <div>
                 <h4 style="margin:0 0 8px;">Cores vs Auto Stack</h4>
-                <p class="muted">Use donut charts for product allocation and stacked bars for source, risk, and asset breakdowns.</p>
+                <p class="muted">See how your capital is split across Cores, Auto Stack, risk levels, sources, and assets.</p>
               </div>
             </div>
           </div>
@@ -1134,7 +1247,7 @@
     <section class="final-cta">
       <div class="wrap">
         <h2>Start with a Core. Build the position over time.</h2>
-        <p>SolStacker should make the first commitment feel simple while keeping APY, risk, liquidity, and composition visible before wallet confirmation.</p>
+        <p>Explore a Core, simulate a monthly commitment, and review APY, risk, liquidity, and composition before wallet confirmation.</p>
         <div class="hero-actions" style="justify-content:center;">
           <a class="button" href="#cores">Explore Cores</a>
           <a class="button secondary" href="#simulator">Try Simulator</a>
@@ -1145,8 +1258,8 @@
 
   <footer>
     <div class="wrap">
-      <span>SolStacker landing page concept</span>
-      <span>Front-end artifact, mocked data</span>
+      <span>SolStacker</span>
+      <span>APY changes over time. Estimates are not forecasts.</span>
     </div>
   </footer>
 
@@ -1177,11 +1290,17 @@
     const projectedValue = document.querySelector("#projectedValue");
     const depositValue = document.querySelector("#depositValue");
     const yieldValue = document.querySelector("#yieldValue");
-    const ring = document.querySelector("#ring");
+    const ringProgress = document.querySelector("#ringProgress");
     const coreName = document.querySelector("#coreName");
     const apyText = document.querySelector("#apyText");
     const segments = Array.from(document.querySelectorAll(".segment"));
     const cards = Array.from(document.querySelectorAll(".featured-card"));
+    const coreOptions = Array.from(document.querySelectorAll(".core-option"));
+    const ringRadius = 94;
+    const ringCircumference = 2 * Math.PI * ringRadius;
+
+    ringProgress.style.strokeDasharray = `${ringCircumference}`;
+    ringProgress.style.strokeDashoffset = `${ringCircumference}`;
 
     function project(initialDeposit, monthlyDeposit, apy, years) {
       const months = years * 12;
@@ -1207,7 +1326,7 @@
       const monthlyDeposit = Number(monthly.value);
       const result = project(initialDeposit, monthlyDeposit, state.apy, state.years);
       const yieldRatio = Math.max(0, Math.min(1, result.yieldEarned / Math.max(result.value, 1)));
-      const progress = 36 + yieldRatio * 250;
+      const progress = 0.12 + yieldRatio * 0.76;
 
       lumpOut.textContent = formatter.format(initialDeposit);
       monthlyOut.textContent = formatter.format(monthlyDeposit);
@@ -1217,7 +1336,25 @@
       projectedValue.textContent = formatter.format(result.value);
       depositValue.textContent = formatter.format(result.deposits);
       yieldValue.textContent = formatter.format(Math.max(0, result.yieldEarned));
-      ring.style.setProperty("--progress", `${progress}deg`);
+      ringProgress.style.strokeDashoffset = `${ringCircumference * (1 - progress)}`;
+      setRangeFill(lump);
+      setRangeFill(monthly);
+    }
+
+    function setRangeFill(input) {
+      const min = Number(input.min);
+      const max = Number(input.max);
+      const value = Number(input.value);
+      const percentage = ((value - min) / (max - min)) * 100;
+      input.style.setProperty("--range-fill", `${percentage}%`);
+    }
+
+    function setCore(core, apy) {
+      state.core = core;
+      state.apy = Number(apy);
+      cards.forEach((item) => item.classList.toggle("active", item.dataset.core === core));
+      coreOptions.forEach((item) => item.classList.toggle("active", item.dataset.core === core));
+      update();
     }
 
     lump.addEventListener("input", update);
@@ -1234,11 +1371,13 @@
 
     cards.forEach((card) => {
       card.addEventListener("click", () => {
-        cards.forEach((item) => item.classList.remove("active"));
-        card.classList.add("active");
-        state.core = card.dataset.core;
-        state.apy = Number(card.dataset.apy);
-        update();
+        setCore(card.dataset.core, card.dataset.apy);
+      });
+    });
+
+    coreOptions.forEach((option) => {
+      option.addEventListener("click", () => {
+        setCore(option.dataset.core, option.dataset.apy);
       });
     });
 
