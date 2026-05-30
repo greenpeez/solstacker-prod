@@ -1,0 +1,1248 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SolStacker Landing Page Concept</title>
+  <style>
+    :root {
+      --bg: #050505;
+      --bg-soft: #0d0d0b;
+      --surface: #191917;
+      --surface-2: #22211f;
+      --ink: #ffffff;
+      --muted: rgba(255, 255, 255, 0.68);
+      --faint: rgba(255, 255, 255, 0.42);
+      --line: rgba(255, 255, 255, 0.12);
+      --line-strong: rgba(255, 255, 255, 0.2);
+      --light: #f7f6f2;
+      --light-ink: #050505;
+      --accent: #8f46ff;
+      --green: #14f195;
+      --cyan: #00c2ff;
+      --pink: #ff4fd8;
+      --coral: #ff6b4a;
+      --danger: #f05d5e;
+      --radius: 8px;
+      --page: 1200px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.45;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 18% 10%, rgba(143, 70, 255, 0.16), transparent 28rem),
+        radial-gradient(circle at 82% 14%, rgba(0, 194, 255, 0.12), transparent 24rem),
+        linear-gradient(180deg, #050505 0%, #0d0d0b 54%, #050505 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.18;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px);
+      background-size: 72px 72px;
+      mask-image: linear-gradient(180deg, rgba(0,0,0,0.9), transparent 78%);
+      z-index: -1;
+    }
+
+    h1, h2, h3, p { margin: 0; }
+
+    a { color: inherit; }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .wrap {
+      width: calc(100% - 48px);
+      max-width: var(--page);
+      margin: 0 auto;
+    }
+
+    .mono {
+      font-family: "IBM Plex Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--line);
+      background: rgba(5, 5, 5, 0.76);
+      backdrop-filter: blur(18px);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 68px;
+      gap: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 16px;
+      font-weight: 680;
+      text-decoration: none;
+    }
+
+    .brand svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 26px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      padding: 0 18px;
+      background: #fff;
+      color: #050505;
+      font-weight: 700;
+      font-size: 14px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 160ms ease, color 160ms ease, border-color 160ms ease, transform 160ms ease;
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      background: var(--accent);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    .button.secondary {
+      background: transparent;
+      color: #fff;
+      border-color: var(--line-strong);
+    }
+
+    .button.secondary:hover,
+    .button.secondary:focus-visible {
+      background: #fff;
+      color: #050505;
+      border-color: #fff;
+    }
+
+    .hero {
+      min-height: 820px;
+      display: grid;
+      align-items: center;
+      padding: 96px 0 64px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 460px;
+      gap: 64px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      color: var(--faint);
+      font-size: 12px;
+      font-weight: 750;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      max-width: 760px;
+      margin-top: 18px;
+      font-size: clamp(52px, 7vw, 92px);
+      line-height: 0.95;
+      letter-spacing: 0;
+      font-weight: 690;
+    }
+
+    .lead {
+      max-width: 660px;
+      margin-top: 26px;
+      color: var(--muted);
+      font-size: 19px;
+      line-height: 1.65;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 34px;
+    }
+
+    .stat-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 56px;
+      max-width: 740px;
+    }
+
+    .stat {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 15px;
+      background: rgba(255,255,255,0.035);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 22px;
+      line-height: 1.1;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 8px;
+      color: var(--faint);
+      font-size: 12px;
+    }
+
+    .hero-visual {
+      position: relative;
+      min-height: 560px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(140deg, rgba(255,255,255,0.1), transparent 44%),
+        #10100f;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.42);
+    }
+
+    .orbit {
+      position: absolute;
+      inset: 54px -120px auto auto;
+      width: 520px;
+      height: 520px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 50%;
+    }
+
+    .orbit::before,
+    .orbit::after {
+      content: "";
+      position: absolute;
+      inset: 66px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 50%;
+    }
+
+    .orbit::after { inset: 132px; }
+
+    .coin-stack {
+      position: absolute;
+      right: 38px;
+      top: 32px;
+      display: grid;
+      gap: 18px;
+      width: 190px;
+    }
+
+    .coin-card {
+      min-height: 118px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,0.055);
+      display: grid;
+      place-items: center;
+    }
+
+    .coin {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      border: 9px solid rgba(255,255,255,0.18);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.16), 0 10px 24px rgba(0,0,0,0.35);
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 750;
+    }
+
+    .core-panel {
+      position: absolute;
+      left: 34px;
+      bottom: 34px;
+      width: min(340px, calc(100% - 68px));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(5,5,5,0.74);
+      padding: 20px;
+      backdrop-filter: blur(14px);
+    }
+
+    .core-panel h3 {
+      margin-top: 10px;
+      font-size: 22px;
+    }
+
+    .mini-bars {
+      display: grid;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .mini-bar {
+      height: 8px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      display: flex;
+    }
+
+    .mini-bar span { display: block; }
+
+    .section {
+      padding: 96px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .section.light {
+      background: var(--light);
+      color: var(--light-ink);
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: 310px minmax(0, 1fr);
+      gap: 64px;
+      margin-bottom: 38px;
+    }
+
+    .section-head h2 {
+      font-size: clamp(34px, 4vw, 56px);
+      line-height: 1.03;
+      font-weight: 680;
+      letter-spacing: 0;
+    }
+
+    .section-head p {
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.65;
+      max-width: 720px;
+    }
+
+    .light .section-head p,
+    .light .muted {
+      color: rgba(5,5,5,0.62);
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .product-card,
+    .featured-card,
+    .simulator,
+    .process-card,
+    .account-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .product-card {
+      min-height: 210px;
+      padding: 22px;
+      display: grid;
+      align-content: space-between;
+    }
+
+    .product-card p,
+    .featured-card p,
+    .process-card p {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .product-card h3,
+    .featured-card h3,
+    .process-card h3 {
+      font-size: 20px;
+    }
+
+    .product-card .tag {
+      justify-self: start;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 5px 9px;
+      color: var(--faint);
+      font-size: 12px;
+    }
+
+    .featured-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 430px;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .featured-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .featured-card {
+      padding: 20px;
+      min-height: 238px;
+      display: grid;
+      align-content: space-between;
+      cursor: pointer;
+      transition: border-color 160ms ease, transform 160ms ease, background 160ms ease;
+    }
+
+    .featured-card:hover,
+    .featured-card.active {
+      border-color: rgba(143,70,255,0.72);
+      background: #1d1c1a;
+      transform: translateY(-2px);
+    }
+
+    .metric-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .metric {
+      border-top: 1px solid var(--line);
+      padding-top: 11px;
+    }
+
+    .metric span {
+      display: block;
+      color: var(--faint);
+      font-size: 11px;
+      margin-bottom: 5px;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 15px;
+    }
+
+    .simulator {
+      padding: 22px;
+      position: sticky;
+      top: 92px;
+      min-height: 494px;
+    }
+
+    .sim-top {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    .sim-top h3 {
+      font-size: 24px;
+      line-height: 1.08;
+    }
+
+    .apy-pill {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 9px;
+      color: var(--green);
+      font-size: 12px;
+      white-space: nowrap;
+      background: rgba(20,241,149,0.08);
+    }
+
+    .ring-wrap {
+      display: grid;
+      place-items: center;
+      margin: 12px 0 24px;
+    }
+
+    .ring {
+      --progress: 64deg;
+      width: 222px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: conic-gradient(var(--accent) 0 var(--progress), rgba(255,255,255,0.08) var(--progress) 360deg);
+      display: grid;
+      place-items: center;
+      transition: background 260ms ease;
+    }
+
+    .ring-inner {
+      width: 154px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 16px;
+    }
+
+    .ring-inner span {
+      color: var(--faint);
+      font-size: 11px;
+    }
+
+    .ring-inner strong {
+      display: block;
+      margin-top: 6px;
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    .control-group {
+      display: grid;
+      gap: 15px;
+    }
+
+    .control-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .control-label output {
+      color: #fff;
+      font-weight: 700;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+    }
+
+    .segments {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .segment {
+      min-height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .segment.active {
+      background: #fff;
+      color: #050505;
+      border-color: #fff;
+    }
+
+    .sim-summary {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .summary-cell {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px;
+      background: rgba(255,255,255,0.035);
+    }
+
+    .summary-cell span {
+      display: block;
+      color: var(--faint);
+      font-size: 11px;
+      margin-bottom: 4px;
+    }
+
+    .summary-cell strong {
+      font-size: 16px;
+    }
+
+    .disclaimer {
+      margin-top: 16px;
+      color: var(--faint);
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .process-card {
+      min-height: 320px;
+      padding: 22px;
+      display: grid;
+      align-content: space-between;
+    }
+
+    .process-art {
+      height: 150px;
+      border-radius: var(--radius);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--line);
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+
+    .flow-lines {
+      width: 80%;
+      display: grid;
+      gap: 13px;
+    }
+
+    .flow-lines span {
+      display: block;
+      height: 2px;
+      background: rgba(255,255,255,0.22);
+      position: relative;
+    }
+
+    .flow-lines span::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: -5px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .account-preview {
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .account-card {
+      padding: 24px;
+    }
+
+    .account-card h3 {
+      font-size: 38px;
+      line-height: 1;
+      margin-top: 12px;
+    }
+
+    .donut-row {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      margin-top: 24px;
+    }
+
+    .donut {
+      width: 152px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: conic-gradient(var(--accent) 0 44%, var(--cyan) 44% 64%, var(--pink) 64% 82%, var(--green) 82% 100%);
+      position: relative;
+      flex: 0 0 auto;
+    }
+
+    .donut::after {
+      content: "";
+      position: absolute;
+      inset: 38px;
+      background: var(--surface);
+      border-radius: 50%;
+    }
+
+    .table-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th, td {
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      text-align: left;
+    }
+
+    th {
+      color: var(--faint);
+      font-size: 11px;
+      font-weight: 750;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    .final-cta {
+      padding: 100px 0;
+      text-align: center;
+      border-top: 1px solid var(--line);
+    }
+
+    .final-cta h2 {
+      max-width: 760px;
+      margin: 0 auto;
+      font-size: clamp(42px, 6vw, 76px);
+      line-height: 0.98;
+    }
+
+    .final-cta p {
+      max-width: 620px;
+      margin: 24px auto 0;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 32px 0;
+      color: var(--faint);
+      font-size: 12px;
+    }
+
+    footer .wrap {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: center;
+    }
+
+    @media (max-width: 980px) {
+      .nav-links {
+        display: none;
+      }
+
+      .hero-grid,
+      .featured-layout,
+      .section-head,
+      .account-preview {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: auto;
+      }
+
+      .hero-visual {
+        min-height: 440px;
+      }
+
+      .stat-strip,
+      .product-grid,
+      .featured-grid,
+      .process-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .simulator {
+        position: static;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .wrap {
+        width: calc(100% - 28px);
+        max-width: var(--page);
+      }
+
+      .hero,
+      .section,
+      .final-cta {
+        padding: 64px 0;
+      }
+
+      .hero h1 {
+        font-size: 42px;
+        line-height: 1.03;
+      }
+
+      footer .wrap {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .hero-actions .button,
+      .final-cta .button {
+        width: 100%;
+      }
+
+      .stat-strip,
+      .product-grid,
+      .featured-grid,
+      .process-grid,
+      .sim-summary {
+        grid-template-columns: 1fr;
+      }
+
+      .coin-stack {
+        width: 150px;
+        right: 22px;
+      }
+
+      .core-panel {
+        left: 18px;
+        bottom: 18px;
+        width: calc(100% - 36px);
+      }
+
+      .donut-row {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="wrap nav" aria-label="Primary">
+      <a class="brand" href="#">
+        <svg viewBox="0 0 200 200" fill="currentColor" aria-hidden="true">
+          <g transform="translate(20 30)">
+            <rect width="160" height="22" rx="3"></rect>
+            <rect x="6" y="38" width="154" height="22" rx="3"></rect>
+            <rect y="76" width="160" height="22" rx="3"></rect>
+            <rect x="12" y="114" width="148" height="22" rx="3"></rect>
+          </g>
+        </svg>
+        SolStacker
+      </a>
+      <div class="nav-links">
+        <a href="#products">Products</a>
+        <a href="#cores">Cores</a>
+        <a href="#account">Account</a>
+        <a href="#stats">Stats</a>
+      </div>
+      <a class="button" href="#cores">Launch App</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="eyebrow">Solana yield allocation</div>
+          <h1>Solana yield products curated from multiple sources.</h1>
+          <p class="lead">Choose a Core, understand the strategy, allocate capital, and manage every SolStacker position from one Account.</p>
+          <div class="hero-actions">
+            <a class="button" href="#cores">Explore Cores</a>
+            <a class="button secondary" href="#simulator">Simulate Growth</a>
+          </div>
+          <div class="stat-strip" aria-label="Protocol preview metrics">
+            <div class="stat"><strong>$842M</strong><span>Routed TVL</span></div>
+            <div class="stat"><strong>12</strong><span>Curated Cores</span></div>
+            <div class="stat"><strong>8.9%</strong><span>Median APY</span></div>
+            <div class="stat"><strong>24h</strong><span>Account visibility</span></div>
+          </div>
+        </div>
+        <div class="hero-visual" aria-label="SolStacker product visual">
+          <div class="orbit"></div>
+          <div class="coin-stack">
+            <div class="coin-card"><div class="coin">SOL</div></div>
+            <div class="coin-card"><div class="coin">LST</div></div>
+            <div class="coin-card"><div class="coin">RWA</div></div>
+          </div>
+          <div class="core-panel">
+            <div class="eyebrow">Selected Core</div>
+            <h3>Balanced</h3>
+            <p class="muted">SOL, stable lending, and RWA yield combined into one managed product.</p>
+            <div class="mini-bars">
+              <div class="mini-bar">
+                <span style="width:42%;background:var(--accent)"></span>
+                <span style="width:28%;background:var(--cyan)"></span>
+                <span style="width:30%;background:var(--green)"></span>
+              </div>
+              <div class="mini-bar">
+                <span style="width:44%;background:var(--green)"></span>
+                <span style="width:36%;background:var(--coral)"></span>
+                <span style="width:20%;background:var(--danger)"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="products">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>One product suite for yield allocation.</h2>
+          <p>SolStacker should feel like a financial product layer, not a protocol directory. Each surface has a clear job: discover, accumulate, manage, or inspect.</p>
+        </div>
+        <div class="product-grid">
+          <article class="product-card">
+            <div>
+              <div class="tag">Discover</div>
+              <h3 style="margin-top:18px;">Cores</h3>
+            </div>
+            <p>Curated yield products with thesis, composition, APY range, risk profile, and liquidity behavior.</p>
+          </article>
+          <article class="product-card">
+            <div>
+              <div class="tag">Accumulate</div>
+              <h3 style="margin-top:18px;">Auto Stack</h3>
+            </div>
+            <p>Automatic SOL accumulation while waiting capital earns yield before execution.</p>
+          </article>
+          <article class="product-card">
+            <div>
+              <div class="tag">Manage</div>
+              <h3 style="margin-top:18px;">Account</h3>
+            </div>
+            <p>The connected-wallet home for positions, pending executions, activity, allocation, and earned yield.</p>
+          </article>
+          <article class="product-card">
+            <div>
+              <div class="tag">Verify</div>
+              <h3 style="margin-top:18px;">Stats</h3>
+            </div>
+            <p>Protocol and product-level metrics for TVL, yield distribution, volume, APY history, and composition.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="cores">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Featured Cores, with commitment modeled beside them.</h2>
+          <p>Users can compare a small set of Cores while the simulator keeps the outcome concrete. The simulator is a prompt to explore, not a promise of returns.</p>
+        </div>
+        <div class="featured-layout">
+          <div class="featured-grid" aria-label="Featured Cores">
+            <article class="featured-card active" data-core="Balanced" data-apy="0.098" data-risk="Medium">
+              <div>
+                <div class="eyebrow">Default Core</div>
+                <h3>Balanced</h3>
+                <p style="margin-top:10px;">Mixed SOL, stable lending, and RWA exposure for a managed starting point.</p>
+              </div>
+              <div class="metric-row">
+                <div class="metric"><span>APY</span><strong>9.8%</strong></div>
+                <div class="metric"><span>Risk</span><strong>Medium</strong></div>
+                <div class="metric"><span>TVL</span><strong>$184M</strong></div>
+              </div>
+            </article>
+            <article class="featured-card" data-core="Cashflow" data-apy="0.074" data-risk="Low">
+              <div>
+                <div class="eyebrow">Income Core</div>
+                <h3>Cashflow</h3>
+                <p style="margin-top:10px;">Stable lending and real-world yield sources for conservative allocation.</p>
+              </div>
+              <div class="metric-row">
+                <div class="metric"><span>APY</span><strong>7.4%</strong></div>
+                <div class="metric"><span>Risk</span><strong>Low</strong></div>
+                <div class="metric"><span>TVL</span><strong>$229M</strong></div>
+              </div>
+            </article>
+            <article class="featured-card" data-core="Liquid Staking" data-apy="0.082" data-risk="Low-Med">
+              <div>
+                <div class="eyebrow">SOL Core</div>
+                <h3>Liquid Staking</h3>
+                <p style="margin-top:10px;">Diversified SOL exposure across leading liquid staking sources.</p>
+              </div>
+              <div class="metric-row">
+                <div class="metric"><span>APY</span><strong>8.2%</strong></div>
+                <div class="metric"><span>Risk</span><strong>Low-Med</strong></div>
+                <div class="metric"><span>TVL</span><strong>$321M</strong></div>
+              </div>
+            </article>
+            <article class="featured-card" data-core="Boost" data-apy="0.142" data-risk="Med-High">
+              <div>
+                <div class="eyebrow">Active Core</div>
+                <h3>Boost</h3>
+                <p style="margin-top:10px;">Active yield across loops, basis, market structure, and RWA sources.</p>
+              </div>
+              <div class="metric-row">
+                <div class="metric"><span>APY</span><strong>14.2%</strong></div>
+                <div class="metric"><span>Risk</span><strong>Med-High</strong></div>
+                <div class="metric"><span>TVL</span><strong>$167M</strong></div>
+              </div>
+            </article>
+          </div>
+
+          <aside class="simulator" id="simulator" aria-label="Growth simulator">
+            <div class="sim-top">
+              <div>
+                <div class="eyebrow">Growth simulator</div>
+                <h3>Model a monthly Core commitment.</h3>
+              </div>
+              <div class="apy-pill"><span id="coreName">Balanced</span> <span id="apyText">9.8%</span></div>
+            </div>
+
+            <div class="ring-wrap">
+              <div class="ring" id="ring">
+                <div class="ring-inner">
+                  <span>Projected value</span>
+                  <strong id="projectedValue">$44,720</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label>
+                <span class="control-label"><span>Lump sum</span><output id="lumpOut">$5,000</output></span>
+                <input id="lump" type="range" min="0" max="25000" step="500" value="5000">
+              </label>
+              <label>
+                <span class="control-label"><span>Monthly commitment</span><output id="monthlyOut">$500</output></span>
+                <input id="monthly" type="range" min="100" max="2000" step="50" value="500">
+              </label>
+              <div>
+                <span class="control-label"><span>Time horizon</span><output id="horizonOut">5Y</output></span>
+                <div class="segments" role="group" aria-label="Time horizon">
+                  <button class="segment" type="button" data-years="1">1Y</button>
+                  <button class="segment active" type="button" data-years="5">5Y</button>
+                  <button class="segment" type="button" data-years="10">10Y</button>
+                  <button class="segment" type="button" data-years="15">15Y</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="sim-summary">
+              <div class="summary-cell"><span>Your deposits</span><strong id="depositValue">$35,000</strong></div>
+              <div class="summary-cell"><span>Estimated yield</span><strong id="yieldValue">$9,720</strong></div>
+            </div>
+            <p class="disclaimer">Projected with the selected Core's current APY<br>(APY changes over time. This is an estimate, not a forecast)</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section light">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>How capital moves through SolStacker.</h2>
+          <p>The landing page should explain the user journey without exposing the raw machinery first. A user picks a product, reviews the strategy, then confirms with their wallet.</p>
+        </div>
+        <div class="process-grid">
+          <article class="process-card" style="background:#fff;border-color:rgba(5,5,5,0.12);color:#050505;">
+            <div class="process-art" style="background:#f1efe9;border-color:rgba(5,5,5,0.1);"><div class="flow-lines"><span></span><span></span><span></span></div></div>
+            <div>
+              <h3>Choose a Core</h3>
+              <p class="muted" style="margin-top:10px;">Start from product intent: Simple, SOL, RWA, Markets, Active, or High Yield.</p>
+            </div>
+          </article>
+          <article class="process-card" style="background:#fff;border-color:rgba(5,5,5,0.12);color:#050505;">
+            <div class="process-art" style="background:#f1efe9;border-color:rgba(5,5,5,0.1);"><div class="donut" style="width:112px;"></div></div>
+            <div>
+              <h3>Review composition</h3>
+              <p class="muted" style="margin-top:10px;">See yield sources, risk, liquidity timing, and allocation before committing capital.</p>
+            </div>
+          </article>
+          <article class="process-card" style="background:#fff;border-color:rgba(5,5,5,0.12);color:#050505;">
+            <div class="process-art" style="background:#050505;border-color:#050505;"><strong style="font-size:42px;">$</strong></div>
+            <div>
+              <h3>Manage in Account</h3>
+              <p class="muted" style="margin-top:10px;">Track positions, pending executions, allocation, activity, and earned yield in one place.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="account">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Account turns yield into a position you can manage.</h2>
+          <p>After wallet connection, Account becomes the user's home for Cores, Auto Stack, pending executions, activity, allocation, and product actions.</p>
+        </div>
+        <div class="account-preview">
+          <div class="account-card">
+            <div class="eyebrow">Account value</div>
+            <h3>$84,213.42</h3>
+            <p class="muted" style="margin-top:10px;">24h +0.8% / 7d +2.4%</p>
+            <div class="donut-row">
+              <div class="donut" aria-label="Product allocation chart"></div>
+              <div>
+                <h4 style="margin:0 0 8px;">Cores vs Auto Stack</h4>
+                <p class="muted">Use donut charts for product allocation and stacked bars for source, risk, and asset breakdowns.</p>
+              </div>
+            </div>
+          </div>
+          <div class="table-card">
+            <table>
+              <thead>
+                <tr><th>Product</th><th>Value</th><th>APY</th><th>Action</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Balanced</td><td>$32,420</td><td>9.8%</td><td>Details</td></tr>
+                <tr><td>Cashflow</td><td>$21,118</td><td>7.4%</td><td>Deposit</td></tr>
+                <tr><td>Auto Stack</td><td>$18,600</td><td>6.2%</td><td>Details</td></tr>
+                <tr><td>Boost</td><td>$12,075</td><td>14.2%</td><td>Deposit</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="final-cta">
+      <div class="wrap">
+        <h2>Start with a Core. Build the position over time.</h2>
+        <p>SolStacker should make the first commitment feel simple while keeping APY, risk, liquidity, and composition visible before wallet confirmation.</p>
+        <div class="hero-actions" style="justify-content:center;">
+          <a class="button" href="#cores">Explore Cores</a>
+          <a class="button secondary" href="#simulator">Try Simulator</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>SolStacker landing page concept</span>
+      <span>Front-end artifact, mocked data</span>
+    </div>
+  </footer>
+
+  <script>
+    const state = {
+      core: "Balanced",
+      apy: 0.098,
+      years: 5,
+    };
+
+    const formatter = new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      maximumFractionDigits: 0,
+    });
+
+    const percentFormatter = new Intl.NumberFormat("en-US", {
+      style: "percent",
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1,
+    });
+
+    const lump = document.querySelector("#lump");
+    const monthly = document.querySelector("#monthly");
+    const lumpOut = document.querySelector("#lumpOut");
+    const monthlyOut = document.querySelector("#monthlyOut");
+    const horizonOut = document.querySelector("#horizonOut");
+    const projectedValue = document.querySelector("#projectedValue");
+    const depositValue = document.querySelector("#depositValue");
+    const yieldValue = document.querySelector("#yieldValue");
+    const ring = document.querySelector("#ring");
+    const coreName = document.querySelector("#coreName");
+    const apyText = document.querySelector("#apyText");
+    const segments = Array.from(document.querySelectorAll(".segment"));
+    const cards = Array.from(document.querySelectorAll(".featured-card"));
+
+    function project(initialDeposit, monthlyDeposit, apy, years) {
+      const months = years * 12;
+      const monthlyRate = Math.pow(1 + apy, 1 / 12) - 1;
+      let value = initialDeposit;
+      let deposits = initialDeposit;
+
+      for (let i = 0; i < months; i += 1) {
+        value *= 1 + monthlyRate;
+        value += monthlyDeposit;
+        deposits += monthlyDeposit;
+      }
+
+      return {
+        value,
+        deposits,
+        yieldEarned: value - deposits,
+      };
+    }
+
+    function update() {
+      const initialDeposit = Number(lump.value);
+      const monthlyDeposit = Number(monthly.value);
+      const result = project(initialDeposit, monthlyDeposit, state.apy, state.years);
+      const yieldRatio = Math.max(0, Math.min(1, result.yieldEarned / Math.max(result.value, 1)));
+      const progress = 36 + yieldRatio * 250;
+
+      lumpOut.textContent = formatter.format(initialDeposit);
+      monthlyOut.textContent = formatter.format(monthlyDeposit);
+      horizonOut.textContent = `${state.years}Y`;
+      coreName.textContent = state.core;
+      apyText.textContent = percentFormatter.format(state.apy);
+      projectedValue.textContent = formatter.format(result.value);
+      depositValue.textContent = formatter.format(result.deposits);
+      yieldValue.textContent = formatter.format(Math.max(0, result.yieldEarned));
+      ring.style.setProperty("--progress", `${progress}deg`);
+    }
+
+    lump.addEventListener("input", update);
+    monthly.addEventListener("input", update);
+
+    segments.forEach((segment) => {
+      segment.addEventListener("click", () => {
+        segments.forEach((item) => item.classList.remove("active"));
+        segment.classList.add("active");
+        state.years = Number(segment.dataset.years);
+        update();
+      });
+    });
+
+    cards.forEach((card) => {
+      card.addEventListener("click", () => {
+        cards.forEach((item) => item.classList.remove("active"));
+        card.classList.add("active");
+        state.core = card.dataset.core;
+        state.apy = Number(card.dataset.apy);
+        update();
+      });
+    });
+
+    update();
+  </script>
+</body>
+</html>
