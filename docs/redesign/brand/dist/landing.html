@@ -360,6 +360,201 @@
       max-width: 720px;
     }
 
+    .story-panel {
+      display: grid;
+      grid-template-columns: 360px minmax(0, 1fr);
+      gap: 64px;
+      align-items: center;
+      margin-bottom: 42px;
+      min-height: 520px;
+    }
+
+    .story-copy h2 {
+      font-size: clamp(42px, 5vw, 72px);
+      line-height: 0.98;
+      font-weight: 690;
+      letter-spacing: 0;
+    }
+
+    .story-copy p {
+      max-width: 430px;
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.65;
+    }
+
+    .story-visual {
+      --p: 0;
+      min-height: 360px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at 70% 20%, rgba(143,70,255,0.16), transparent 20rem),
+        radial-gradient(circle at 28% 72%, rgba(20,241,149,0.1), transparent 18rem),
+        #10100f;
+    }
+
+    .scene-grid {
+      position: absolute;
+      inset: 0;
+      opacity: 0.24;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.055) 1px, transparent 1px);
+      background-size: 36px 36px;
+      mask-image: radial-gradient(circle at 50% 50%, #000 0%, transparent 70%);
+    }
+
+    .scene-node,
+    .scene-core,
+    .scene-metric,
+    .scene-chip {
+      position: absolute;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(8px);
+    }
+
+    .scene-node {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 680;
+    }
+
+    .scene-node::after {
+      content: "";
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--node-color, var(--accent));
+      box-shadow: 0 0 24px var(--node-color, var(--accent));
+    }
+
+    .scene-core {
+      left: 50%;
+      top: 50%;
+      width: 132px;
+      height: 132px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(var(--core-scale, 1));
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 720;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+    }
+
+    .scene-core::before,
+    .scene-core::after {
+      content: "";
+      position: absolute;
+      inset: -28px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 50%;
+    }
+
+    .scene-core::after {
+      inset: -56px;
+    }
+
+    .scene-core span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .scene-line {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: var(--line-width, 160px);
+      height: 1px;
+      transform-origin: left center;
+      transform: rotate(var(--line-angle, 0deg)) scaleX(var(--line-scale, 0.2));
+      background: rgba(255,255,255,0.2);
+      opacity: var(--line-opacity, 0.35);
+    }
+
+    .scene-flow {
+      position: absolute;
+      inset: auto 15% 20% 15%;
+      height: 3px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .scene-flow span {
+      display: block;
+      width: var(--flow-width, 36%);
+      height: 100%;
+      border-radius: inherit;
+      background: var(--accent);
+      transform: translateX(var(--flow-x, 0));
+    }
+
+    .scene-metric {
+      width: 124px;
+      height: 74px;
+      border-radius: var(--radius);
+      display: grid;
+      place-content: center;
+      gap: 4px;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .scene-metric strong {
+      color: #fff;
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .scene-chip {
+      min-width: 96px;
+      min-height: 34px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .story-visual[data-scene="cores"] .source-one { left: var(--n1x, 13%); top: var(--n1y, 22%); --node-color: var(--green); }
+    .story-visual[data-scene="cores"] .source-two { left: var(--n2x, 16%); top: var(--n2y, 64%); --node-color: var(--cyan); }
+    .story-visual[data-scene="cores"] .source-three { left: var(--n3x, 73%); top: var(--n3y, 24%); --node-color: var(--pink); }
+    .story-visual[data-scene="cores"] .source-four { left: var(--n4x, 76%); top: var(--n4y, 62%); --node-color: var(--coral); }
+
+    .story-visual[data-scene="model"] .scene-core {
+      width: 154px;
+      height: 154px;
+    }
+
+    .story-visual[data-scene="model"] .model-one { left: 12%; top: var(--m1y, 22%); --node-color: var(--green); }
+    .story-visual[data-scene="model"] .model-two { left: 40%; top: var(--m2y, 56%); --node-color: var(--accent); }
+    .story-visual[data-scene="model"] .model-three { right: 12%; top: var(--m3y, 28%); --node-color: var(--cyan); }
+
+    .story-visual[data-scene="model"] .model-chip-one { left: 16%; bottom: 22%; }
+    .story-visual[data-scene="model"] .model-chip-two { right: 18%; bottom: 20%; }
+
+    .story-visual[data-scene="account"] .scene-core {
+      width: 126px;
+      height: 126px;
+      border-radius: var(--radius);
+    }
+
+    .story-visual[data-scene="account"] .account-chip-one { left: var(--a1x, 12%); top: var(--a1y, 22%); --node-color: var(--accent); }
+    .story-visual[data-scene="account"] .account-chip-two { left: var(--a2x, 18%); bottom: var(--a2y, 20%); --node-color: var(--green); }
+    .story-visual[data-scene="account"] .account-chip-three { right: var(--a3x, 16%); top: var(--a3y, 24%); --node-color: var(--cyan); }
+    .story-visual[data-scene="account"] .account-chip-four { right: var(--a4x, 20%); bottom: var(--a4y, 22%); --node-color: var(--pink); }
+
     .light .section-head p,
     .light .muted {
       color: rgba(5,5,5,0.62);
@@ -382,10 +577,22 @@
     }
 
     .product-card {
-      min-height: 210px;
-      padding: 22px;
-      display: grid;
-      align-content: space-between;
+      min-height: 390px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 22px;
+      cursor: pointer;
+      transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
+    }
+
+    .product-card.is-active,
+    .product-card:hover,
+    .product-card:focus-visible {
+      border-color: rgba(143,70,255,0.64);
+      background: #1d1c1a;
+      transform: translateY(-2px);
     }
 
     .product-card p,
@@ -395,19 +602,289 @@
       line-height: 1.6;
     }
 
+    .product-card p {
+      font-size: 14px;
+    }
+
     .product-card h3,
     .featured-card h3,
     .process-card h3 {
       font-size: 20px;
     }
 
-    .product-card .tag {
-      justify-self: start;
-      border: 1px solid var(--line);
+    .product-copy {
+      display: grid;
+      gap: 10px;
+      margin-top: auto;
+    }
+
+    .card-visual {
+      height: 190px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(143,70,255,0.18), transparent 56%),
+        #0b0b0a;
+      isolation: isolate;
+    }
+
+    .card-visual::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0.2;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px);
+      background-size: 24px 24px;
+      mask-image: radial-gradient(circle at 50% 50%, #000 0%, transparent 74%);
+      z-index: -1;
+    }
+
+    .visual-dot,
+    .visual-core,
+    .visual-bar,
+    .visual-ring,
+    .visual-signal,
+    .visual-orbit,
+    .visual-particle,
+    .visual-stack,
+    .visual-arc {
+      position: absolute;
+    }
+
+    .visual-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--dot-color, var(--accent));
+      box-shadow: 0 0 18px var(--dot-color, var(--accent));
+    }
+
+    .visual-core {
+      left: 50%;
+      top: 50%;
+      width: 70px;
+      height: 70px;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      background: rgba(255,255,255,0.05);
+    }
+
+    .visual-line {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 94px;
+      height: 1px;
+      transform-origin: left center;
+      background: rgba(255,255,255,0.26);
+    }
+
+    .visual-bar {
+      left: 24px;
+      right: 24px;
+      height: 3px;
+      overflow: hidden;
       border-radius: 999px;
-      padding: 5px 9px;
-      color: var(--faint);
-      font-size: 12px;
+      background: rgba(255,255,255,0.1);
+    }
+
+    .visual-bar span {
+      display: block;
+      width: var(--bar-width, 42%);
+      height: 100%;
+      border-radius: inherit;
+      background: var(--bar-color, var(--accent));
+      transform-origin: left center;
+    }
+
+    .visual-ring {
+      left: 50%;
+      top: 50%;
+      width: 118px;
+      height: 118px;
+      border: 1px solid rgba(255,255,255,0.13);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .visual-ring::before,
+    .visual-ring::after {
+      content: "";
+      position: absolute;
+      inset: 20px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 50%;
+    }
+
+    .visual-ring::after {
+      inset: 42px;
+      background: var(--accent);
+      box-shadow: 0 0 22px rgba(143,70,255,0.6);
+    }
+
+    .visual-signal {
+      left: 22px;
+      right: 22px;
+      height: 1px;
+      background: rgba(255,255,255,0.1);
+    }
+
+    .visual-signal::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      width: 28%;
+      height: 100%;
+      background: var(--green);
+      box-shadow: 0 0 14px rgba(20,241,149,0.5);
+    }
+
+    .visual-cores .visual-dot:nth-child(1) { left: 18%; top: 24%; --dot-color: var(--green); }
+    .visual-cores .visual-dot:nth-child(2) { left: 18%; bottom: 24%; --dot-color: var(--cyan); }
+    .visual-cores .visual-dot:nth-child(3) { right: 18%; top: 30%; --dot-color: var(--pink); }
+    .visual-cores .visual-dot:nth-child(4) { right: 20%; bottom: 22%; --dot-color: var(--coral); }
+    .visual-cores .visual-dot:nth-child(1) { --dot-x: 86px; --dot-y: 52px; }
+    .visual-cores .visual-dot:nth-child(2) { --dot-x: 88px; --dot-y: -54px; }
+    .visual-cores .visual-dot:nth-child(3) { --dot-x: -86px; --dot-y: 42px; }
+    .visual-cores .visual-dot:nth-child(4) { --dot-x: -90px; --dot-y: -52px; }
+    .visual-cores .visual-line:nth-child(5) { --angle: 210deg; transform: rotate(var(--angle)) scaleX(0.7); }
+    .visual-cores .visual-line:nth-child(6) { --angle: 150deg; transform: rotate(var(--angle)) scaleX(0.74); }
+    .visual-cores .visual-line:nth-child(7) { --angle: 326deg; transform: rotate(var(--angle)) scaleX(0.64); }
+    .visual-cores .visual-line:nth-child(8) { --angle: 34deg; transform: rotate(var(--angle)) scaleX(0.68); }
+
+    .visual-autostack .visual-stack {
+      left: 24%;
+      top: 28%;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 20px rgba(143,70,255,0.58);
+    }
+
+    .visual-autostack .visual-bar:nth-child(2) { top: 48px; --bar-width: 46%; --bar-color: var(--accent); }
+    .visual-autostack .visual-bar:nth-child(3) { top: 86px; --bar-width: 66%; --bar-color: var(--green); }
+    .visual-autostack .visual-bar:nth-child(4) { top: 124px; --bar-width: 38%; --bar-color: var(--cyan); }
+
+    .visual-account .visual-orbit {
+      left: 50%;
+      top: 50%;
+      width: 126px;
+      height: 126px;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .visual-account .visual-orbit::before {
+      content: "";
+      position: absolute;
+      inset: 28px;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 50%;
+    }
+
+    .visual-account .visual-particle {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--particle-color, var(--accent));
+      box-shadow: 0 0 14px var(--particle-color, var(--accent));
+      transform: translate(-50%, -50%);
+    }
+
+    .visual-account .visual-particle:nth-child(2) { left: 26%; top: 32%; --particle-color: var(--green); }
+    .visual-account .visual-particle:nth-child(3) { left: 70%; top: 26%; --particle-color: var(--cyan); }
+    .visual-account .visual-particle:nth-child(4) { left: 74%; top: 72%; --particle-color: var(--pink); }
+    .visual-account .visual-particle:nth-child(5) { left: 30%; top: 70%; --particle-color: var(--coral); }
+
+    .visual-stats .visual-signal:nth-child(1) { top: 48px; }
+    .visual-stats .visual-signal:nth-child(2) { top: 76px; }
+    .visual-stats .visual-signal:nth-child(3) { top: 104px; }
+    .visual-stats .visual-signal:nth-child(4) { top: 132px; }
+    .visual-stats .visual-signal:nth-child(2)::after { width: 42%; background: var(--accent); box-shadow: 0 0 14px rgba(143,70,255,0.5); }
+    .visual-stats .visual-signal:nth-child(3)::after { width: 58%; background: var(--pink); box-shadow: 0 0 14px rgba(255,79,216,0.45); }
+    .visual-stats .visual-signal:nth-child(4)::after { width: 34%; background: var(--cyan); box-shadow: 0 0 14px rgba(0,194,255,0.45); }
+
+    .product-card.is-animating[data-product-card="cores"] .visual-dot {
+      animation: coreDot 5000ms ease-in-out 1 both;
+    }
+
+    .product-card.is-animating[data-product-card="cores"] .visual-core {
+      animation: coreCenter 5000ms ease-in-out 1 both;
+    }
+
+    .product-card.is-animating[data-product-card="autostack"] .visual-stack {
+      animation: stackTravel 5000ms cubic-bezier(0.2, 0.8, 0.2, 1) 1 both;
+    }
+
+    .product-card.is-animating[data-product-card="autostack"] .visual-bar span {
+      animation: barCharge 5000ms ease-in-out 1 both;
+    }
+
+    .product-card.is-animating[data-product-card="account"] .visual-orbit {
+      animation: orbitResolve 5000ms ease-in-out 1 both;
+    }
+
+    .product-card.is-animating[data-product-card="account"] .visual-particle {
+      animation: particleCollect 5000ms ease-in-out 1 both;
+    }
+
+    .product-card.is-animating[data-product-card="stats"] .visual-signal::after {
+      animation: signalSweep 5000ms ease-in-out 1 both;
+    }
+
+    @keyframes coreDot {
+      0% { transform: translate(0, 0) scale(0.8); opacity: 0.7; }
+      44% { transform: translate(var(--dot-x, 0), var(--dot-y, 0)) scale(1); opacity: 1; }
+      72% { transform: translate(var(--dot-x, 0), var(--dot-y, 0)) scale(0.62); opacity: 0.68; }
+      100% { transform: translate(0, 0) scale(0.9); opacity: 0.92; }
+    }
+
+    @keyframes coreCenter {
+      0%, 100% { box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08); }
+      52% { box-shadow: inset 0 0 0 1px rgba(255,255,255,0.18), 0 0 34px rgba(143,70,255,0.28); }
+    }
+
+    @keyframes stackTravel {
+      0% { transform: translate(0, 0) scale(0.85); }
+      30% { transform: translate(76px, 0) scale(1); }
+      60% { transform: translate(116px, 40px) scale(0.92); }
+      100% { transform: translate(156px, 84px) scale(0.78); }
+    }
+
+    @keyframes barCharge {
+      0% { transform: scaleX(0.14); opacity: 0.5; }
+      52% { transform: scaleX(1); opacity: 1; }
+      100% { transform: scaleX(0.78); opacity: 0.78; }
+    }
+
+    @keyframes orbitResolve {
+      0% { transform: translate(-50%, -50%) rotate(0deg) scale(0.88); }
+      68% { transform: translate(-50%, -50%) rotate(180deg) scale(1.06); }
+      100% { transform: translate(-50%, -50%) rotate(220deg) scale(1); }
+    }
+
+    @keyframes particleCollect {
+      0% { opacity: 0.72; }
+      48% { left: 50%; top: 50%; opacity: 1; }
+      100% { opacity: 0.9; }
+    }
+
+    @keyframes signalSweep {
+      0% { transform: translateX(0); opacity: 0.45; }
+      52% { transform: translateX(190%); opacity: 1; }
+      100% { transform: translateX(0); opacity: 0.75; }
     }
 
     .featured-layout {
@@ -791,25 +1268,6 @@
       background: rgba(5,5,5,0.18);
     }
 
-    .account-mini {
-      width: min(84%, 250px);
-      display: grid;
-      gap: 10px;
-    }
-
-    .account-mini-row {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 14px;
-      color: rgba(255,255,255,0.72);
-      font-size: 11px;
-    }
-
-    .account-mini-row strong {
-      color: #fff;
-      font-weight: 650;
-    }
-
     .flow-lines {
       width: 80%;
       display: grid;
@@ -834,75 +1292,82 @@
       background: var(--green);
     }
 
-    .account-preview {
-      display: grid;
-      grid-template-columns: 0.92fr 1.08fr;
-      gap: 18px;
-      align-items: stretch;
-    }
-
-    .account-card {
-      padding: 24px;
-    }
-
-    .account-card h3 {
-      font-size: 38px;
-      line-height: 1;
-      margin-top: 12px;
-    }
-
-    .donut-row {
-      display: flex;
-      gap: 24px;
-      align-items: center;
-      margin-top: 24px;
-    }
-
-    .donut {
-      width: 152px;
-      aspect-ratio: 1;
-      border-radius: 50%;
-      background: conic-gradient(var(--accent) 0 44%, var(--cyan) 44% 64%, var(--pink) 64% 82%, var(--green) 82% 100%);
+    .journey-art {
       position: relative;
-      flex: 0 0 auto;
+      width: min(78%, 260px);
+      height: 104px;
     }
 
-    .donut::after {
+    .journey-dot,
+    .journey-ring,
+    .journey-line,
+    .journey-block {
+      position: absolute;
+    }
+
+    .journey-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--journey-color, var(--accent));
+      box-shadow: 0 0 16px var(--journey-color, var(--accent));
+    }
+
+    .journey-ring {
+      left: 50%;
+      top: 50%;
+      width: 76px;
+      height: 76px;
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .journey-ring::after {
       content: "";
       position: absolute;
-      inset: 38px;
-      background: var(--surface);
+      inset: 20px;
       border-radius: 50%;
+      background: #050505;
     }
 
-    .table-card {
-      overflow: hidden;
-      border: 1px solid var(--line);
+    .journey-line {
+      height: 2px;
+      border-radius: 999px;
+      background: rgba(5,5,5,0.18);
+      transform-origin: left center;
+    }
+
+    .journey-block {
+      width: 46px;
+      height: 46px;
+      border: 1px solid rgba(5,5,5,0.16);
       border-radius: var(--radius);
-      background: var(--surface);
+      background: rgba(5,5,5,0.05);
+      transform: rotate(45deg);
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
+    .journey-art.core-choice .journey-dot:nth-child(1) { left: 12%; top: 18%; --journey-color: var(--green); }
+    .journey-art.core-choice .journey-dot:nth-child(2) { left: 16%; bottom: 14%; --journey-color: var(--cyan); }
+    .journey-art.core-choice .journey-dot:nth-child(3) { right: 14%; top: 28%; --journey-color: var(--pink); }
+    .journey-art.core-choice .journey-line:nth-child(4) { left: 20%; top: 30%; width: 92px; transform: rotate(20deg); }
+    .journey-art.core-choice .journey-line:nth-child(5) { left: 22%; bottom: 28%; width: 96px; transform: rotate(-18deg); }
+    .journey-art.core-choice .journey-line:nth-child(6) { right: 24%; top: 42%; width: 72px; transform: rotate(148deg); }
+
+    .journey-art.source-mix .journey-block:nth-child(1) { left: 10%; top: 20%; }
+    .journey-art.source-mix .journey-block:nth-child(2) { left: 40%; top: 8%; background: rgba(143,70,255,0.16); }
+    .journey-art.source-mix .journey-block:nth-child(3) { right: 10%; bottom: 18%; background: rgba(20,241,149,0.14); }
+    .journey-art.source-mix .journey-line:nth-child(4) { left: 25%; top: 46%; width: 116px; transform: rotate(-10deg); }
+    .journey-art.source-mix .journey-line:nth-child(5) { right: 24%; top: 58%; width: 96px; transform: rotate(18deg); }
+
+    .journey-art.account-track .journey-ring {
+      border-color: var(--green);
     }
 
-    th, td {
-      padding: 14px 16px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      text-align: left;
-    }
-
-    th {
-      color: var(--faint);
-      font-size: 11px;
-      font-weight: 750;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-
-    tr:last-child td { border-bottom: 0; }
+    .journey-art.account-track .journey-dot:nth-child(2) { left: 12%; top: 18%; --journey-color: var(--accent); }
+    .journey-art.account-track .journey-dot:nth-child(3) { right: 14%; top: 22%; --journey-color: var(--cyan); }
+    .journey-art.account-track .journey-dot:nth-child(4) { left: 18%; bottom: 16%; --journey-color: var(--pink); }
+    .journey-art.account-track .journey-dot:nth-child(5) { right: 18%; bottom: 14%; --journey-color: var(--coral); }
 
     .final-cta {
       padding: 100px 0;
@@ -986,8 +1451,17 @@
       .hero-grid,
       .featured-layout,
       .section-head,
-      .account-preview {
+      .story-panel {
         grid-template-columns: 1fr;
+      }
+
+      .story-panel {
+        gap: 28px;
+        min-height: auto;
+      }
+
+      .story-copy p {
+        max-width: 640px;
       }
 
       .hero {
@@ -1042,6 +1516,23 @@
         grid-template-columns: 1fr;
       }
 
+      .story-copy h2 {
+        font-size: 40px;
+        line-height: 1.04;
+      }
+
+      .story-visual {
+        min-height: 280px;
+      }
+
+      .product-card {
+        min-height: 320px;
+      }
+
+      .card-visual {
+        height: 150px;
+      }
+
       .coin-stack {
         width: 150px;
         right: 22px;
@@ -1053,13 +1544,20 @@
         width: calc(100% - 36px);
       }
 
-      .donut-row {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
       footer .wrap {
         grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px), (prefers-reduced-motion: reduce) {
+      .product-card.is-animating .visual-dot,
+      .product-card.is-animating .visual-core,
+      .product-card.is-animating .visual-stack,
+      .product-card.is-animating .visual-bar span,
+      .product-card.is-animating .visual-orbit,
+      .product-card.is-animating .visual-particle,
+      .product-card.is-animating .visual-signal::after {
+        animation: none !important;
       }
     }
   </style>
@@ -1136,38 +1634,79 @@
 
     <section class="section" id="products">
       <div class="wrap">
-        <div class="section-head">
-          <h2>Access yield through Cores.</h2>
-          <p>Cores package multiple Solana yield sources into clear allocation paths, with Auto Stack for SOL accumulation and Account for position tracking.</p>
+        <div class="story-panel scroll-story" data-scroll-scene="cores">
+          <div class="story-copy">
+            <h2>Access yield through Cores.</h2>
+            <p>Cores package multiple Solana yield sources into clear allocation paths, with Auto Stack for SOL accumulation and Account for position tracking.</p>
+          </div>
+          <div class="story-visual" data-scene="cores" aria-label="Abstract Core allocation visual">
+            <div class="scene-grid"></div>
+            <div class="scene-line" style="--line-angle:214deg;--line-width:190px;--line-color:var(--green);"></div>
+            <div class="scene-line" style="--line-angle:148deg;--line-width:184px;--line-color:var(--cyan);"></div>
+            <div class="scene-line" style="--line-angle:326deg;--line-width:184px;--line-color:var(--pink);"></div>
+            <div class="scene-line" style="--line-angle:34deg;--line-width:176px;--line-color:var(--coral);"></div>
+            <div class="scene-core"></div>
+            <div class="scene-node source-one"></div>
+            <div class="scene-node source-two"></div>
+            <div class="scene-node source-three"></div>
+            <div class="scene-node source-four"></div>
+            <div class="scene-flow"><span></span></div>
+          </div>
         </div>
         <div class="product-grid">
-          <article class="product-card">
-            <div>
-              <div class="tag">Discover</div>
-              <h3 style="margin-top:18px;">Cores</h3>
+          <article class="product-card is-active" data-product-card="cores" tabindex="0">
+            <div class="card-visual visual-cores" aria-hidden="true">
+              <span class="visual-dot"></span>
+              <span class="visual-dot"></span>
+              <span class="visual-dot"></span>
+              <span class="visual-dot"></span>
+              <span class="visual-line"></span>
+              <span class="visual-line"></span>
+              <span class="visual-line"></span>
+              <span class="visual-line"></span>
+              <span class="visual-core"></span>
             </div>
-            <p>Compare curated Solana yield allocations by APY, risk, liquidity, source mix, and strategy intent.</p>
+            <div class="product-copy">
+              <h3>Cores</h3>
+              <p>Compare curated Solana yield allocations by APY, risk, liquidity, source mix, and strategy intent.</p>
+            </div>
           </article>
-          <article class="product-card">
-            <div>
-              <div class="tag">Accumulate</div>
-              <h3 style="margin-top:18px;">Auto Stack</h3>
+          <article class="product-card" data-product-card="autostack" tabindex="0">
+            <div class="card-visual visual-autostack" aria-hidden="true">
+              <span class="visual-stack"></span>
+              <span class="visual-bar"><span></span></span>
+              <span class="visual-bar"><span></span></span>
+              <span class="visual-bar"><span></span></span>
             </div>
-            <p>Accumulate SOL over time while unfilled capital continues earning yield before execution.</p>
+            <div class="product-copy">
+              <h3>Auto Stack</h3>
+              <p>Accumulate SOL over time while unfilled capital continues earning yield before execution.</p>
+            </div>
           </article>
-          <article class="product-card">
-            <div>
-              <div class="tag">Manage</div>
-              <h3 style="margin-top:18px;">Account</h3>
+          <article class="product-card" data-product-card="account" tabindex="0">
+            <div class="card-visual visual-account" aria-hidden="true">
+              <span class="visual-orbit"></span>
+              <span class="visual-particle"></span>
+              <span class="visual-particle"></span>
+              <span class="visual-particle"></span>
+              <span class="visual-particle"></span>
             </div>
-            <p>See every position, pending execution, allocation, activity, and earned yield from one connected-wallet view.</p>
+            <div class="product-copy">
+              <h3>Account</h3>
+              <p>See every position, pending execution, allocation, activity, and earned yield from one connected-wallet view.</p>
+            </div>
           </article>
-          <article class="product-card">
-            <div>
-              <div class="tag">Verify</div>
-              <h3 style="margin-top:18px;">Stats</h3>
+          <article class="product-card" data-product-card="stats" tabindex="0" id="stats">
+            <div class="card-visual visual-stats" aria-hidden="true">
+              <span class="visual-signal"></span>
+              <span class="visual-signal"></span>
+              <span class="visual-signal"></span>
+              <span class="visual-signal"></span>
             </div>
-            <p>Review TVL, APY history, volume, source mix, and Core composition before allocating.</p>
+            <div class="product-copy">
+              <h3>Stats</h3>
+              <p>Review TVL, APY history, volume, source mix, and Core composition before allocating.</p>
+            </div>
           </article>
         </div>
       </div>
@@ -1175,9 +1714,22 @@
 
     <section class="section" id="cores">
       <div class="wrap">
-        <div class="section-head">
-          <h2>Model a Core before you allocate.</h2>
-          <p>Set a lump sum, add a monthly commitment, and compare how different Cores project over time at current APY.</p>
+        <div class="story-panel scroll-story" data-scroll-scene="model">
+          <div class="story-copy">
+            <h2>Model a Core before you allocate.</h2>
+            <p>Set a lump sum, add a monthly commitment, and compare how different Cores project over time at current APY.</p>
+          </div>
+          <div class="story-visual" data-scene="model" aria-label="Abstract yield modeling visual">
+            <div class="scene-grid"></div>
+            <div class="scene-core"></div>
+            <div class="scene-node model-one"></div>
+            <div class="scene-node model-two"></div>
+            <div class="scene-node model-three"></div>
+            <div class="scene-line" style="--line-angle:198deg;--line-width:170px;"></div>
+            <div class="scene-line" style="--line-angle:72deg;--line-width:150px;"></div>
+            <div class="scene-line" style="--line-angle:334deg;--line-width:164px;"></div>
+            <div class="scene-flow"><span></span></div>
+          </div>
         </div>
         <div class="featured-layout">
           <div class="featured-grid" aria-label="Featured Cores">
@@ -1302,10 +1854,14 @@
         <div class="process-grid">
           <article class="process-card" style="background:#fff;border-color:rgba(5,5,5,0.12);color:#050505;">
             <div class="process-art" style="background:#f1efe9;border-color:rgba(5,5,5,0.1);">
-              <div class="art-list">
-                <div class="art-row"><span>Balanced</span><div class="art-bar"><span style="width:68%;"></span></div></div>
-                <div class="art-row"><span>Cashflow</span><div class="art-bar"><span style="width:52%;background:var(--green);"></span></div></div>
-                <div class="art-row"><span>Boost</span><div class="art-bar"><span style="width:82%;background:var(--pink);"></span></div></div>
+              <div class="journey-art core-choice" aria-hidden="true">
+                <span class="journey-dot"></span>
+                <span class="journey-dot"></span>
+                <span class="journey-dot"></span>
+                <span class="journey-line"></span>
+                <span class="journey-line"></span>
+                <span class="journey-line"></span>
+                <span class="journey-ring"></span>
               </div>
             </div>
             <div>
@@ -1315,10 +1871,12 @@
           </article>
           <article class="process-card" style="background:#fff;border-color:rgba(5,5,5,0.12);color:#050505;">
             <div class="process-art" style="background:#f1efe9;border-color:rgba(5,5,5,0.1);">
-              <div class="source-map">
-                <div class="source-node">Liquid staking</div>
-                <div class="source-node">Stable lending</div>
-                <div class="source-node">RWA yield</div>
+              <div class="journey-art source-mix" aria-hidden="true">
+                <span class="journey-block"></span>
+                <span class="journey-block"></span>
+                <span class="journey-block"></span>
+                <span class="journey-line"></span>
+                <span class="journey-line"></span>
               </div>
             </div>
             <div>
@@ -1328,10 +1886,12 @@
           </article>
           <article class="process-card" style="background:#fff;border-color:rgba(5,5,5,0.12);color:#050505;">
             <div class="process-art" style="background:#050505;border-color:#050505;">
-              <div class="account-mini">
-                <div class="account-mini-row"><span>Account value</span><strong>$84,213</strong></div>
-                <div class="account-mini-row"><span>24h / 7d</span><strong>+0.8% / +2.4%</strong></div>
-                <div class="account-mini-row"><span>Pending</span><strong>2 executions</strong></div>
+              <div class="journey-art account-track" aria-hidden="true">
+                <span class="journey-ring"></span>
+                <span class="journey-dot"></span>
+                <span class="journey-dot"></span>
+                <span class="journey-dot"></span>
+                <span class="journey-dot"></span>
               </div>
             </div>
             <div>
@@ -1345,35 +1905,23 @@
 
     <section class="section" id="account">
       <div class="wrap">
-        <div class="section-head">
-          <h2>Your SolStacker position, in one Account.</h2>
-          <p>Connect your wallet to track Cores, Auto Stack, allocation, activity, pending executions, and yield earned over time.</p>
-        </div>
-        <div class="account-preview">
-          <div class="account-card">
-            <div class="eyebrow">Account value</div>
-            <h3>$84,213.42</h3>
-            <p class="muted" style="margin-top:10px;">24h +0.8% / 7d +2.4%</p>
-            <div class="donut-row">
-              <div class="donut" aria-label="Product allocation chart"></div>
-              <div>
-                <h4 style="margin:0 0 8px;">Cores vs Auto Stack</h4>
-                <p class="muted">See how your capital is split across Cores, Auto Stack, assets, sources, and risk levels.</p>
-              </div>
-            </div>
+        <div class="story-panel scroll-story" data-scroll-scene="account">
+          <div class="story-copy">
+            <h2>Your SolStacker position, in one Account.</h2>
+            <p>Connect your wallet to track Cores, Auto Stack, allocation, activity, pending executions, and yield earned over time.</p>
           </div>
-          <div class="table-card">
-            <table>
-              <thead>
-                <tr><th>Product</th><th>Value</th><th>APY</th><th>Action</th></tr>
-              </thead>
-              <tbody>
-                <tr><td>Balanced</td><td>$32,420</td><td>9.8%</td><td>Details</td></tr>
-                <tr><td>Cashflow</td><td>$21,118</td><td>7.4%</td><td>Deposit</td></tr>
-                <tr><td>Auto Stack</td><td>$18,600</td><td>6.2%</td><td>Details</td></tr>
-                <tr><td>Boost</td><td>$12,075</td><td>14.2%</td><td>Deposit</td></tr>
-              </tbody>
-            </table>
+          <div class="story-visual" data-scene="account" aria-label="Abstract account aggregation visual">
+            <div class="scene-grid"></div>
+            <div class="scene-core"></div>
+            <div class="scene-node account-chip-one"></div>
+            <div class="scene-node account-chip-two"></div>
+            <div class="scene-node account-chip-three"></div>
+            <div class="scene-node account-chip-four"></div>
+            <div class="scene-line" style="--line-angle:216deg;--line-width:176px;"></div>
+            <div class="scene-line" style="--line-angle:144deg;--line-width:172px;"></div>
+            <div class="scene-line" style="--line-angle:324deg;--line-width:168px;"></div>
+            <div class="scene-line" style="--line-angle:36deg;--line-width:168px;"></div>
+            <div class="scene-flow"><span></span></div>
           </div>
         </div>
       </div>
@@ -1463,8 +2011,15 @@
     const segments = Array.from(document.querySelectorAll(".segment"));
     const cards = Array.from(document.querySelectorAll(".featured-card"));
     const coreOptions = Array.from(document.querySelectorAll(".core-option"));
+    const productCards = Array.from(document.querySelectorAll("[data-product-card]"));
+    const scrollStories = Array.from(document.querySelectorAll(".scroll-story"));
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const desktopMotion = window.matchMedia("(min-width: 641px)");
     const ringRadius = 94;
     const ringCircumference = 2 * Math.PI * ringRadius;
+    let productCardIndex = 0;
+    let productCycleTimer = null;
+    let scrollTicking = false;
 
     ringProgress.style.strokeDasharray = `${ringCircumference}`;
     ringProgress.style.strokeDashoffset = `${ringCircumference}`;
@@ -1524,6 +2079,97 @@
       update();
     }
 
+    function animateProductCard(card) {
+      productCards.forEach((item) => {
+        item.classList.toggle("is-active", item === card);
+        item.classList.remove("is-animating");
+      });
+
+      if (!desktopMotion.matches || reduceMotion.matches) return;
+
+      requestAnimationFrame(() => {
+        card.classList.add("is-animating");
+      });
+    }
+
+    function selectProductCard(card) {
+      productCardIndex = Math.max(0, productCards.indexOf(card));
+      animateProductCard(card);
+    }
+
+    function startProductCardCycle() {
+      if (productCycleTimer) window.clearInterval(productCycleTimer);
+      if (!desktopMotion.matches || reduceMotion.matches || productCards.length === 0) return;
+
+      productCycleTimer = window.setInterval(() => {
+        productCardIndex = (productCardIndex + 1) % productCards.length;
+        animateProductCard(productCards[productCardIndex]);
+      }, 5000);
+    }
+
+    function stopProductCardCycle() {
+      if (!productCycleTimer) return;
+      window.clearInterval(productCycleTimer);
+      productCycleTimer = null;
+    }
+
+    function setSceneProgress(story, progress) {
+      const scene = story.querySelector(".story-visual");
+      if (!scene) return;
+
+      const p = Math.max(0, Math.min(1, progress));
+      scene.style.setProperty("--p", p.toFixed(3));
+      scene.style.setProperty("--core-scale", (0.86 + p * 0.22).toFixed(3));
+      scene.style.setProperty("--line-scale", (0.18 + p * 0.88).toFixed(3));
+      scene.style.setProperty("--line-opacity", (0.18 + p * 0.62).toFixed(3));
+      scene.style.setProperty("--flow-width", `${30 + p * 36}%`);
+      scene.style.setProperty("--flow-x", `${-18 + p * 78}%`);
+
+      if (story.dataset.scrollScene === "cores") {
+        scene.style.setProperty("--n1x", `${10 + p * 9}%`);
+        scene.style.setProperty("--n1y", `${18 + p * 5}%`);
+        scene.style.setProperty("--n2x", `${10 + p * 12}%`);
+        scene.style.setProperty("--n2y", `${70 - p * 10}%`);
+        scene.style.setProperty("--n3x", `${82 - p * 8}%`);
+        scene.style.setProperty("--n3y", `${18 + p * 6}%`);
+        scene.style.setProperty("--n4x", `${82 - p * 10}%`);
+        scene.style.setProperty("--n4y", `${72 - p * 10}%`);
+      }
+
+      if (story.dataset.scrollScene === "model") {
+        scene.style.setProperty("--m1y", `${16 + p * 8}%`);
+        scene.style.setProperty("--m2y", `${64 - p * 10}%`);
+        scene.style.setProperty("--m3y", `${18 + p * 12}%`);
+      }
+
+      if (story.dataset.scrollScene === "account") {
+        scene.style.setProperty("--a1x", `${8 + p * 8}%`);
+        scene.style.setProperty("--a1y", `${16 + p * 8}%`);
+        scene.style.setProperty("--a2x", `${10 + p * 8}%`);
+        scene.style.setProperty("--a2y", `${14 + p * 10}%`);
+        scene.style.setProperty("--a3x", `${8 + p * 8}%`);
+        scene.style.setProperty("--a3y", `${16 + p * 8}%`);
+        scene.style.setProperty("--a4x", `${10 + p * 10}%`);
+        scene.style.setProperty("--a4y", `${14 + p * 10}%`);
+      }
+    }
+
+    function updateScrollScenes() {
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+      scrollStories.forEach((story) => {
+        const rect = story.getBoundingClientRect();
+        const progress = (viewportHeight - rect.top) / (viewportHeight + rect.height);
+        setSceneProgress(story, progress);
+      });
+      scrollTicking = false;
+    }
+
+    function requestScrollSceneUpdate() {
+      if (scrollTicking) return;
+      scrollTicking = true;
+      requestAnimationFrame(updateScrollScenes);
+    }
+
     lump.addEventListener("input", update);
     monthly.addEventListener("input", update);
 
@@ -1548,7 +2194,40 @@
       });
     });
 
+    productCards.forEach((card) => {
+      card.addEventListener("mouseenter", () => {
+        stopProductCardCycle();
+        selectProductCard(card);
+      });
+      card.addEventListener("mouseleave", startProductCardCycle);
+      card.addEventListener("focus", () => {
+        stopProductCardCycle();
+        selectProductCard(card);
+      });
+      card.addEventListener("blur", startProductCardCycle);
+      card.addEventListener("click", () => {
+        stopProductCardCycle();
+        selectProductCard(card);
+      });
+    });
+
+    desktopMotion.addEventListener("change", () => {
+      startProductCardCycle();
+      if (productCards[productCardIndex]) animateProductCard(productCards[productCardIndex]);
+    });
+
+    reduceMotion.addEventListener("change", () => {
+      startProductCardCycle();
+      if (productCards[productCardIndex]) animateProductCard(productCards[productCardIndex]);
+    });
+
+    window.addEventListener("scroll", requestScrollSceneUpdate, { passive: true });
+    window.addEventListener("resize", requestScrollSceneUpdate);
+
     update();
+    if (productCards[0]) animateProductCard(productCards[0]);
+    startProductCardCycle();
+    updateScrollScenes();
   </script>
 </body>
 </html>
