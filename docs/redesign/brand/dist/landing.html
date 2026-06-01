@@ -384,6 +384,11 @@
       top: 112px;
     }
 
+    .scroll-story + .product-grid,
+    .scroll-story + .featured-layout {
+      margin-top: clamp(48px, 5vh, 76px);
+    }
+
     .story-copy h2 {
       font-size: clamp(42px, 5vw, 72px);
       line-height: 0.98;
@@ -1435,6 +1440,53 @@
       box-shadow: 0 0 28px rgba(143,70,255,0.22);
     }
 
+    .process-card.is-active .journey-dot {
+      animation: processDotPulse 1800ms ease-in-out infinite alternate;
+    }
+
+    .process-card.is-active .journey-ring {
+      animation: processRingPulse 2200ms ease-in-out infinite alternate;
+    }
+
+    .process-card.is-active .journey-line {
+      animation: processLineGlow 1800ms ease-in-out infinite alternate;
+    }
+
+    .process-card.is-active .journey-block {
+      animation: processBlockFloat 2400ms ease-in-out infinite alternate;
+    }
+
+    .process-card.is-active .core-choice .journey-dot:nth-child(1) { animation-delay: 0ms; }
+    .process-card.is-active .core-choice .journey-dot:nth-child(2) { animation-delay: 180ms; }
+    .process-card.is-active .core-choice .journey-dot:nth-child(3) { animation-delay: 360ms; }
+    .process-card.is-active .account-track .journey-dot:nth-child(2) { animation-delay: 0ms; }
+    .process-card.is-active .account-track .journey-dot:nth-child(3) { animation-delay: 170ms; }
+    .process-card.is-active .account-track .journey-dot:nth-child(4) { animation-delay: 340ms; }
+    .process-card.is-active .account-track .journey-dot:nth-child(5) { animation-delay: 510ms; }
+    .process-card.is-active .source-mix .journey-block:nth-child(1) { animation-delay: 0ms; }
+    .process-card.is-active .source-mix .journey-block:nth-child(2) { animation-delay: 220ms; }
+    .process-card.is-active .source-mix .journey-block:nth-child(3) { animation-delay: 440ms; }
+
+    @keyframes processDotPulse {
+      from { filter: brightness(0.82); translate: 0 0; }
+      to { filter: brightness(1.25); translate: 0 -8px; }
+    }
+
+    @keyframes processRingPulse {
+      from { box-shadow: 0 0 12px rgba(143,70,255,0.16); }
+      to { box-shadow: 0 0 34px rgba(143,70,255,0.32); }
+    }
+
+    @keyframes processLineGlow {
+      from { opacity: 0.48; }
+      to { opacity: 1; }
+    }
+
+    @keyframes processBlockFloat {
+      from { filter: brightness(0.94); translate: 0 0; }
+      to { filter: brightness(1.12); translate: 0 -7px; }
+    }
+
     .final-cta {
       padding: 100px 0;
       text-align: center;
@@ -1633,7 +1685,11 @@
       .product-card.is-animating .visual-bar span,
       .product-card.is-animating .visual-orbit,
       .product-card.is-animating .visual-particle,
-      .product-card.is-animating .visual-signal::after {
+      .product-card.is-animating .visual-signal::after,
+      .process-card.is-active .journey-dot,
+      .process-card.is-active .journey-ring,
+      .process-card.is-active .journey-line,
+      .process-card.is-active .journey-block {
         animation: none !important;
       }
     }
