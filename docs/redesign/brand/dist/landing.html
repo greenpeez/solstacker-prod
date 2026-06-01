@@ -568,7 +568,8 @@
     .scene-grid {
       position: absolute;
       inset: 0;
-      opacity: 0.16;
+      display: none;
+      opacity: 0;
       background-image:
         linear-gradient(rgba(255,255,255,0.055) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255,255,255,0.055) 1px, transparent 1px);
@@ -933,254 +934,217 @@
       z-index: 0;
     }
 
-    .visual-dot,
-    .visual-core,
-    .visual-bar,
-    .visual-ring,
-    .visual-orbit,
-    .visual-particle,
-    .visual-stack,
-    .visual-arc {
+    .mini-stream,
+    .mini-mark,
+    .mini-barset,
+    .mini-marker,
+    .mini-ledger-row {
       position: absolute;
       z-index: 1;
-    }
-
-    .visual-dot {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: var(--dot-color, var(--accent));
-      box-shadow: 0 0 22px var(--dot-color, var(--accent));
-    }
-
-    .visual-core {
-      left: 50%;
-      top: 50%;
-      width: 76px;
-      height: 76px;
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-      display: grid;
-      place-items: center;
-      color: #fff;
-      font-size: 11px;
-      font-weight: 700;
-      background: rgba(255,255,255,0.05);
-    }
-
-    .visual-core::before,
-    .visual-core::after {
-      content: "";
-      position: absolute;
-      inset: -18px;
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: inherit;
-    }
-
-    .visual-core::after {
-      inset: -36px;
-      border-color: rgba(255,255,255,0.055);
-    }
-
-    .visual-line {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 94px;
-      height: 1px;
-      transform-origin: left center;
-      background: rgba(255,255,255,0.26);
-    }
-
-    .visual-bar {
-      left: 24px;
-      right: 24px;
-      height: 2px;
-      overflow: hidden;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.1);
-    }
-
-    .visual-bar span {
-      display: block;
-      width: var(--bar-width, 42%);
-      height: 100%;
-      border-radius: inherit;
-      background: var(--bar-color, var(--accent));
-      box-shadow: 0 0 18px var(--bar-color, var(--accent));
-      transform-origin: left center;
-    }
-
-    .visual-ring {
-      left: 50%;
-      top: 50%;
-      width: 118px;
-      height: 118px;
-      border: 1px solid rgba(255,255,255,0.13);
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    .visual-ring::before,
-    .visual-ring::after {
-      content: "";
-      position: absolute;
-      inset: 20px;
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 50%;
-    }
-
-    .visual-ring::after {
-      inset: 42px;
-      background: var(--accent);
-      box-shadow: 0 0 22px rgba(143,70,255,0.6);
     }
 
     .visual-cores::after,
     .visual-autostack::after,
     .visual-account::after {
-      border-radius: 50%;
-      inset: 42px 74px;
-      transform: rotate(-12deg);
+      inset: 20px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 50% 50%, rgba(143,70,255,0.12), transparent 58%);
+      border: 0;
     }
 
-    .visual-cores .visual-dot:nth-child(1) { left: 18%; top: 24%; --dot-color: var(--green); }
-    .visual-cores .visual-dot:nth-child(2) { left: 18%; bottom: 24%; --dot-color: var(--cyan); }
-    .visual-cores .visual-dot:nth-child(3) { right: 18%; top: 30%; --dot-color: var(--pink); }
-    .visual-cores .visual-dot:nth-child(4) { right: 20%; bottom: 22%; --dot-color: var(--coral); }
-    .visual-cores .visual-dot:nth-child(1) { --dot-x: 86px; --dot-y: 52px; }
-    .visual-cores .visual-dot:nth-child(2) { --dot-x: 88px; --dot-y: -54px; }
-    .visual-cores .visual-dot:nth-child(3) { --dot-x: -86px; --dot-y: 42px; }
-    .visual-cores .visual-dot:nth-child(4) { --dot-x: -90px; --dot-y: -52px; }
-    .visual-cores .visual-line:nth-child(5) { --angle: 210deg; transform: rotate(var(--angle)) scaleX(0.7); }
-    .visual-cores .visual-line:nth-child(6) { --angle: 150deg; transform: rotate(var(--angle)) scaleX(0.74); }
-    .visual-cores .visual-line:nth-child(7) { --angle: 326deg; transform: rotate(var(--angle)) scaleX(0.64); }
-    .visual-cores .visual-line:nth-child(8) { --angle: 34deg; transform: rotate(var(--angle)) scaleX(0.68); }
-
-    .visual-autostack .visual-stack {
-      left: 24%;
-      top: 28%;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 20px rgba(143,70,255,0.58);
+    .mini-stream {
+      left: var(--mini-left, 12%);
+      top: var(--mini-top, 50%);
+      width: var(--mini-width, 72%);
+      height: 10px;
+      clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 50%, calc(100% - 18px) 100%, 0 100%, 10px 50%);
+      background: var(--mini-color, var(--accent));
+      box-shadow: 0 0 18px rgba(143,70,255,0.2);
+      opacity: 0.76;
+      transform-origin: left center;
     }
 
-    .visual-autostack .visual-stack::before {
-      content: "";
-      position: absolute;
-      inset: -16px;
-      border: 1px solid rgba(143,70,255,0.24);
-      border-radius: inherit;
-    }
+    .visual-cores .mini-stream:nth-child(1) { --mini-top: 24%; --mini-left: 8%; --mini-width: 70%; --mini-color: var(--green); }
+    .visual-cores .mini-stream:nth-child(2) { --mini-top: 42%; --mini-left: 20%; --mini-width: 74%; --mini-color: var(--accent); }
+    .visual-cores .mini-stream:nth-child(3) { --mini-top: 60%; --mini-left: 4%; --mini-width: 66%; --mini-color: var(--cyan); }
+    .visual-cores .mini-stream:nth-child(4) { --mini-top: 76%; --mini-left: 18%; --mini-width: 68%; --mini-color: var(--pink); }
 
-    .visual-autostack .visual-bar:nth-child(2) { top: 48px; --bar-width: 46%; --bar-color: var(--accent); }
-    .visual-autostack .visual-bar:nth-child(3) { top: 86px; --bar-width: 66%; --bar-color: var(--green); }
-    .visual-autostack .visual-bar:nth-child(4) { top: 124px; --bar-width: 38%; --bar-color: var(--cyan); }
-
-    .visual-account .visual-orbit {
+    .mini-mark {
       left: 50%;
       top: 50%;
-      width: 126px;
-      height: 126px;
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
+      width: 82px;
+      height: 62px;
+      transform: translate(-50%, -50%) rotate(-7deg);
+      filter: drop-shadow(0 14px 34px rgba(255,255,255,0.12));
     }
 
-    .visual-account .visual-orbit::before {
+    .mini-mark::before,
+    .mini-mark::after,
+    .mini-mark span {
       content: "";
       position: absolute;
-      inset: 28px;
-      border: 1px solid rgba(255,255,255,0.12);
+      left: 0;
+      right: 0;
+      height: 9px;
+      border-radius: 3px;
+      background: #fff;
+    }
+
+    .mini-mark::before { top: 6px; }
+    .mini-mark span { top: 27px; left: 7px; right: 7px; }
+    .mini-mark::after { top: 48px; }
+
+    .mini-barset {
+      left: 11%;
+      right: 11%;
+      bottom: 22%;
+      height: 56%;
+      display: grid;
+      grid-template-columns: repeat(9, minmax(0, 1fr));
+      align-items: end;
+      gap: 8px;
+    }
+
+    .mini-barset span {
+      display: block;
+      height: var(--mini-bar-h, 42%);
+      border-radius: 999px 999px 2px 2px;
+      background: rgba(255,255,255,0.12);
+      overflow: hidden;
+      transform-origin: bottom center;
+    }
+
+    .mini-barset span::after {
+      content: "";
+      display: block;
+      height: var(--mini-fill, 64%);
+      margin-top: auto;
+      background: var(--mini-color, var(--accent));
+      box-shadow: 0 0 16px var(--mini-color, var(--accent));
+    }
+
+    .mini-barset span:nth-child(1) { --mini-bar-h: 24%; --mini-fill: 58%; --mini-color: var(--green); }
+    .mini-barset span:nth-child(2) { --mini-bar-h: 32%; --mini-fill: 62%; --mini-color: var(--green); }
+    .mini-barset span:nth-child(3) { --mini-bar-h: 41%; --mini-fill: 68%; --mini-color: var(--cyan); }
+    .mini-barset span:nth-child(4) { --mini-bar-h: 50%; --mini-fill: 72%; --mini-color: var(--cyan); }
+    .mini-barset span:nth-child(5) { --mini-bar-h: 62%; --mini-fill: 78%; --mini-color: var(--accent); }
+    .mini-barset span:nth-child(6) { --mini-bar-h: 72%; --mini-fill: 82%; --mini-color: var(--accent); }
+    .mini-barset span:nth-child(7) { --mini-bar-h: 82%; --mini-fill: 88%; --mini-color: var(--pink); }
+    .mini-barset span:nth-child(8) { --mini-bar-h: 91%; --mini-fill: 92%; --mini-color: var(--coral); }
+    .mini-barset span:nth-child(9) { --mini-bar-h: 100%; --mini-fill: 96%; --mini-color: var(--green); }
+
+    .mini-marker {
+      right: 18%;
+      top: 25%;
+      width: 38px;
+      height: 38px;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 50%;
+      box-shadow: 0 0 26px rgba(143,70,255,0.24);
+    }
+
+    .mini-marker::after {
+      content: "";
+      position: absolute;
+      inset: 13px;
+      border-radius: inherit;
+      background: var(--accent);
+      box-shadow: 0 0 18px rgba(143,70,255,0.52);
+    }
+
+    .mini-ledger-row {
+      left: var(--mini-row-left, 9%);
+      right: var(--mini-row-right, 9%);
+      top: var(--mini-row-top, 50%);
+      height: 1px;
+      background: rgba(255,255,255,0.12);
+    }
+
+    .mini-ledger-row::before,
+    .mini-ledger-row::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      background: var(--mini-row-color, var(--accent));
+      box-shadow: 0 0 14px var(--mini-row-color, var(--accent));
+    }
+
+    .mini-ledger-row::before {
+      top: -4px;
+      width: 9px;
+      height: 9px;
       border-radius: 50%;
     }
 
-    .visual-account .visual-particle {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: var(--particle-color, var(--accent));
-      box-shadow: 0 0 14px var(--particle-color, var(--accent));
-      transform: translate(-50%, -50%);
+    .mini-ledger-row::after {
+      inset: 0 auto 0 0;
+      width: var(--mini-row-width, 48%);
     }
 
-    .visual-account .visual-particle:nth-child(2) { left: 26%; top: 32%; --particle-color: var(--green); }
-    .visual-account .visual-particle:nth-child(3) { left: 70%; top: 26%; --particle-color: var(--cyan); }
-    .visual-account .visual-particle:nth-child(4) { left: 74%; top: 72%; --particle-color: var(--pink); }
-    .visual-account .visual-particle:nth-child(5) { left: 30%; top: 70%; --particle-color: var(--coral); }
+    .visual-account .mini-ledger-row:nth-child(1) { --mini-row-top: 27%; --mini-row-left: 11%; --mini-row-right: 24%; --mini-row-width: 46%; --mini-row-color: var(--green); }
+    .visual-account .mini-ledger-row:nth-child(2) { --mini-row-top: 42%; --mini-row-left: 18%; --mini-row-right: 12%; --mini-row-width: 62%; --mini-row-color: var(--accent); }
+    .visual-account .mini-ledger-row:nth-child(3) { --mini-row-top: 57%; --mini-row-left: 9%; --mini-row-right: 18%; --mini-row-width: 54%; --mini-row-color: var(--cyan); }
+    .visual-account .mini-ledger-row:nth-child(4) { --mini-row-top: 72%; --mini-row-left: 21%; --mini-row-right: 8%; --mini-row-width: 44%; --mini-row-color: var(--pink); }
 
-    .product-card.is-animating[data-product-card="cores"] .visual-dot {
-      animation: coreDot 5000ms ease-in-out 1 both;
+    .product-card.is-animating[data-product-card="cores"] .mini-stream {
+      animation: miniStreamResolve 5000ms ease-in-out 1 both;
     }
 
-    .product-card.is-animating[data-product-card="cores"] .visual-core {
-      animation: coreCenter 5000ms ease-in-out 1 both;
+    .product-card.is-animating[data-product-card="cores"] .mini-mark,
+    .product-card.is-animating[data-product-card="account"] .mini-mark {
+      animation: miniMarkSettle 5000ms ease-in-out 1 both;
     }
 
-    .product-card.is-animating[data-product-card="cores"] .visual-line {
-      animation: coreLineTrace 5000ms ease-in-out 1 both;
+    .product-card.is-animating[data-product-card="autostack"] .mini-barset span {
+      animation: miniBarGrow 5000ms ease-in-out 1 both;
     }
 
-    .product-card.is-animating[data-product-card="autostack"] .visual-stack {
-      animation: stackTravel 5000ms cubic-bezier(0.2, 0.8, 0.2, 1) 1 both;
+    .product-card.is-animating[data-product-card="autostack"] .mini-marker {
+      animation: miniMarkerClimb 5000ms cubic-bezier(0.2, 0.8, 0.2, 1) 1 both;
     }
 
-    .product-card.is-animating[data-product-card="autostack"] .visual-bar span {
-      animation: barCharge 5000ms ease-in-out 1 both;
+    .product-card.is-animating[data-product-card="account"] .mini-ledger-row::before {
+      animation: miniLedgerNode 5000ms ease-in-out 1 both;
     }
 
-    .product-card.is-animating[data-product-card="account"] .visual-orbit {
-      animation: orbitResolve 5000ms ease-in-out 1 both;
+    .product-card.is-animating[data-product-card="account"] .mini-ledger-row::after {
+      animation: miniLedgerFill 5000ms ease-in-out 1 both;
     }
 
-    .product-card.is-animating[data-product-card="account"] .visual-particle {
-      animation: particleCollect 5000ms ease-in-out 1 both;
+    @keyframes miniStreamResolve {
+      0% { transform: translateX(-28px) scaleX(0.52); opacity: 0.34; }
+      48%, 76% { transform: translateX(0) scaleX(1); opacity: 0.86; }
+      100% { transform: translateX(8px) scaleX(0.9); opacity: 0.72; }
     }
 
-    @keyframes coreDot {
-      0% { transform: translate(0, 0) scale(0.8); opacity: 0.7; }
-      44% { transform: translate(var(--dot-x, 0), var(--dot-y, 0)) scale(1); opacity: 1; }
-      72% { transform: translate(var(--dot-x, 0), var(--dot-y, 0)) scale(0.62); opacity: 0.68; }
-      100% { transform: translate(0, 0) scale(0.9); opacity: 0.92; }
+    @keyframes miniMarkSettle {
+      0% { transform: translate(-50%, -50%) rotate(-13deg) scale(0.9); opacity: 0.76; }
+      54% { transform: translate(-50%, -50%) rotate(-4deg) scale(1.05); opacity: 1; }
+      100% { transform: translate(-50%, -50%) rotate(-7deg) scale(1); opacity: 0.94; }
     }
 
-    @keyframes coreCenter {
-      0%, 100% { box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08); }
-      52% { box-shadow: inset 0 0 0 1px rgba(255,255,255,0.18), 0 0 34px rgba(143,70,255,0.28); }
+    @keyframes miniBarGrow {
+      0% { transform: scaleY(0.28); opacity: 0.38; }
+      58% { transform: scaleY(1); opacity: 0.94; }
+      100% { transform: scaleY(0.82); opacity: 0.78; }
     }
 
-    @keyframes coreLineTrace {
-      0% { opacity: 0.24; clip-path: inset(0 100% 0 0); }
-      42%, 72% { opacity: 0.82; clip-path: inset(0 0 0 0); }
-      100% { opacity: 0.42; clip-path: inset(0 18% 0 0); }
+    @keyframes miniMarkerClimb {
+      0% { transform: translate(-118px, 78px) scale(0.78); opacity: 0.52; }
+      62% { transform: translate(-20px, 12px) scale(1.04); opacity: 1; }
+      100% { transform: translate(0, 0) scale(0.96); opacity: 0.86; }
     }
 
-    @keyframes stackTravel {
-      0% { transform: translate(0, 0) scale(0.85); }
-      30% { transform: translate(76px, 0) scale(1); }
-      60% { transform: translate(116px, 40px) scale(0.92); }
-      100% { transform: translate(156px, 84px) scale(0.78); }
+    @keyframes miniLedgerNode {
+      0% { transform: translateX(0); opacity: 0.54; }
+      58% { transform: translateX(76px); opacity: 1; }
+      100% { transform: translateX(54px); opacity: 0.82; }
     }
 
-    @keyframes barCharge {
-      0% { transform: scaleX(0.14); opacity: 0.5; }
-      52% { transform: scaleX(1); opacity: 1; }
-      100% { transform: scaleX(0.78); opacity: 0.78; }
-    }
-
-    @keyframes orbitResolve {
-      0% { transform: translate(-50%, -50%) rotate(0deg) scale(0.88); }
-      68% { transform: translate(-50%, -50%) rotate(180deg) scale(1.06); }
-      100% { transform: translate(-50%, -50%) rotate(220deg) scale(1); }
-    }
-
-    @keyframes particleCollect {
-      0% { opacity: 0.72; }
-      48% { left: 50%; top: 50%; opacity: 1; }
-      100% { opacity: 0.9; }
+    @keyframes miniLedgerFill {
+      0% { transform: scaleX(0.18); opacity: 0.38; }
+      58% { transform: scaleX(1); opacity: 0.9; }
+      100% { transform: scaleX(0.72); opacity: 0.7; }
     }
 
     .featured-layout {
@@ -2365,12 +2329,12 @@
     }
 
     @media (max-width: 640px), (prefers-reduced-motion: reduce) {
-      .product-card.is-animating .visual-dot,
-      .product-card.is-animating .visual-core,
-      .product-card.is-animating .visual-stack,
-      .product-card.is-animating .visual-bar span,
-      .product-card.is-animating .visual-orbit,
-      .product-card.is-animating .visual-particle,
+      .product-card.is-animating .mini-stream,
+      .product-card.is-animating .mini-mark,
+      .product-card.is-animating .mini-barset span,
+      .product-card.is-animating .mini-marker,
+      .product-card.is-animating .mini-ledger-row::before,
+      .product-card.is-animating .mini-ledger-row::after,
       .signal-line,
       .signal-node,
       .signal-ring,
@@ -2492,15 +2456,11 @@
         <div class="product-grid">
           <article class="product-card is-active" data-product-card="cores" tabindex="0">
             <div class="card-visual visual-cores" aria-hidden="true">
-              <span class="visual-dot"></span>
-              <span class="visual-dot"></span>
-              <span class="visual-dot"></span>
-              <span class="visual-dot"></span>
-              <span class="visual-line"></span>
-              <span class="visual-line"></span>
-              <span class="visual-line"></span>
-              <span class="visual-line"></span>
-              <span class="visual-core"></span>
+              <span class="mini-stream"></span>
+              <span class="mini-stream"></span>
+              <span class="mini-stream"></span>
+              <span class="mini-stream"></span>
+              <span class="mini-mark"><span></span></span>
             </div>
             <div class="product-copy">
               <h3>Cores</h3>
@@ -2509,10 +2469,11 @@
           </article>
           <article class="product-card" data-product-card="autostack" tabindex="0">
             <div class="card-visual visual-autostack" aria-hidden="true">
-              <span class="visual-stack"></span>
-              <span class="visual-bar"><span></span></span>
-              <span class="visual-bar"><span></span></span>
-              <span class="visual-bar"><span></span></span>
+              <div class="mini-barset">
+                <span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+              </div>
+              <span class="mini-marker"></span>
             </div>
             <div class="product-copy">
               <h3>Auto Stack</h3>
@@ -2521,11 +2482,11 @@
           </article>
           <article class="product-card" data-product-card="account" tabindex="0">
             <div class="card-visual visual-account" aria-hidden="true">
-              <span class="visual-orbit"></span>
-              <span class="visual-particle"></span>
-              <span class="visual-particle"></span>
-              <span class="visual-particle"></span>
-              <span class="visual-particle"></span>
+              <span class="mini-ledger-row"></span>
+              <span class="mini-ledger-row"></span>
+              <span class="mini-ledger-row"></span>
+              <span class="mini-ledger-row"></span>
+              <span class="mini-mark"><span></span></span>
             </div>
             <div class="product-copy">
               <h3>Account</h3>
