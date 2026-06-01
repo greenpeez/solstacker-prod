@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SolStacker</title>
+  <link rel="icon" href='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"%3E%3Crect x="20" y="30" width="160" height="22" rx="3" fill="white"/%3E%3Crect x="26" y="68" width="154" height="22" rx="3" fill="white"/%3E%3Crect x="20" y="106" width="160" height="22" rx="3" fill="white"/%3E%3Crect x="32" y="144" width="148" height="22" rx="3" fill="white"/%3E%3C/svg%3E'>
   <style>
     :root {
       --bg: #050505;
@@ -575,6 +576,207 @@
       mask-image: radial-gradient(circle at 50% 50%, #000 0%, transparent 70%);
       z-index: 0;
     }
+
+    .scene-artifact {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .source-streams {
+      isolation: isolate;
+    }
+
+    .stream-band {
+      position: absolute;
+      left: var(--stream-left, 8%);
+      top: var(--stream-top, 50%);
+      width: var(--stream-width, 360px);
+      height: var(--stream-height, 18px);
+      clip-path: polygon(0 0, calc(100% - 32px) 0, 100% 50%, calc(100% - 32px) 100%, 0 100%, 18px 50%);
+      background: var(--stream-color, var(--accent));
+      box-shadow: 0 0 22px rgba(143,70,255,0.24);
+      opacity: var(--stream-opacity, 0.76);
+      transform: translateX(var(--stream-x, 0)) scaleX(var(--stream-scale, 1));
+      transform-origin: left center;
+    }
+
+    .stream-band::before {
+      content: "";
+      position: absolute;
+      inset: 42% 10% auto 8%;
+      height: 1px;
+      background: rgba(5,5,5,0.28);
+      opacity: 0.4;
+    }
+
+    .stream-one { --stream-top: 14%; --stream-left: 4%; --stream-width: 390px; --stream-color: var(--green); }
+    .stream-two { --stream-top: 29%; --stream-left: 14%; --stream-width: 430px; --stream-color: var(--accent); --stream-x: var(--stream-x-reverse, 0); }
+    .stream-three { --stream-top: 45%; --stream-left: 0%; --stream-width: 360px; --stream-color: var(--cyan); }
+    .stream-four { --stream-top: 61%; --stream-left: 20%; --stream-width: 340px; --stream-color: var(--pink); --stream-x: var(--stream-x-reverse, 0); }
+    .stream-five { --stream-top: 76%; --stream-left: 8%; --stream-width: 470px; --stream-color: var(--coral); }
+
+    .core-emblem,
+    .account-emblem {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 138px;
+      height: 104px;
+      transform: translate(-50%, -50%) rotate(var(--emblem-rotate, -5deg)) scale(var(--emblem-scale, 1));
+      filter: drop-shadow(0 22px 54px rgba(143,70,255,0.18));
+    }
+
+    .core-emblem::before,
+    .core-emblem::after,
+    .core-emblem span,
+    .account-emblem::before,
+    .account-emblem::after,
+    .account-emblem span {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 15px;
+      border-radius: 4px;
+      background: #fff;
+      box-shadow: 0 0 24px rgba(255,255,255,0.16);
+    }
+
+    .core-emblem::before,
+    .account-emblem::before {
+      top: 12px;
+    }
+
+    .core-emblem span,
+    .account-emblem span {
+      top: 44px;
+      left: 10px;
+      right: 10px;
+    }
+
+    .core-emblem::after,
+    .account-emblem::after {
+      top: 76px;
+    }
+
+    .compound-bars {
+      position: absolute;
+      left: 8%;
+      right: 9%;
+      bottom: 15%;
+      height: 58%;
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      align-items: end;
+      gap: 10px;
+      z-index: 2;
+    }
+
+    .compound-bars span {
+      --bar-h: 30%;
+      display: block;
+      height: var(--bar-h);
+      min-height: 12px;
+      border-radius: 999px 999px 2px 2px;
+      background: rgba(255,255,255,0.12);
+      position: relative;
+      overflow: hidden;
+      transform: scaleY(var(--model-scale, 0.72));
+      transform-origin: bottom center;
+      opacity: var(--model-opacity, 0.58);
+    }
+
+    .compound-bars span::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: var(--fill, 52%);
+      background: var(--bar-color, var(--accent));
+      box-shadow: 0 0 18px var(--bar-color, var(--accent));
+    }
+
+    .compound-bars span:nth-child(1) { --bar-h: 22%; --fill: 58%; --bar-color: var(--green); }
+    .compound-bars span:nth-child(2) { --bar-h: 28%; --fill: 62%; --bar-color: var(--green); }
+    .compound-bars span:nth-child(3) { --bar-h: 35%; --fill: 66%; --bar-color: var(--cyan); }
+    .compound-bars span:nth-child(4) { --bar-h: 41%; --fill: 70%; --bar-color: var(--cyan); }
+    .compound-bars span:nth-child(5) { --bar-h: 49%; --fill: 72%; --bar-color: var(--accent); }
+    .compound-bars span:nth-child(6) { --bar-h: 55%; --fill: 76%; --bar-color: var(--accent); }
+    .compound-bars span:nth-child(7) { --bar-h: 62%; --fill: 80%; --bar-color: var(--accent); }
+    .compound-bars span:nth-child(8) { --bar-h: 69%; --fill: 83%; --bar-color: var(--pink); }
+    .compound-bars span:nth-child(9) { --bar-h: 76%; --fill: 86%; --bar-color: var(--pink); }
+    .compound-bars span:nth-child(10) { --bar-h: 83%; --fill: 89%; --bar-color: var(--coral); }
+    .compound-bars span:nth-child(11) { --bar-h: 90%; --fill: 92%; --bar-color: var(--coral); }
+    .compound-bars span:nth-child(12) { --bar-h: 98%; --fill: 96%; --bar-color: var(--green); }
+
+    .projection-marker {
+      position: absolute;
+      left: var(--model-marker-x, 66%);
+      top: var(--model-marker-y, 28%);
+      width: 74px;
+      height: 74px;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 50%;
+      box-shadow: 0 0 32px rgba(143,70,255,0.24);
+      transform: translate(-50%, -50%) scale(var(--model-scale, 1));
+      z-index: 3;
+    }
+
+    .projection-marker::after {
+      content: "";
+      position: absolute;
+      inset: 26px;
+      border-radius: inherit;
+      background: var(--accent);
+      box-shadow: 0 0 22px rgba(143,70,255,0.56);
+    }
+
+    .account-ledger {
+      position: absolute;
+      inset: 4% 2%;
+      z-index: 2;
+    }
+
+    .account-row {
+      position: absolute;
+      left: var(--row-left, 8%);
+      right: var(--row-right, 8%);
+      top: var(--row-top, 50%);
+      height: 1px;
+      background: rgba(255,255,255,0.1);
+      overflow: visible;
+    }
+
+    .account-row::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: -5px;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: var(--row-color, var(--accent));
+      box-shadow: 0 0 18px var(--row-color, var(--accent));
+      transform: translateX(var(--account-node-x, 0));
+    }
+
+    .account-row::after {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: var(--row-width, 40%);
+      background: var(--row-color, var(--accent));
+      box-shadow: 0 0 18px var(--row-color, var(--accent));
+      transform: scaleX(var(--account-progress, 0.44));
+      transform-origin: left center;
+    }
+
+    .account-row.one { --row-top: 20%; --row-left: 2%; --row-right: 22%; --row-width: 48%; --row-color: var(--green); }
+    .account-row.two { --row-top: 36%; --row-left: 12%; --row-right: 8%; --row-width: 64%; --row-color: var(--accent); }
+    .account-row.three { --row-top: 52%; --row-left: 4%; --row-right: 16%; --row-width: 56%; --row-color: var(--cyan); }
+    .account-row.four { --row-top: 68%; --row-left: 18%; --row-right: 4%; --row-width: 44%; --row-color: var(--pink); }
+    .account-row.five { --row-top: 82%; --row-left: 8%; --row-right: 14%; --row-width: 72%; --row-color: var(--coral); }
 
     .scene-svg {
       position: absolute;
@@ -1488,6 +1690,7 @@
 
     .process-section {
       --process: 0;
+      margin-top: clamp(64px, 8vw, 112px);
     }
 
     .process-card {
@@ -1809,6 +2012,7 @@
     .stats-section {
       position: relative;
       overflow: hidden;
+      padding-bottom: calc(120px + var(--ticker-height));
       background:
         radial-gradient(circle at 80% 20%, rgba(143,70,255,0.12), transparent 24rem),
         radial-gradient(circle at 16% 78%, rgba(20,241,149,0.08), transparent 22rem),
@@ -2444,16 +2648,14 @@
                 <path class="scene-path" pathLength="1" style="--path-color:var(--coral);--path-glow:rgba(255,107,74,0.3);" d="M504 268 C424 250 374 214 300 180"></path>
                 <path class="scene-fill" d="M263 156 L337 156 L352 180 L337 204 L263 204 L248 180 Z"></path>
               </svg>
-              <div class="scene-line" style="--line-angle:214deg;--line-width:190px;--line-color:var(--green);"></div>
-              <div class="scene-line" style="--line-angle:148deg;--line-width:184px;--line-color:var(--cyan);"></div>
-              <div class="scene-line" style="--line-angle:326deg;--line-width:184px;--line-color:var(--pink);"></div>
-              <div class="scene-line" style="--line-angle:34deg;--line-width:176px;--line-color:var(--coral);"></div>
-              <div class="scene-core"></div>
-              <div class="scene-node source-one"></div>
-              <div class="scene-node source-two"></div>
-              <div class="scene-node source-three"></div>
-              <div class="scene-node source-four"></div>
-              <div class="scene-flow"><span></span></div>
+              <div class="scene-artifact source-streams" aria-hidden="true">
+                <span class="stream-band stream-one"></span>
+                <span class="stream-band stream-two"></span>
+                <span class="stream-band stream-three"></span>
+                <span class="stream-band stream-four"></span>
+                <span class="stream-band stream-five"></span>
+                <span class="core-emblem"><span></span></span>
+              </div>
             </div>
           </div>
         </div>
@@ -2524,14 +2726,14 @@
                 <path class="scene-path model-curve" pathLength="1" style="--path-color:var(--accent);--path-glow:rgba(143,70,255,0.42);" d="M72 282 C150 266 220 234 282 204 C358 168 422 118 528 74"></path>
                 <path class="scene-path" pathLength="1" style="--path-color:var(--green);--path-glow:rgba(20,241,149,0.28);--path-width:1.3;" d="M96 274 C176 252 226 226 292 204"></path>
               </svg>
-              <div class="scene-core"></div>
-              <div class="scene-node model-one"></div>
-              <div class="scene-node model-two"></div>
-              <div class="scene-node model-three"></div>
-              <div class="scene-line" style="--line-angle:198deg;--line-width:170px;--line-color:var(--green);"></div>
-              <div class="scene-line" style="--line-angle:72deg;--line-width:150px;--line-color:var(--accent);"></div>
-              <div class="scene-line" style="--line-angle:334deg;--line-width:164px;--line-color:var(--cyan);"></div>
-              <div class="scene-flow"><span></span></div>
+              <div class="scene-artifact model-artifact" aria-hidden="true">
+                <div class="compound-bars">
+                  <span></span><span></span><span></span><span></span>
+                  <span></span><span></span><span></span><span></span>
+                  <span></span><span></span><span></span><span></span>
+                </div>
+                <span class="projection-marker"></span>
+              </div>
             </div>
           </div>
         </div>
@@ -2726,16 +2928,14 @@
                 <path class="scene-path" pathLength="1" style="--path-color:var(--pink);--path-glow:rgba(255,79,216,0.32);" d="M500 270 C424 236 376 208 300 180"></path>
                 <path class="scene-fill" d="M250 134 H350 V154 H250 Z M230 172 H370 V192 H230 Z M250 210 H350 V230 H250 Z"></path>
               </svg>
-              <div class="scene-core"></div>
-              <div class="scene-node account-chip-one"></div>
-              <div class="scene-node account-chip-two"></div>
-              <div class="scene-node account-chip-three"></div>
-              <div class="scene-node account-chip-four"></div>
-              <div class="scene-line" style="--line-angle:216deg;--line-width:176px;--line-color:var(--accent);"></div>
-              <div class="scene-line" style="--line-angle:144deg;--line-width:172px;--line-color:var(--green);"></div>
-              <div class="scene-line" style="--line-angle:324deg;--line-width:168px;--line-color:var(--cyan);"></div>
-              <div class="scene-line" style="--line-angle:36deg;--line-width:168px;--line-color:var(--pink);"></div>
-              <div class="scene-flow"><span></span></div>
+              <div class="scene-artifact account-ledger" aria-hidden="true">
+                <span class="account-row one"></span>
+                <span class="account-row two"></span>
+                <span class="account-row three"></span>
+                <span class="account-row four"></span>
+                <span class="account-row five"></span>
+                <span class="account-emblem"><span></span></span>
+              </div>
             </div>
           </div>
         </div>
@@ -3038,6 +3238,7 @@
       if (!scene) return;
 
       const p = clamp(progress);
+      const eased = p * p * (3 - 2 * p);
       scene.style.setProperty("--p", p.toFixed(3));
       scene.style.setProperty("--core-scale", (0.86 + p * 0.22).toFixed(3));
       scene.style.setProperty("--line-scale", (0.18 + p * 0.88).toFixed(3));
@@ -3055,6 +3256,18 @@
       scene.style.setProperty("--scene-glow-blur", `${18 + p * 34}px`);
       scene.style.setProperty("--core-ring-rotate", `${p * 46}deg`);
       scene.style.setProperty("--core-ring-rotate-alt", `${p * -32}deg`);
+      scene.style.setProperty("--stream-x", `${-42 + eased * 72}px`);
+      scene.style.setProperty("--stream-x-reverse", `${34 - eased * 64}px`);
+      scene.style.setProperty("--stream-scale", (0.78 + eased * 0.22).toFixed(3));
+      scene.style.setProperty("--stream-opacity", (0.42 + eased * 0.46).toFixed(3));
+      scene.style.setProperty("--emblem-scale", (0.9 + eased * 0.12).toFixed(3));
+      scene.style.setProperty("--emblem-rotate", `${-8 + eased * 6}deg`);
+      scene.style.setProperty("--model-scale", (0.62 + eased * 0.38).toFixed(3));
+      scene.style.setProperty("--model-opacity", (0.34 + eased * 0.58).toFixed(3));
+      scene.style.setProperty("--model-marker-x", `${42 + eased * 34}%`);
+      scene.style.setProperty("--model-marker-y", `${62 - eased * 39}%`);
+      scene.style.setProperty("--account-progress", (0.2 + eased * 0.8).toFixed(3));
+      scene.style.setProperty("--account-node-x", `${eased * 84}px`);
 
       if (story.dataset.scrollScene === "cores") {
         scene.style.setProperty("--n1x", `${10 + p * 9}%`);
