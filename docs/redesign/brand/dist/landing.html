@@ -209,34 +209,6 @@
       margin-top: 34px;
     }
 
-    .stat-strip {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 56px;
-      max-width: 740px;
-    }
-
-    .stat {
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 15px;
-      background: rgba(255,255,255,0.035);
-    }
-
-    .stat strong {
-      display: block;
-      font-size: 22px;
-      line-height: 1.1;
-    }
-
-    .stat span {
-      display: block;
-      margin-top: 8px;
-      color: var(--faint);
-      font-size: 12px;
-    }
-
     .hero-visual {
       position: relative;
       min-height: 560px;
@@ -315,22 +287,6 @@
       margin-top: 10px;
       font-size: 22px;
     }
-
-    .mini-bars {
-      display: grid;
-      gap: 8px;
-      margin-top: 20px;
-    }
-
-    .mini-bar {
-      height: 8px;
-      overflow: hidden;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.08);
-      display: flex;
-    }
-
-    .mini-bar span { display: block; }
 
     .section {
       padding: 96px 0;
@@ -1651,7 +1607,6 @@
         min-height: 440px;
       }
 
-      .stat-strip,
       .product-grid,
       .featured-grid,
       .process-grid,
@@ -1690,7 +1645,6 @@
         width: 100%;
       }
 
-      .stat-strip,
       .product-grid,
       .featured-grid,
       .process-grid,
@@ -1799,10 +1753,9 @@
         SolStacker
       </a>
       <div class="nav-links">
-        <a href="#products">Overview</a>
+        <a href="#">Home</a>
         <a href="#cores">Cores</a>
         <a href="#products">Auto Stack</a>
-        <a href="#account">Account</a>
         <a href="#stats">Stats</a>
       </div>
       <a class="button" href="#cores">Launch App</a>
@@ -1819,12 +1772,6 @@
             <a class="button" href="#cores">Explore Cores</a>
             <a class="button secondary" href="#simulator">Model yield</a>
           </div>
-          <div class="stat-strip" aria-label="Protocol preview metrics">
-            <div class="stat"><strong>$842M</strong><span>Capital routed</span></div>
-            <div class="stat"><strong>12</strong><span>Curated Cores</span></div>
-            <div class="stat"><strong>8.9%</strong><span>Median Core APY</span></div>
-            <div class="stat"><strong>24h / 7d</strong><span>Account view</span></div>
-          </div>
         </div>
         <div class="hero-visual" aria-label="SolStacker product visual">
           <div class="orbit"></div>
@@ -1837,18 +1784,6 @@
             <div class="eyebrow">Balanced Core</div>
             <h3>Balanced</h3>
             <p class="muted">SOL, stable yield, and RWA exposure combined into one Core.</p>
-            <div class="mini-bars">
-              <div class="mini-bar">
-                <span style="width:42%;background:var(--accent)"></span>
-                <span style="width:28%;background:var(--cyan)"></span>
-                <span style="width:30%;background:var(--green)"></span>
-              </div>
-              <div class="mini-bar">
-                <span style="width:44%;background:var(--green)"></span>
-                <span style="width:36%;background:var(--coral)"></span>
-                <span style="width:20%;background:var(--danger)"></span>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -2163,10 +2098,9 @@
       </div>
       <div class="footer-col">
         <strong>Product</strong>
-        <a href="#">Overview</a>
+        <a href="#">Home</a>
         <a href="#cores">Cores</a>
         <a href="#products">Auto Stack</a>
-        <a href="#account">Account</a>
         <a href="#stats">Stats</a>
       </div>
       <div class="footer-col">
