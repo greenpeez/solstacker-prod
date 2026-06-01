@@ -833,176 +833,6 @@
       opacity: var(--story-flow-opacity, 0.45);
     }
 
-    .scene-node,
-    .scene-core,
-    .scene-metric,
-    .scene-chip {
-      position: absolute;
-      border: 0;
-      background: transparent;
-      z-index: 2;
-    }
-
-    .scene-node {
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      color: #fff;
-      font-size: 11px;
-      font-weight: 680;
-      box-shadow: none;
-    }
-
-    .scene-node::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border: 1px solid var(--node-color, var(--accent));
-      border-radius: inherit;
-      opacity: var(--node-ring-opacity, 0.28);
-      box-shadow: 0 0 34px var(--node-color, var(--accent));
-    }
-
-    .scene-node::after {
-      content: "";
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      background: var(--node-color, var(--accent));
-      box-shadow: 0 0 24px var(--node-color, var(--accent)), 0 0 56px var(--node-color, var(--accent));
-      transform: scale(var(--node-dot-scale, 0.72));
-    }
-
-    .scene-core {
-      left: 50%;
-      top: 50%;
-      width: 124px;
-      height: 124px;
-      border-radius: 50%;
-      transform: translate(-50%, -50%) scale(var(--core-scale, 1));
-      display: grid;
-      place-items: center;
-      color: #fff;
-      font-weight: 720;
-      background:
-        radial-gradient(circle, rgba(255,255,255,0.08), rgba(255,255,255,0.01) 64%, transparent 66%);
-      box-shadow: 0 0 var(--scene-glow-blur, 18px) rgba(143,70,255,0.18);
-    }
-
-    .scene-core::before,
-    .scene-core::after {
-      content: "";
-      position: absolute;
-      inset: -28px;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 50%;
-      transform: rotate(var(--core-ring-rotate, 0deg));
-      border-left-color: rgba(143,70,255,0.36);
-      border-bottom-color: rgba(20,241,149,0.2);
-    }
-
-    .scene-core::after {
-      inset: -56px;
-      border-color: rgba(255,255,255,0.055);
-      border-right-color: rgba(0,194,255,0.22);
-      transform: rotate(var(--core-ring-rotate-alt, 0deg));
-    }
-
-    .scene-core span {
-      position: relative;
-      z-index: 1;
-    }
-
-    .scene-line {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: var(--line-width, 160px);
-      height: 1px;
-      transform-origin: left center;
-      transform: rotate(var(--line-angle, 0deg)) scaleX(var(--line-scale, 0.2));
-      background: linear-gradient(90deg, transparent, var(--line-color, rgba(255,255,255,0.24)), transparent);
-      opacity: var(--line-opacity, 0.35);
-      box-shadow: 0 0 18px var(--line-color, rgba(255,255,255,0.12));
-      z-index: 1;
-    }
-
-    .scene-flow {
-      position: absolute;
-      inset: auto 15% 20% 15%;
-      height: 1px;
-      overflow: hidden;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.06);
-      z-index: 3;
-    }
-
-    .scene-flow span {
-      display: block;
-      width: var(--flow-width, 36%);
-      height: 100%;
-      border-radius: inherit;
-      background: var(--accent);
-      box-shadow: 0 0 22px rgba(143,70,255,0.55);
-      transform: translateX(var(--flow-x, 0));
-    }
-
-    .scene-metric {
-      width: 124px;
-      height: 74px;
-      border-radius: var(--radius);
-      display: grid;
-      place-content: center;
-      gap: 4px;
-      color: var(--muted);
-      font-size: 10px;
-    }
-
-    .scene-metric strong {
-      color: #fff;
-      font-size: 20px;
-      line-height: 1;
-    }
-
-    .scene-chip {
-      min-width: 96px;
-      min-height: 34px;
-      border-radius: 999px;
-      display: grid;
-      place-items: center;
-      color: var(--muted);
-      font-size: 11px;
-    }
-
-    .story-visual[data-scene="cores"] .source-one { left: var(--n1x, 13%); top: var(--n1y, 22%); --node-color: var(--green); }
-    .story-visual[data-scene="cores"] .source-two { left: var(--n2x, 16%); top: var(--n2y, 64%); --node-color: var(--cyan); }
-    .story-visual[data-scene="cores"] .source-three { left: var(--n3x, 73%); top: var(--n3y, 24%); --node-color: var(--pink); }
-    .story-visual[data-scene="cores"] .source-four { left: var(--n4x, 76%); top: var(--n4y, 62%); --node-color: var(--coral); }
-
-    .story-visual[data-scene="model"] .scene-core {
-      width: 154px;
-      height: 154px;
-    }
-
-    .story-visual[data-scene="model"] .model-one { left: 12%; top: var(--m1y, 22%); --node-color: var(--green); }
-    .story-visual[data-scene="model"] .model-two { left: 40%; top: var(--m2y, 56%); --node-color: var(--accent); }
-    .story-visual[data-scene="model"] .model-three { right: 12%; top: var(--m3y, 28%); --node-color: var(--cyan); }
-
-    .story-visual[data-scene="model"] .model-chip-one { left: 16%; bottom: 22%; }
-    .story-visual[data-scene="model"] .model-chip-two { right: 18%; bottom: 20%; }
-
-    .story-visual[data-scene="account"] .scene-core {
-      width: 132px;
-      height: 132px;
-    }
-
-    .story-visual[data-scene="account"] .account-chip-one { left: var(--a1x, 12%); top: var(--a1y, 22%); --node-color: var(--accent); }
-    .story-visual[data-scene="account"] .account-chip-two { left: var(--a2x, 18%); bottom: var(--a2y, 20%); --node-color: var(--green); }
-    .story-visual[data-scene="account"] .account-chip-three { right: var(--a3x, 16%); top: var(--a3y, 24%); --node-color: var(--cyan); }
-    .story-visual[data-scene="account"] .account-chip-four { right: var(--a4x, 20%); bottom: var(--a4y, 22%); --node-color: var(--pink); }
-
     .light .section-head p,
     .light .muted {
       color: rgba(5,5,5,0.62);
@@ -3240,22 +3070,12 @@
       const p = clamp(progress);
       const eased = p * p * (3 - 2 * p);
       scene.style.setProperty("--p", p.toFixed(3));
-      scene.style.setProperty("--core-scale", (0.86 + p * 0.22).toFixed(3));
-      scene.style.setProperty("--line-scale", (0.18 + p * 0.88).toFixed(3));
-      scene.style.setProperty("--line-opacity", (0.05 + p * 0.18).toFixed(3));
-      scene.style.setProperty("--flow-width", `${30 + p * 36}%`);
-      scene.style.setProperty("--flow-x", `${-18 + p * 78}%`);
       scene.style.setProperty("--story-glow-x", `${28 + p * 18}%`);
       scene.style.setProperty("--story-accent-x", `${72 - p * 14}%`);
       scene.style.setProperty("--story-field-rotate", `${-7 + p * 16}deg`);
       scene.style.setProperty("--story-field-scale", (0.92 + p * 0.08).toFixed(3));
       scene.style.setProperty("--story-flow-scale", (0.18 + p * 0.82).toFixed(3));
       scene.style.setProperty("--story-flow-opacity", (0.45 + p * 0.45).toFixed(3));
-      scene.style.setProperty("--node-ring-opacity", (0.36 + p * 0.42).toFixed(3));
-      scene.style.setProperty("--node-dot-scale", (0.72 + p * 0.28).toFixed(3));
-      scene.style.setProperty("--scene-glow-blur", `${18 + p * 34}px`);
-      scene.style.setProperty("--core-ring-rotate", `${p * 46}deg`);
-      scene.style.setProperty("--core-ring-rotate-alt", `${p * -32}deg`);
       scene.style.setProperty("--stream-x", `${-42 + eased * 72}px`);
       scene.style.setProperty("--stream-x-reverse", `${34 - eased * 64}px`);
       scene.style.setProperty("--stream-scale", (0.78 + eased * 0.22).toFixed(3));
@@ -3268,34 +3088,6 @@
       scene.style.setProperty("--model-marker-y", `${62 - eased * 39}%`);
       scene.style.setProperty("--account-progress", (0.2 + eased * 0.8).toFixed(3));
       scene.style.setProperty("--account-node-x", `${eased * 84}px`);
-
-      if (story.dataset.scrollScene === "cores") {
-        scene.style.setProperty("--n1x", `${10 + p * 9}%`);
-        scene.style.setProperty("--n1y", `${18 + p * 5}%`);
-        scene.style.setProperty("--n2x", `${10 + p * 12}%`);
-        scene.style.setProperty("--n2y", `${70 - p * 10}%`);
-        scene.style.setProperty("--n3x", `${82 - p * 8}%`);
-        scene.style.setProperty("--n3y", `${18 + p * 6}%`);
-        scene.style.setProperty("--n4x", `${82 - p * 10}%`);
-        scene.style.setProperty("--n4y", `${72 - p * 10}%`);
-      }
-
-      if (story.dataset.scrollScene === "model") {
-        scene.style.setProperty("--m1y", `${16 + p * 8}%`);
-        scene.style.setProperty("--m2y", `${64 - p * 10}%`);
-        scene.style.setProperty("--m3y", `${18 + p * 12}%`);
-      }
-
-      if (story.dataset.scrollScene === "account") {
-        scene.style.setProperty("--a1x", `${8 + p * 8}%`);
-        scene.style.setProperty("--a1y", `${16 + p * 8}%`);
-        scene.style.setProperty("--a2x", `${10 + p * 8}%`);
-        scene.style.setProperty("--a2y", `${14 + p * 10}%`);
-        scene.style.setProperty("--a3x", `${8 + p * 8}%`);
-        scene.style.setProperty("--a3y", `${16 + p * 8}%`);
-        scene.style.setProperty("--a4x", `${10 + p * 10}%`);
-        scene.style.setProperty("--a4y", `${14 + p * 10}%`);
-      }
     }
 
     function updateScrollScenes() {
