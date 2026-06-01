@@ -2126,12 +2126,42 @@
       };
     }
 
+    function getSimulatorValueBounds() {
+      const apys = coreOptions.map((option) => Number(option.dataset.apy));
+      const years = segments.map((segment) => Number(segment.dataset.years));
+      const minLump = Number(lump.min);
+      const maxLump = Number(lump.max);
+      const minMonthly = Number(monthly.min);
+      const maxMonthly = Number(monthly.max);
+      const values = [];
+
+      apys.forEach((apy) => {
+        years.forEach((year) => {
+          values.push(project(minLump, minMonthly, apy, year).value);
+          values.push(project(maxLump, maxMonthly, apy, year).value);
+        });
+      });
+
+      return {
+        min: Math.max(1, Math.min(...values)),
+        max: Math.max(...values),
+      };
+    }
+
+    const simulatorValueBounds = getSimulatorValueBounds();
+
+    function getProjectedValueProgress(value) {
+      const min = simulatorValueBounds.min;
+      const max = Math.max(min + 1, simulatorValueBounds.max);
+      const normalized = (Math.log(Math.max(value, min)) - Math.log(min)) / (Math.log(max) - Math.log(min));
+      return 0.08 + clamp(normalized) * 0.84;
+    }
+
     function update() {
       const initialDeposit = Number(lump.value);
       const monthlyDeposit = Number(monthly.value);
       const result = project(initialDeposit, monthlyDeposit, state.apy, state.years);
-      const yieldRatio = Math.max(0, Math.min(1, result.yieldEarned / Math.max(result.value, 1)));
-      const progress = 0.12 + yieldRatio * 0.76;
+      const progress = getProjectedValueProgress(result.value);
 
       lumpOut.textContent = formatter.format(initialDeposit);
       monthlyOut.textContent = formatter.format(monthlyDeposit);
