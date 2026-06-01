@@ -25,6 +25,7 @@
       --danger: #f05d5e;
       --radius: 8px;
       --page: 1200px;
+      --ticker-height: 42px;
     }
 
     * { box-sizing: border-box; }
@@ -41,6 +42,7 @@
       margin: 0;
       min-width: 320px;
       overflow-x: hidden;
+      padding-bottom: var(--ticker-height);
       background:
         radial-gradient(circle at 18% 10%, rgba(143, 70, 255, 0.16), transparent 28rem),
         radial-gradient(circle at 82% 14%, rgba(0, 194, 255, 0.12), transparent 24rem),
@@ -142,7 +144,8 @@
 
     .button:hover,
     .button:focus-visible {
-      background: var(--accent);
+      border-color: rgba(255,255,255,0.86);
+      background: #050505;
       color: #fff;
       transform: translateY(-1px);
     }
@@ -585,7 +588,7 @@
 
     .product-grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 14px;
     }
 
@@ -670,7 +673,6 @@
     .visual-core,
     .visual-bar,
     .visual-ring,
-    .visual-signal,
     .visual-orbit,
     .visual-particle,
     .visual-stack,
@@ -755,23 +757,6 @@
       box-shadow: 0 0 22px rgba(143,70,255,0.6);
     }
 
-    .visual-signal {
-      left: 22px;
-      right: 22px;
-      height: 1px;
-      background: rgba(255,255,255,0.1);
-    }
-
-    .visual-signal::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      width: 28%;
-      height: 100%;
-      background: var(--green);
-      box-shadow: 0 0 14px rgba(20,241,149,0.5);
-    }
-
     .visual-cores .visual-dot:nth-child(1) { left: 18%; top: 24%; --dot-color: var(--green); }
     .visual-cores .visual-dot:nth-child(2) { left: 18%; bottom: 24%; --dot-color: var(--cyan); }
     .visual-cores .visual-dot:nth-child(3) { right: 18%; top: 30%; --dot-color: var(--pink); }
@@ -831,14 +816,6 @@
     .visual-account .visual-particle:nth-child(4) { left: 74%; top: 72%; --particle-color: var(--pink); }
     .visual-account .visual-particle:nth-child(5) { left: 30%; top: 70%; --particle-color: var(--coral); }
 
-    .visual-stats .visual-signal:nth-child(1) { top: 48px; }
-    .visual-stats .visual-signal:nth-child(2) { top: 76px; }
-    .visual-stats .visual-signal:nth-child(3) { top: 104px; }
-    .visual-stats .visual-signal:nth-child(4) { top: 132px; }
-    .visual-stats .visual-signal:nth-child(2)::after { width: 42%; background: var(--accent); box-shadow: 0 0 14px rgba(143,70,255,0.5); }
-    .visual-stats .visual-signal:nth-child(3)::after { width: 58%; background: var(--pink); box-shadow: 0 0 14px rgba(255,79,216,0.45); }
-    .visual-stats .visual-signal:nth-child(4)::after { width: 34%; background: var(--cyan); box-shadow: 0 0 14px rgba(0,194,255,0.45); }
-
     .product-card.is-animating[data-product-card="cores"] .visual-dot {
       animation: coreDot 5000ms ease-in-out 1 both;
     }
@@ -861,10 +838,6 @@
 
     .product-card.is-animating[data-product-card="account"] .visual-particle {
       animation: particleCollect 5000ms ease-in-out 1 both;
-    }
-
-    .product-card.is-animating[data-product-card="stats"] .visual-signal::after {
-      animation: signalSweep 5000ms ease-in-out 1 both;
     }
 
     @keyframes coreDot {
@@ -902,12 +875,6 @@
       0% { opacity: 0.72; }
       48% { left: 50%; top: 50%; opacity: 1; }
       100% { opacity: 0.9; }
-    }
-
-    @keyframes signalSweep {
-      0% { transform: translateX(0); opacity: 0.45; }
-      52% { transform: translateX(190%); opacity: 1; }
-      100% { transform: translateX(0); opacity: 0.75; }
     }
 
     .featured-layout {
@@ -1155,14 +1122,14 @@
 
     .core-option:hover,
     .core-option:focus-visible {
-      border-color: rgba(143,70,255,0.62);
+      border-color: rgba(255,255,255,0.72);
       color: #fff;
     }
 
     .core-option.active {
-      border-color: rgba(143,70,255,0.78);
-      background: rgba(143,70,255,0.16);
-      color: #fff;
+      border-color: #fff;
+      background: #fff;
+      color: #050505;
     }
 
     .segments {
@@ -1564,6 +1531,88 @@
       color: #fff;
     }
 
+    .yield-ticker {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 40;
+      height: var(--ticker-height);
+      overflow: hidden;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      background: rgba(11, 12, 16, 0.96);
+      box-shadow: 0 -18px 34px rgba(0,0,0,0.34);
+      backdrop-filter: blur(16px);
+      user-select: none;
+    }
+
+    .yield-ticker::before,
+    .yield-ticker::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      z-index: 2;
+      width: min(84px, 18vw);
+      pointer-events: none;
+    }
+
+    .yield-ticker::before {
+      left: 0;
+      background: linear-gradient(90deg, #0b0c10, rgba(11,12,16,0));
+    }
+
+    .yield-ticker::after {
+      right: 0;
+      background: linear-gradient(270deg, #0b0c10, rgba(11,12,16,0));
+    }
+
+    .ticker-track {
+      display: flex;
+      width: max-content;
+      height: 100%;
+      animation: tickerScroll 48s linear infinite;
+    }
+
+    .ticker-group {
+      display: flex;
+      align-items: center;
+      gap: 44px;
+      padding-right: 44px;
+      white-space: nowrap;
+    }
+
+    .ticker-item {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 12px;
+      color: rgba(255,255,255,0.86);
+      font-size: 14px;
+      font-weight: 660;
+      line-height: var(--ticker-height);
+    }
+
+    .ticker-source {
+      color: rgba(255,255,255,0.4);
+      font-family: "IBM Plex Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      font-weight: 620;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+
+    .ticker-yield {
+      color: var(--green);
+      font-family: "IBM Plex Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-weight: 740;
+      letter-spacing: 0.02em;
+    }
+
+    @keyframes tickerScroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
     @media (max-width: 980px) {
       .nav-links {
         display: none;
@@ -1619,6 +1668,10 @@
       .wrap {
         width: calc(100% - 28px);
         max-width: var(--page);
+      }
+
+      :root {
+        --ticker-height: 40px;
       }
 
       .hero,
@@ -1691,6 +1744,21 @@
       footer .wrap {
         grid-template-columns: 1fr;
       }
+
+      .ticker-group {
+        gap: 28px;
+        padding-right: 28px;
+      }
+
+      .ticker-item {
+        gap: 9px;
+        font-size: 12px;
+      }
+
+      .ticker-source {
+        font-size: 10px;
+        letter-spacing: 0.18em;
+      }
     }
 
     @media (max-width: 640px), (prefers-reduced-motion: reduce) {
@@ -1700,12 +1768,18 @@
       .product-card.is-animating .visual-bar span,
       .product-card.is-animating .visual-orbit,
       .product-card.is-animating .visual-particle,
-      .product-card.is-animating .visual-signal::after,
       .process-card.is-active .journey-dot,
       .process-card.is-active .journey-ring,
       .process-card.is-active .journey-line,
       .process-card.is-active .journey-block {
         animation: none !important;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ticker-track {
+        animation: none !important;
+        transform: translateX(0);
       }
     }
   </style>
@@ -1844,18 +1918,6 @@
             <div class="product-copy">
               <h3>Account</h3>
               <p>See every position, pending execution, allocation, activity, and earned yield from one connected-wallet view.</p>
-            </div>
-          </article>
-          <article class="product-card" data-product-card="stats" tabindex="0" id="stats">
-            <div class="card-visual visual-stats" aria-hidden="true">
-              <span class="visual-signal"></span>
-              <span class="visual-signal"></span>
-              <span class="visual-signal"></span>
-              <span class="visual-signal"></span>
-            </div>
-            <div class="product-copy">
-              <h3>Stats</h3>
-              <p>Review TVL, APY history, volume, source mix, and Core composition before allocating.</p>
             </div>
           </article>
         </div>
@@ -2131,6 +2193,31 @@
       </div>
     </div>
   </footer>
+
+  <aside class="yield-ticker" aria-label="Solana yield source ticker">
+    <div class="ticker-track" aria-hidden="true">
+      <div class="ticker-group">
+        <span class="ticker-item"><span class="ticker-source">Kamino</span><span>USDC Lend</span><span class="ticker-yield">9.42%</span></span>
+        <span class="ticker-item"><span class="ticker-source">Marinade</span><span>mSOL Native</span><span class="ticker-yield">7.18%</span></span>
+        <span class="ticker-item"><span class="ticker-source">Drift</span><span>USDC Insurance</span><span class="ticker-yield">12.4%</span></span>
+        <span class="ticker-item"><span class="ticker-source">Elemental</span><span>SOL Looped</span><span class="ticker-yield">13.2%</span></span>
+        <span class="ticker-item"><span class="ticker-source">Sanctum</span><span>INF LST</span><span class="ticker-yield">8.71%</span></span>
+        <span class="ticker-item"><span class="ticker-source">Loopscale</span><span>SOL Supply</span><span class="ticker-yield">10.6%</span></span>
+        <span class="ticker-item"><span class="ticker-source">Jupiter</span><span>JLP</span><span class="ticker-yield">14.8%</span></span>
+        <span class="ticker-item"><span class="ticker-source">Marginfi</span><span>USDC Loop</span><span class="ticker-yield">11.9%</span></span>
+      </div>
+      <div class="ticker-group">
+        <span class="ticker-item"><span class="ticker-source">Kamino</span><span>USDC Lend</span><span class="ticker-yield">9.42%</span></span>
+        <span class="ticker-item"><span class="ticker-source">Marinade</span><span>mSOL Native</span><span class="ticker-yield">7.18%</span></span>
+        <span class="ticker-item"><span class="ticker-source">Drift</span><span>USDC Insurance</span><span class="ticker-yield">12.4%</span></span>
+        <span class="ticker-item"><span class="ticker-source">Elemental</span><span>SOL Looped</span><span class="ticker-yield">13.2%</span></span>
+        <span class="ticker-item"><span class="ticker-source">Sanctum</span><span>INF LST</span><span class="ticker-yield">8.71%</span></span>
+        <span class="ticker-item"><span class="ticker-source">Loopscale</span><span>SOL Supply</span><span class="ticker-yield">10.6%</span></span>
+        <span class="ticker-item"><span class="ticker-source">Jupiter</span><span>JLP</span><span class="ticker-yield">14.8%</span></span>
+        <span class="ticker-item"><span class="ticker-source">Marginfi</span><span>USDC Loop</span><span class="ticker-yield">11.9%</span></span>
+      </div>
+    </div>
+  </aside>
 
   <script>
     const state = {
