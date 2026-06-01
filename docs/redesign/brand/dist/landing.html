@@ -151,16 +151,16 @@
     }
 
     .button.secondary {
-      background: transparent;
-      color: #fff;
-      border-color: var(--line-strong);
+      background: #fff;
+      color: #050505;
+      border-color: #fff;
     }
 
     .button.secondary:hover,
     .button.secondary:focus-visible {
-      background: #fff;
-      color: #050505;
-      border-color: #fff;
+      background: #050505;
+      color: #fff;
+      border-color: rgba(255,255,255,0.86);
     }
 
     .hero {
@@ -212,37 +212,37 @@
     .hero-visual {
       position: relative;
       min-height: 560px;
-      overflow: hidden;
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
+      overflow: visible;
       isolation: isolate;
-      background:
-        radial-gradient(circle at 76% 18%, rgba(143,70,255,0.14), transparent 17rem),
-        radial-gradient(circle at 22% 84%, rgba(20,241,149,0.1), transparent 15rem),
-        #0d0d0c;
-      box-shadow: 0 24px 80px rgba(0,0,0,0.42);
     }
 
     .hero-visual::before {
       content: "";
       position: absolute;
-      inset: 0;
-      opacity: 0.2;
+      inset: -64px -48px;
+      opacity: 0.72;
       background-image:
-        linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px);
-      background-size: 38px 38px;
-      mask-image: radial-gradient(circle at 56% 47%, #000 0%, transparent 74%);
+        radial-gradient(circle at 68% 26%, rgba(143,70,255,0.2), transparent 18rem),
+        radial-gradient(circle at 16% 72%, rgba(20,241,149,0.12), transparent 16rem),
+        radial-gradient(circle at 84% 76%, rgba(255,79,216,0.11), transparent 14rem),
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.032) 1px, transparent 1px);
+      background-size: auto, auto, auto, 46px 46px, 46px 46px;
+      mask-image: radial-gradient(circle at 54% 48%, #000 0%, rgba(0,0,0,0.74) 48%, transparent 77%);
       z-index: 0;
     }
 
     .hero-visual::after {
       content: "";
       position: absolute;
-      inset: 10%;
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 42%;
-      transform: rotate(-18deg);
+      left: 12%;
+      right: 2%;
+      bottom: 116px;
+      height: 1px;
+      border: 0;
+      border-radius: 999px;
+      background: linear-gradient(90deg, transparent, rgba(20,241,149,0.42), rgba(143,70,255,0.72), transparent);
+      box-shadow: 0 0 26px rgba(143,70,255,0.3);
       z-index: 0;
     }
 
@@ -255,9 +255,9 @@
     }
 
     .signal-ring {
-      border: 1px solid rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.1);
       border-radius: 50%;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.035);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.025), 0 0 70px rgba(143,70,255,0.08);
     }
 
     .hero-ring-primary {
@@ -294,7 +294,7 @@
     .signal-line {
       height: 1px;
       transform-origin: left center;
-      background: var(--signal-color, rgba(255,255,255,0.22));
+      background: linear-gradient(90deg, transparent, var(--signal-color, rgba(255,255,255,0.22)), transparent);
       box-shadow: 0 0 18px var(--signal-glow, rgba(255,255,255,0.12));
     }
 
@@ -353,11 +353,12 @@
     .hero-node-four { right: 46px; bottom: 112px; --node-color: var(--coral); animation: nodeFloat 6000ms ease-in-out infinite alternate-reverse; }
 
     .signal-band {
-      left: 54px;
-      right: 54px;
-      height: 18px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.07);
+      left: 34px;
+      right: auto;
+      width: var(--band-width, 390px);
+      height: 17px;
+      clip-path: polygon(0 0, calc(100% - 28px) 0, 100% 50%, calc(100% - 28px) 100%, 0 100%, 14px 50%);
+      background: rgba(255,255,255,0.045);
       overflow: hidden;
       opacity: 0.72;
     }
@@ -372,46 +373,49 @@
       animation: bandResolve 5200ms ease-in-out infinite;
     }
 
-    .hero-band-one { bottom: 118px; --band-fill: 44%; --band-color: var(--green); }
-    .hero-band-two { bottom: 88px; --band-fill: 62%; --band-color: var(--accent); }
-    .hero-band-three { bottom: 58px; --band-fill: 36%; --band-color: var(--cyan); }
+    .hero-band-one { bottom: 152px; --band-width: 342px; --band-fill: 44%; --band-color: var(--green); }
+    .hero-band-two { bottom: 116px; --band-width: 430px; --band-fill: 62%; --band-color: var(--accent); }
+    .hero-band-three { bottom: 80px; --band-width: 302px; --band-fill: 36%; --band-color: var(--cyan); }
 
-    .core-panel {
+    .hero-stack-mark {
       position: absolute;
-      left: 34px;
-      bottom: 34px;
-      width: min(340px, calc(100% - 68px));
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: rgba(5,5,5,0.78);
-      padding: 20px;
-      backdrop-filter: blur(14px);
-      box-shadow: 0 20px 64px rgba(0,0,0,0.38);
+      left: 50%;
+      top: 48%;
+      width: 142px;
+      height: 112px;
+      transform: translate(-50%, -50%) rotate(-7deg);
       z-index: 2;
+      animation: heroMarkFloat 6200ms ease-in-out infinite alternate;
     }
 
-    .core-panel h3 {
-      margin-top: 10px;
-      font-size: 22px;
+    .hero-stack-mark::before,
+    .hero-stack-mark::after,
+    .hero-stack-mark span {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 18px;
+      border-radius: 4px;
+      background: #fff;
+      box-shadow: 0 0 28px rgba(255,255,255,0.18);
     }
 
-    .core-signal {
-      display: grid;
-      grid-template-columns: 1.1fr 0.8fr 1.3fr;
-      gap: 8px;
-      margin-top: 18px;
+    .hero-stack-mark::before {
+      top: 8px;
+      width: 100%;
     }
 
-    .core-signal span {
-      height: 2px;
-      border-radius: 999px;
-      background: var(--signal, var(--accent));
-      box-shadow: 0 0 18px var(--signal, var(--accent));
+    .hero-stack-mark span {
+      top: 45px;
+      left: 12px;
+      width: 126px;
     }
 
-    .core-signal span:nth-child(1) { --signal: var(--green); }
-    .core-signal span:nth-child(2) { --signal: var(--cyan); }
-    .core-signal span:nth-child(3) { --signal: var(--accent); }
+    .hero-stack-mark::after {
+      top: 82px;
+      width: 100%;
+    }
 
     @keyframes signalTrace {
       0%, 100% { clip-path: inset(0 84% 0 0); opacity: 0.42; }
@@ -431,6 +435,11 @@
     @keyframes heroRingDrift {
       from { transform: rotate(-10deg) scale(0.98); }
       to { transform: rotate(8deg) scale(1.04); }
+    }
+
+    @keyframes heroMarkFloat {
+      from { transform: translate(-50%, -50%) rotate(-9deg) scale(0.98); filter: drop-shadow(0 18px 44px rgba(143,70,255,0.12)); }
+      to { transform: translate(-50%, calc(-50% - 14px)) rotate(-4deg) scale(1.02); filter: drop-shadow(0 24px 60px rgba(20,241,149,0.12)); }
     }
 
     .section {
@@ -516,16 +525,9 @@
     .story-visual {
       --p: 0;
       min-height: 360px;
-      overflow: hidden;
+      overflow: visible;
       position: relative;
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
       isolation: isolate;
-      background:
-        radial-gradient(circle at var(--story-glow-x, 38%) 72%, rgba(20,241,149,0.12), transparent 18rem),
-        radial-gradient(circle at var(--story-accent-x, 64%) 22%, rgba(143,70,255,0.16), transparent 19rem),
-        #0d0d0c;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 24px 70px rgba(0,0,0,0.24);
     }
 
     .story-visual::before,
@@ -537,19 +539,25 @@
     }
 
     .story-visual::before {
-      inset: 42px 13%;
-      border: 1px solid rgba(255,255,255,0.065);
-      border-radius: 999px;
+      inset: -14% -10%;
+      border: 0;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at var(--story-glow-x, 38%) 72%, rgba(20,241,149,0.13), transparent 17rem),
+        radial-gradient(circle at var(--story-accent-x, 64%) 22%, rgba(143,70,255,0.18), transparent 18rem),
+        radial-gradient(circle at 80% 60%, rgba(255,79,216,0.07), transparent 14rem);
       transform: rotate(var(--story-field-rotate, -7deg)) scale(var(--story-field-scale, 0.92));
+      filter: blur(2px);
+      opacity: 0.86;
     }
 
     .story-visual::after {
-      left: 12%;
-      right: 12%;
-      bottom: 86px;
-      height: 2px;
+      left: 8%;
+      right: 8%;
+      bottom: 19%;
+      height: 1px;
       border-radius: 999px;
-      background: var(--accent);
+      background: linear-gradient(90deg, transparent, rgba(20,241,149,0.36), var(--accent), transparent);
       box-shadow: 0 0 24px rgba(143,70,255,0.45);
       transform-origin: left center;
       transform: scaleX(var(--story-flow-scale, 0.18));
@@ -568,14 +576,68 @@
       z-index: 0;
     }
 
+    .scene-svg {
+      position: absolute;
+      inset: -6% -4%;
+      width: 108%;
+      height: 112%;
+      overflow: visible;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .scene-svg .ghost {
+      fill: none;
+      stroke: rgba(255,255,255,0.08);
+      stroke-width: 1;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .scene-path {
+      fill: none;
+      stroke: var(--path-color, var(--accent));
+      stroke-width: var(--path-width, 1.8);
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      vector-effect: non-scaling-stroke;
+      stroke-dasharray: 1;
+      stroke-dashoffset: calc(1 - var(--p, 0));
+      filter: drop-shadow(0 0 8px var(--path-glow, rgba(143,70,255,0.36)));
+      opacity: 0.88;
+    }
+
+    .scene-path.soft {
+      opacity: 0.36;
+      stroke-width: 1;
+      stroke-dashoffset: 0;
+      filter: none;
+    }
+
+    .scene-fill {
+      fill: rgba(255,255,255,0.035);
+      stroke: rgba(255,255,255,0.11);
+      stroke-width: 1;
+      vector-effect: non-scaling-stroke;
+      opacity: 0.78;
+    }
+
+    .model-curve {
+      stroke-width: 2.4;
+    }
+
+    .model-band {
+      fill: rgba(143,70,255,0.055);
+      stroke: none;
+      opacity: var(--story-flow-opacity, 0.45);
+    }
+
     .scene-node,
     .scene-core,
     .scene-metric,
     .scene-chip {
       position: absolute;
-      border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(255,255,255,0.06);
-      backdrop-filter: blur(8px);
+      border: 0;
+      background: transparent;
       z-index: 2;
     }
 
@@ -588,16 +650,17 @@
       color: #fff;
       font-size: 11px;
       font-weight: 680;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08), 0 0 36px rgba(255,255,255,0.035);
+      box-shadow: none;
     }
 
     .scene-node::before {
       content: "";
       position: absolute;
-      inset: 9px;
+      inset: 0;
       border: 1px solid var(--node-color, var(--accent));
       border-radius: inherit;
-      opacity: var(--node-ring-opacity, 0.36);
+      opacity: var(--node-ring-opacity, 0.28);
+      box-shadow: 0 0 34px var(--node-color, var(--accent));
     }
 
     .scene-node::after {
@@ -606,23 +669,24 @@
       height: 16px;
       border-radius: 50%;
       background: var(--node-color, var(--accent));
-      box-shadow: 0 0 24px var(--node-color, var(--accent));
+      box-shadow: 0 0 24px var(--node-color, var(--accent)), 0 0 56px var(--node-color, var(--accent));
       transform: scale(var(--node-dot-scale, 0.72));
     }
 
     .scene-core {
       left: 50%;
       top: 50%;
-      width: 146px;
-      height: 146px;
+      width: 124px;
+      height: 124px;
       border-radius: 50%;
       transform: translate(-50%, -50%) scale(var(--core-scale, 1));
       display: grid;
       place-items: center;
       color: #fff;
       font-weight: 720;
-      background: rgba(255,255,255,0.045);
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08), 0 0 var(--scene-glow-blur, 18px) rgba(143,70,255,0.18);
+      background:
+        radial-gradient(circle, rgba(255,255,255,0.08), rgba(255,255,255,0.01) 64%, transparent 66%);
+      box-shadow: 0 0 var(--scene-glow-blur, 18px) rgba(143,70,255,0.18);
     }
 
     .scene-core::before,
@@ -633,11 +697,14 @@
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 50%;
       transform: rotate(var(--core-ring-rotate, 0deg));
+      border-left-color: rgba(143,70,255,0.36);
+      border-bottom-color: rgba(20,241,149,0.2);
     }
 
     .scene-core::after {
       inset: -56px;
       border-color: rgba(255,255,255,0.055);
+      border-right-color: rgba(0,194,255,0.22);
       transform: rotate(var(--core-ring-rotate-alt, 0deg));
     }
 
@@ -654,7 +721,7 @@
       height: 1px;
       transform-origin: left center;
       transform: rotate(var(--line-angle, 0deg)) scaleX(var(--line-scale, 0.2));
-      background: var(--line-color, rgba(255,255,255,0.24));
+      background: linear-gradient(90deg, transparent, var(--line-color, rgba(255,255,255,0.24)), transparent);
       opacity: var(--line-opacity, 0.35);
       box-shadow: 0 0 18px var(--line-color, rgba(255,255,255,0.12));
       z-index: 1;
@@ -663,10 +730,10 @@
     .scene-flow {
       position: absolute;
       inset: auto 15% 20% 15%;
-      height: 2px;
+      height: 1px;
       overflow: hidden;
       border-radius: 999px;
-      background: rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.06);
       z-index: 3;
     }
 
@@ -725,9 +792,8 @@
     .story-visual[data-scene="model"] .model-chip-two { right: 18%; bottom: 20%; }
 
     .story-visual[data-scene="account"] .scene-core {
-      width: 126px;
-      height: 126px;
-      border-radius: var(--radius);
+      width: 132px;
+      height: 132px;
     }
 
     .story-visual[data-scene="account"] .account-chip-one { left: var(--a1x, 12%); top: var(--a1y, 22%); --node-color: var(--accent); }
@@ -1740,6 +1806,190 @@
       to { filter: brightness(1.12); translate: 0 -7px; }
     }
 
+    .stats-section {
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 80% 20%, rgba(143,70,255,0.12), transparent 24rem),
+        radial-gradient(circle at 16% 78%, rgba(20,241,149,0.08), transparent 22rem),
+        #050505;
+    }
+
+    .stats-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+      gap: clamp(44px, 7vw, 92px);
+      align-items: center;
+    }
+
+    .stats-copy h2 {
+      font-size: clamp(42px, 5.6vw, 76px);
+      line-height: 0.98;
+      font-weight: 690;
+      letter-spacing: 0;
+    }
+
+    .stats-copy p {
+      max-width: 500px;
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.65;
+    }
+
+    .stats-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px 22px;
+      margin-top: 34px;
+      max-width: 520px;
+    }
+
+    .stats-metric {
+      border-top: 1px solid var(--line);
+      padding-top: 14px;
+    }
+
+    .stats-metric strong {
+      display: block;
+      font-size: clamp(28px, 3vw, 42px);
+      line-height: 1;
+      color: #fff;
+    }
+
+    .stats-metric span {
+      display: block;
+      margin-top: 8px;
+      color: var(--faint);
+      font-size: 13px;
+    }
+
+    .stats-visual {
+      min-height: 430px;
+      position: relative;
+      overflow: visible;
+      isolation: isolate;
+    }
+
+    .stats-visual::before {
+      content: "";
+      position: absolute;
+      inset: -18% -10%;
+      z-index: 0;
+      opacity: 0.76;
+      background-image:
+        radial-gradient(circle at 54% 48%, rgba(143,70,255,0.18), transparent 19rem),
+        radial-gradient(circle at 20% 66%, rgba(20,241,149,0.1), transparent 16rem),
+        linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: auto, auto, 44px 44px, 44px 44px;
+      mask-image: radial-gradient(circle at 52% 50%, #000 0%, rgba(0,0,0,0.64) 48%, transparent 78%);
+    }
+
+    .stats-svg {
+      position: absolute;
+      inset: -4% -5%;
+      width: 110%;
+      height: 108%;
+      overflow: visible;
+      z-index: 1;
+    }
+
+    .stats-svg .axis {
+      fill: none;
+      stroke: rgba(255,255,255,0.07);
+      stroke-width: 1;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .stats-svg .trace {
+      fill: none;
+      stroke: var(--trace-color, var(--accent));
+      stroke-width: var(--trace-width, 1.7);
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      vector-effect: non-scaling-stroke;
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+      filter: drop-shadow(0 0 8px var(--trace-glow, rgba(143,70,255,0.32)));
+      animation: statsTrace 6200ms ease-in-out infinite;
+    }
+
+    .stats-svg .trace-two { animation-delay: 520ms; }
+    .stats-svg .trace-three { animation-delay: 1040ms; }
+    .stats-svg .trace-four { animation-delay: 1560ms; }
+
+    .stats-orb,
+    .stats-ribbon {
+      position: absolute;
+      z-index: 2;
+    }
+
+    .stats-orb {
+      width: 54px;
+      height: 54px;
+      border: 1px solid var(--orb-color, var(--accent));
+      border-radius: 50%;
+      opacity: 0.76;
+      box-shadow: 0 0 34px var(--orb-color, var(--accent));
+      animation: statsOrb 5200ms ease-in-out infinite alternate;
+    }
+
+    .stats-orb::after {
+      content: "";
+      position: absolute;
+      inset: 18px;
+      border-radius: inherit;
+      background: var(--orb-color, var(--accent));
+      box-shadow: 0 0 24px var(--orb-color, var(--accent));
+    }
+
+    .stats-orb.one { left: 12%; top: 18%; --orb-color: var(--green); animation-delay: 0ms; }
+    .stats-orb.two { right: 16%; top: 24%; --orb-color: var(--cyan); animation-delay: 600ms; }
+    .stats-orb.three { left: 22%; bottom: 18%; --orb-color: var(--pink); animation-delay: 1200ms; }
+    .stats-orb.four { right: 18%; bottom: 16%; --orb-color: var(--coral); animation-delay: 1800ms; }
+
+    .stats-ribbon {
+      left: 14%;
+      right: 10%;
+      height: 1px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      overflow: hidden;
+    }
+
+    .stats-ribbon::after {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: var(--ribbon-width, 44%);
+      background: var(--ribbon-color, var(--accent));
+      box-shadow: 0 0 18px var(--ribbon-color, var(--accent));
+      animation: statsRibbon 5200ms ease-in-out infinite;
+    }
+
+    .stats-ribbon.one { top: 37%; --ribbon-width: 52%; --ribbon-color: var(--green); }
+    .stats-ribbon.two { top: 50%; --ribbon-width: 68%; --ribbon-color: var(--accent); }
+    .stats-ribbon.three { top: 63%; --ribbon-width: 42%; --ribbon-color: var(--cyan); }
+    .stats-ribbon.two::after { animation-delay: 420ms; }
+    .stats-ribbon.three::after { animation-delay: 840ms; }
+
+    @keyframes statsTrace {
+      0% { stroke-dashoffset: 1; opacity: 0.18; }
+      50%, 72% { stroke-dashoffset: 0; opacity: 0.92; }
+      100% { stroke-dashoffset: -0.25; opacity: 0.38; }
+    }
+
+    @keyframes statsOrb {
+      from { transform: translate3d(0, 0, 0) scale(0.92); }
+      to { transform: translate3d(0, -12px, 0) scale(1.03); }
+    }
+
+    @keyframes statsRibbon {
+      0%, 100% { transform: scaleX(0.42); opacity: 0.38; }
+      54% { transform: scaleX(1); opacity: 1; }
+    }
+
     .final-cta {
       padding: 100px 0;
       text-align: center;
@@ -1904,7 +2154,8 @@
       .hero-grid,
       .featured-layout,
       .section-head,
-      .story-sticky {
+      .story-sticky,
+      .stats-layout {
         grid-template-columns: 1fr;
       }
 
@@ -1932,6 +2183,10 @@
 
       .hero-visual {
         min-height: 440px;
+      }
+
+      .stats-visual {
+        min-height: 360px;
       }
 
       .product-grid,
@@ -2003,6 +2258,26 @@
         min-height: 240px;
       }
 
+      .stats-copy h2 {
+        font-size: 40px;
+        line-height: 1.04;
+      }
+
+      .stats-copy p {
+        margin-top: 16px;
+        font-size: 15px;
+        line-height: 1.55;
+      }
+
+      .stats-metrics {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .stats-visual {
+        min-height: 280px;
+      }
+
       .product-card {
         min-height: 320px;
       }
@@ -2032,13 +2307,7 @@
 
       .signal-band {
         left: 28px;
-        right: 28px;
-      }
-
-      .core-panel {
-        left: 18px;
-        bottom: 18px;
-        width: calc(100% - 36px);
+        width: min(var(--band-width, 320px), calc(100% - 56px));
       }
 
       footer .wrap {
@@ -2072,11 +2341,25 @@
       .signal-node,
       .signal-ring,
       .signal-band::after,
+      .hero-stack-mark,
+      .stats-svg .trace,
+      .stats-orb,
+      .stats-ribbon::after,
       .process-card.is-active .journey-dot,
       .process-card.is-active .journey-ring,
       .process-card.is-active .journey-line,
       .process-card.is-active .journey-block {
         animation: none !important;
+      }
+
+      .stats-svg .trace {
+        stroke-dashoffset: 0;
+        opacity: 0.72;
+      }
+
+      .stats-ribbon::after {
+        transform: scaleX(1);
+        opacity: 0.72;
       }
     }
 
@@ -2136,16 +2419,7 @@
           <span class="signal-band hero-band-one"></span>
           <span class="signal-band hero-band-two"></span>
           <span class="signal-band hero-band-three"></span>
-          <div class="core-panel">
-            <div class="eyebrow">Balanced Core</div>
-            <h3>Balanced</h3>
-            <p class="muted">SOL, stable yield, and RWA exposure combined into one Core.</p>
-            <div class="core-signal" aria-hidden="true">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-          </div>
+          <span class="hero-stack-mark" aria-hidden="true"><span></span></span>
         </div>
       </div>
     </section>
@@ -2160,6 +2434,16 @@
             </div>
             <div class="story-visual" data-scene="cores" aria-label="Abstract Core allocation visual">
               <div class="scene-grid"></div>
+              <svg class="scene-svg" viewBox="0 0 600 360" aria-hidden="true">
+                <circle class="ghost" cx="300" cy="180" r="126"></circle>
+                <circle class="ghost" cx="300" cy="180" r="82"></circle>
+                <path class="scene-path soft" d="M112 181 C196 174 238 176 300 180 S422 188 504 177"></path>
+                <path class="scene-path" pathLength="1" style="--path-color:var(--green);--path-glow:rgba(20,241,149,0.36);" d="M92 86 C170 98 216 138 300 180"></path>
+                <path class="scene-path" pathLength="1" style="--path-color:var(--cyan);--path-glow:rgba(0,194,255,0.34);" d="M88 270 C168 248 220 214 300 180"></path>
+                <path class="scene-path" pathLength="1" style="--path-color:var(--pink);--path-glow:rgba(255,79,216,0.34);" d="M512 92 C434 108 382 140 300 180"></path>
+                <path class="scene-path" pathLength="1" style="--path-color:var(--coral);--path-glow:rgba(255,107,74,0.3);" d="M504 268 C424 250 374 214 300 180"></path>
+                <path class="scene-fill" d="M263 156 L337 156 L352 180 L337 204 L263 204 L248 180 Z"></path>
+              </svg>
               <div class="scene-line" style="--line-angle:214deg;--line-width:190px;--line-color:var(--green);"></div>
               <div class="scene-line" style="--line-angle:148deg;--line-width:184px;--line-color:var(--cyan);"></div>
               <div class="scene-line" style="--line-angle:326deg;--line-width:184px;--line-color:var(--pink);"></div>
@@ -2230,6 +2514,16 @@
             </div>
             <div class="story-visual" data-scene="model" aria-label="Abstract yield modeling visual">
               <div class="scene-grid"></div>
+              <svg class="scene-svg" viewBox="0 0 600 360" aria-hidden="true">
+                <path class="model-band" d="M72 282 C160 258 214 230 280 204 C354 174 416 132 528 74 L528 292 L72 292 Z"></path>
+                <path class="ghost" d="M78 292 H536"></path>
+                <path class="ghost" d="M78 232 H536"></path>
+                <path class="ghost" d="M78 172 H536"></path>
+                <path class="ghost" d="M78 112 H536"></path>
+                <path class="scene-path soft" d="M72 250 C156 236 226 220 286 190 C354 156 424 122 528 102"></path>
+                <path class="scene-path model-curve" pathLength="1" style="--path-color:var(--accent);--path-glow:rgba(143,70,255,0.42);" d="M72 282 C150 266 220 234 282 204 C358 168 422 118 528 74"></path>
+                <path class="scene-path" pathLength="1" style="--path-color:var(--green);--path-glow:rgba(20,241,149,0.28);--path-width:1.3;" d="M96 274 C176 252 226 226 292 204"></path>
+              </svg>
               <div class="scene-core"></div>
               <div class="scene-node model-one"></div>
               <div class="scene-node model-two"></div>
@@ -2423,6 +2717,15 @@
             </div>
             <div class="story-visual" data-scene="account" aria-label="Abstract account aggregation visual">
               <div class="scene-grid"></div>
+              <svg class="scene-svg" viewBox="0 0 600 360" aria-hidden="true">
+                <circle class="ghost" cx="300" cy="180" r="92"></circle>
+                <path class="ghost" d="M226 180 C254 142 346 142 374 180 C346 218 254 218 226 180 Z"></path>
+                <path class="scene-path" pathLength="1" style="--path-color:var(--accent);--path-glow:rgba(143,70,255,0.36);" d="M82 88 C158 112 202 136 300 180"></path>
+                <path class="scene-path" pathLength="1" style="--path-color:var(--green);--path-glow:rgba(20,241,149,0.34);" d="M96 274 C164 236 220 210 300 180"></path>
+                <path class="scene-path" pathLength="1" style="--path-color:var(--cyan);--path-glow:rgba(0,194,255,0.32);" d="M514 92 C438 124 386 150 300 180"></path>
+                <path class="scene-path" pathLength="1" style="--path-color:var(--pink);--path-glow:rgba(255,79,216,0.32);" d="M500 270 C424 236 376 208 300 180"></path>
+                <path class="scene-fill" d="M250 134 H350 V154 H250 Z M230 172 H370 V192 H230 Z M250 210 H350 V230 H250 Z"></path>
+              </svg>
               <div class="scene-core"></div>
               <div class="scene-node account-chip-one"></div>
               <div class="scene-node account-chip-two"></div>
@@ -2435,6 +2738,52 @@
               <div class="scene-flow"><span></span></div>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section stats-section" id="stats">
+      <div class="wrap stats-layout">
+        <div class="stats-copy">
+          <h2>Read the yield layer before you allocate.</h2>
+          <p>Review protocol-level activity, Core composition, yield distribution, and APY history before choosing where to start.</p>
+          <div class="stats-metrics" aria-label="Protocol stats">
+            <div class="stats-metric">
+              <strong>$842M</strong>
+              <span>Capital routed</span>
+            </div>
+            <div class="stats-metric">
+              <strong>12</strong>
+              <span>Curated Cores</span>
+            </div>
+            <div class="stats-metric">
+              <strong>8.9%</strong>
+              <span>Median Core APY</span>
+            </div>
+            <div class="stats-metric">
+              <strong>$18.6M</strong>
+              <span>Yield distributed</span>
+            </div>
+          </div>
+        </div>
+        <div class="stats-visual" aria-label="Animated protocol stats visual">
+          <svg class="stats-svg" viewBox="0 0 640 420" aria-hidden="true">
+            <path class="axis" d="M64 334 H570"></path>
+            <path class="axis" d="M64 270 H570"></path>
+            <path class="axis" d="M64 206 H570"></path>
+            <path class="axis" d="M64 142 H570"></path>
+            <path class="trace trace-one" pathLength="1" style="--trace-color:var(--green);--trace-glow:rgba(20,241,149,0.3);" d="M72 320 C132 304 170 268 226 262 C292 254 334 188 404 184 C472 180 512 144 568 118"></path>
+            <path class="trace trace-two" pathLength="1" style="--trace-color:var(--accent);--trace-glow:rgba(143,70,255,0.36);--trace-width:2.2;" d="M72 292 C130 284 172 236 232 230 C302 222 338 176 404 168 C472 160 510 116 568 86"></path>
+            <path class="trace trace-three" pathLength="1" style="--trace-color:var(--cyan);--trace-glow:rgba(0,194,255,0.28);" d="M72 344 C130 326 186 318 242 288 C304 254 350 246 410 222 C470 198 520 194 568 172"></path>
+            <path class="trace trace-four" pathLength="1" style="--trace-color:var(--pink);--trace-glow:rgba(255,79,216,0.28);--trace-width:1.3;" d="M72 250 C128 248 178 230 236 210 C292 192 350 198 406 174 C466 148 516 150 568 132"></path>
+          </svg>
+          <span class="stats-orb one"></span>
+          <span class="stats-orb two"></span>
+          <span class="stats-orb three"></span>
+          <span class="stats-orb four"></span>
+          <span class="stats-ribbon one"></span>
+          <span class="stats-ribbon two"></span>
+          <span class="stats-ribbon three"></span>
         </div>
       </div>
     </section>
@@ -2692,7 +3041,7 @@
       scene.style.setProperty("--p", p.toFixed(3));
       scene.style.setProperty("--core-scale", (0.86 + p * 0.22).toFixed(3));
       scene.style.setProperty("--line-scale", (0.18 + p * 0.88).toFixed(3));
-      scene.style.setProperty("--line-opacity", (0.18 + p * 0.62).toFixed(3));
+      scene.style.setProperty("--line-opacity", (0.05 + p * 0.18).toFixed(3));
       scene.style.setProperty("--flow-width", `${30 + p * 36}%`);
       scene.style.setProperty("--flow-x", `${-18 + p * 78}%`);
       scene.style.setProperty("--story-glow-x", `${28 + p * 18}%`);
