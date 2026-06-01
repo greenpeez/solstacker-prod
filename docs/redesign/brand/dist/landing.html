@@ -369,6 +369,21 @@
       min-height: 520px;
     }
 
+    .scroll-story {
+      align-items: start;
+      min-height: clamp(900px, 130vh, 1120px);
+      margin-bottom: 0;
+      padding-top: 6vh;
+      position: relative;
+    }
+
+    .scroll-story > .story-copy,
+    .scroll-story > .story-visual {
+      align-self: start;
+      position: sticky;
+      top: 112px;
+    }
+
     .story-copy h2 {
       font-size: clamp(42px, 5vw, 72px);
       line-height: 0.98;
@@ -1202,11 +1217,28 @@
       gap: 14px;
     }
 
+    .process-section {
+      --process: 0;
+    }
+
     .process-card {
+      --card-p: 0;
+      --card-y: 18px;
+      --card-shadow-y: 0px;
+      --card-shadow-a: 0;
+      --artifact-scale: 0.96;
       min-height: 320px;
       padding: 22px;
       display: grid;
       align-content: space-between;
+      box-shadow: 0 var(--card-shadow-y) 52px rgba(5, 5, 5, var(--card-shadow-a));
+      transform: translateY(var(--card-y));
+      transition: border-color 160ms ease, box-shadow 160ms ease;
+      will-change: transform;
+    }
+
+    .process-card.is-active {
+      border-color: rgba(143,70,255,0.42) !important;
     }
 
     .process-art {
@@ -1217,6 +1249,13 @@
       display: grid;
       place-items: center;
       overflow: hidden;
+      transform: scale(var(--artifact-scale));
+      transition: border-color 160ms ease;
+      will-change: transform;
+    }
+
+    .process-card.is-active .process-art {
+      border-color: rgba(143,70,255,0.34) !important;
     }
 
     .art-list {
@@ -1369,6 +1408,33 @@
     .journey-art.account-track .journey-dot:nth-child(4) { left: 18%; bottom: 16%; --journey-color: var(--pink); }
     .journey-art.account-track .journey-dot:nth-child(5) { right: 18%; bottom: 14%; --journey-color: var(--coral); }
 
+    .process-card .journey-dot,
+    .process-card .journey-ring,
+    .process-card .journey-block,
+    .process-card .journey-line {
+      opacity: var(--artifact-opacity, 0.28);
+    }
+
+    .process-card .journey-dot {
+      transform: translateY(var(--dot-y, 10px)) scale(var(--dot-scale, 0.72));
+    }
+
+    .process-card .journey-ring {
+      transform: translate(-50%, -50%) scale(var(--ring-scale, 0.78));
+    }
+
+    .process-card .journey-block {
+      transform: rotate(45deg) scale(var(--block-scale, 0.76));
+    }
+
+    .process-card .journey-line {
+      clip-path: inset(0 var(--line-clip, 100%) 0 0);
+    }
+
+    .process-card.is-active .journey-ring {
+      box-shadow: 0 0 28px rgba(143,70,255,0.22);
+    }
+
     .final-cta {
       padding: 100px 0;
       text-align: center;
@@ -1458,6 +1524,17 @@
       .story-panel {
         gap: 28px;
         min-height: auto;
+      }
+
+      .scroll-story {
+        min-height: auto;
+        padding-top: 0;
+      }
+
+      .scroll-story > .story-copy,
+      .scroll-story > .story-visual {
+        position: relative;
+        top: auto;
       }
 
       .story-copy p {
@@ -1845,7 +1922,7 @@
       </div>
     </section>
 
-    <section class="section light">
+    <section class="section light process-section" data-process-scene>
       <div class="wrap">
         <div class="section-head">
           <h2>From Core to Account.</h2>
@@ -2013,13 +2090,19 @@
     const coreOptions = Array.from(document.querySelectorAll(".core-option"));
     const productCards = Array.from(document.querySelectorAll("[data-product-card]"));
     const scrollStories = Array.from(document.querySelectorAll(".scroll-story"));
+    const processScenes = Array.from(document.querySelectorAll("[data-process-scene]"));
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const desktopMotion = window.matchMedia("(min-width: 641px)");
+    const pinMotion = window.matchMedia("(min-width: 981px)");
     const ringRadius = 94;
     const ringCircumference = 2 * Math.PI * ringRadius;
     let productCardIndex = 0;
     let productCycleTimer = null;
     let scrollTicking = false;
+
+    function clamp(value, min = 0, max = 1) {
+      return Math.max(min, Math.min(max, value));
+    }
 
     ringProgress.style.strokeDasharray = `${ringCircumference}`;
     ringProgress.style.strokeDashoffset = `${ringCircumference}`;
@@ -2117,7 +2200,7 @@
       const scene = story.querySelector(".story-visual");
       if (!scene) return;
 
-      const p = Math.max(0, Math.min(1, progress));
+      const p = clamp(progress);
       scene.style.setProperty("--p", p.toFixed(3));
       scene.style.setProperty("--core-scale", (0.86 + p * 0.22).toFixed(3));
       scene.style.setProperty("--line-scale", (0.18 + p * 0.88).toFixed(3));
@@ -2158,9 +2241,40 @@
       const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
       scrollStories.forEach((story) => {
         const rect = story.getBoundingClientRect();
-        const progress = (viewportHeight - rect.top) / (viewportHeight + rect.height);
+        const scene = story.querySelector(".story-visual");
+        const copy = story.querySelector(".story-copy");
+        const stickyHeight = Math.max(scene?.offsetHeight || 0, copy?.offsetHeight || 0);
+        const stickyTop = 112;
+        const stickyRange = Math.max(1, rect.height - stickyHeight);
+        const progress = pinMotion.matches
+          ? (stickyTop - rect.top) / stickyRange
+          : (viewportHeight - rect.top) / (viewportHeight + rect.height);
         setSceneProgress(story, progress);
       });
+
+      processScenes.forEach((section) => {
+        const rect = section.getBoundingClientRect();
+        const progress = clamp((viewportHeight * 0.82 - rect.top) / Math.max(1, viewportHeight * 0.9));
+        const cards = Array.from(section.querySelectorAll(".process-card"));
+
+        section.style.setProperty("--process", progress.toFixed(3));
+        cards.forEach((card, index) => {
+          const localProgress = clamp((progress - index * 0.22) / 0.36);
+          card.style.setProperty("--card-p", localProgress.toFixed(3));
+          card.style.setProperty("--card-y", `${(1 - localProgress) * 18}px`);
+          card.style.setProperty("--card-shadow-y", `${localProgress * 18}px`);
+          card.style.setProperty("--card-shadow-a", (localProgress * 0.08).toFixed(3));
+          card.style.setProperty("--artifact-scale", (0.96 + localProgress * 0.04).toFixed(3));
+          card.style.setProperty("--artifact-opacity", (0.28 + localProgress * 0.72).toFixed(3));
+          card.style.setProperty("--dot-y", `${(1 - localProgress) * 10}px`);
+          card.style.setProperty("--dot-scale", (0.72 + localProgress * 0.28).toFixed(3));
+          card.style.setProperty("--ring-scale", (0.78 + localProgress * 0.22).toFixed(3));
+          card.style.setProperty("--block-scale", (0.76 + localProgress * 0.24).toFixed(3));
+          card.style.setProperty("--line-clip", `${(1 - localProgress) * 100}%`);
+          card.classList.toggle("is-active", localProgress > 0.55);
+        });
+      });
+
       scrollTicking = false;
     }
 
@@ -2214,12 +2328,15 @@
     desktopMotion.addEventListener("change", () => {
       startProductCardCycle();
       if (productCards[productCardIndex]) animateProductCard(productCards[productCardIndex]);
+      requestScrollSceneUpdate();
     });
 
     reduceMotion.addEventListener("change", () => {
       startProductCardCycle();
       if (productCards[productCardIndex]) animateProductCard(productCards[productCardIndex]);
     });
+
+    pinMotion.addEventListener("change", requestScrollSceneUpdate);
 
     window.addEventListener("scroll", requestScrollSceneUpdate, { passive: true });
     window.addEventListener("resize", requestScrollSceneUpdate);
