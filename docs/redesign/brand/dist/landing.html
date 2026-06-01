@@ -361,11 +361,15 @@
     }
 
     .story-panel {
+      margin-bottom: 42px;
+      min-height: 520px;
+    }
+
+    .story-sticky {
       display: grid;
       grid-template-columns: 360px minmax(0, 1fr);
       gap: 64px;
       align-items: center;
-      margin-bottom: 42px;
       min-height: 520px;
     }
 
@@ -377,8 +381,7 @@
       position: relative;
     }
 
-    .scroll-story > .story-copy,
-    .scroll-story > .story-visual {
+    .scroll-story .story-sticky {
       align-self: start;
       position: sticky;
       top: 112px;
@@ -1569,24 +1572,22 @@
       .hero-grid,
       .featured-layout,
       .section-head,
-      .story-panel {
+      .story-sticky {
         grid-template-columns: 1fr;
       }
 
-      .story-panel {
+      .story-sticky {
         gap: 28px;
         min-height: auto;
       }
 
       .scroll-story {
-        min-height: auto;
+        min-height: clamp(760px, 155vh, 1040px);
         padding-top: 0;
       }
 
-      .scroll-story > .story-copy,
-      .scroll-story > .story-visual {
-        position: relative;
-        top: auto;
+      .scroll-story .story-sticky {
+        top: 88px;
       }
 
       .story-copy p {
@@ -1650,8 +1651,22 @@
         line-height: 1.04;
       }
 
+      .story-copy p {
+        margin-top: 16px;
+        font-size: 15px;
+        line-height: 1.55;
+      }
+
+      .scroll-story {
+        min-height: clamp(740px, 155vh, 920px);
+      }
+
+      .scroll-story .story-sticky {
+        top: 76px;
+      }
+
       .story-visual {
-        min-height: 280px;
+        min-height: 240px;
       }
 
       .product-card {
@@ -1768,22 +1783,24 @@
     <section class="section" id="products">
       <div class="wrap">
         <div class="story-panel scroll-story" data-scroll-scene="cores">
-          <div class="story-copy">
-            <h2>Access yield through Cores.</h2>
-            <p>Cores package multiple Solana yield sources into clear allocation paths, with Auto Stack for SOL accumulation and Account for position tracking.</p>
-          </div>
-          <div class="story-visual" data-scene="cores" aria-label="Abstract Core allocation visual">
-            <div class="scene-grid"></div>
-            <div class="scene-line" style="--line-angle:214deg;--line-width:190px;--line-color:var(--green);"></div>
-            <div class="scene-line" style="--line-angle:148deg;--line-width:184px;--line-color:var(--cyan);"></div>
-            <div class="scene-line" style="--line-angle:326deg;--line-width:184px;--line-color:var(--pink);"></div>
-            <div class="scene-line" style="--line-angle:34deg;--line-width:176px;--line-color:var(--coral);"></div>
-            <div class="scene-core"></div>
-            <div class="scene-node source-one"></div>
-            <div class="scene-node source-two"></div>
-            <div class="scene-node source-three"></div>
-            <div class="scene-node source-four"></div>
-            <div class="scene-flow"><span></span></div>
+          <div class="story-sticky">
+            <div class="story-copy">
+              <h2>Access yield through Cores.</h2>
+              <p>Cores package multiple Solana yield sources into clear allocation paths, with Auto Stack for SOL accumulation and Account for position tracking.</p>
+            </div>
+            <div class="story-visual" data-scene="cores" aria-label="Abstract Core allocation visual">
+              <div class="scene-grid"></div>
+              <div class="scene-line" style="--line-angle:214deg;--line-width:190px;--line-color:var(--green);"></div>
+              <div class="scene-line" style="--line-angle:148deg;--line-width:184px;--line-color:var(--cyan);"></div>
+              <div class="scene-line" style="--line-angle:326deg;--line-width:184px;--line-color:var(--pink);"></div>
+              <div class="scene-line" style="--line-angle:34deg;--line-width:176px;--line-color:var(--coral);"></div>
+              <div class="scene-core"></div>
+              <div class="scene-node source-one"></div>
+              <div class="scene-node source-two"></div>
+              <div class="scene-node source-three"></div>
+              <div class="scene-node source-four"></div>
+              <div class="scene-flow"><span></span></div>
+            </div>
           </div>
         </div>
         <div class="product-grid">
@@ -1848,20 +1865,22 @@
     <section class="section" id="cores">
       <div class="wrap">
         <div class="story-panel scroll-story" data-scroll-scene="model">
-          <div class="story-copy">
-            <h2>Model a Core before you allocate.</h2>
-            <p>Set a lump sum, add a monthly commitment, and compare how different Cores project over time at current APY.</p>
-          </div>
-          <div class="story-visual" data-scene="model" aria-label="Abstract yield modeling visual">
-            <div class="scene-grid"></div>
-            <div class="scene-core"></div>
-            <div class="scene-node model-one"></div>
-            <div class="scene-node model-two"></div>
-            <div class="scene-node model-three"></div>
-            <div class="scene-line" style="--line-angle:198deg;--line-width:170px;"></div>
-            <div class="scene-line" style="--line-angle:72deg;--line-width:150px;"></div>
-            <div class="scene-line" style="--line-angle:334deg;--line-width:164px;"></div>
-            <div class="scene-flow"><span></span></div>
+          <div class="story-sticky">
+            <div class="story-copy">
+              <h2>Model a Core before you allocate.</h2>
+              <p>Set a lump sum, add a monthly commitment, and compare how different Cores project over time at current APY.</p>
+            </div>
+            <div class="story-visual" data-scene="model" aria-label="Abstract yield modeling visual">
+              <div class="scene-grid"></div>
+              <div class="scene-core"></div>
+              <div class="scene-node model-one"></div>
+              <div class="scene-node model-two"></div>
+              <div class="scene-node model-three"></div>
+              <div class="scene-line" style="--line-angle:198deg;--line-width:170px;"></div>
+              <div class="scene-line" style="--line-angle:72deg;--line-width:150px;"></div>
+              <div class="scene-line" style="--line-angle:334deg;--line-width:164px;"></div>
+              <div class="scene-flow"><span></span></div>
+            </div>
           </div>
         </div>
         <div class="featured-layout">
@@ -2039,22 +2058,24 @@
     <section class="section" id="account">
       <div class="wrap">
         <div class="story-panel scroll-story" data-scroll-scene="account">
-          <div class="story-copy">
-            <h2>Your SolStacker position, in one Account.</h2>
-            <p>Connect your wallet to track Cores, Auto Stack, allocation, activity, pending executions, and yield earned over time.</p>
-          </div>
-          <div class="story-visual" data-scene="account" aria-label="Abstract account aggregation visual">
-            <div class="scene-grid"></div>
-            <div class="scene-core"></div>
-            <div class="scene-node account-chip-one"></div>
-            <div class="scene-node account-chip-two"></div>
-            <div class="scene-node account-chip-three"></div>
-            <div class="scene-node account-chip-four"></div>
-            <div class="scene-line" style="--line-angle:216deg;--line-width:176px;"></div>
-            <div class="scene-line" style="--line-angle:144deg;--line-width:172px;"></div>
-            <div class="scene-line" style="--line-angle:324deg;--line-width:168px;"></div>
-            <div class="scene-line" style="--line-angle:36deg;--line-width:168px;"></div>
-            <div class="scene-flow"><span></span></div>
+          <div class="story-sticky">
+            <div class="story-copy">
+              <h2>Your SolStacker position, in one Account.</h2>
+              <p>Connect your wallet to track Cores, Auto Stack, allocation, activity, pending executions, and yield earned over time.</p>
+            </div>
+            <div class="story-visual" data-scene="account" aria-label="Abstract account aggregation visual">
+              <div class="scene-grid"></div>
+              <div class="scene-core"></div>
+              <div class="scene-node account-chip-one"></div>
+              <div class="scene-node account-chip-two"></div>
+              <div class="scene-node account-chip-three"></div>
+              <div class="scene-node account-chip-four"></div>
+              <div class="scene-line" style="--line-angle:216deg;--line-width:176px;"></div>
+              <div class="scene-line" style="--line-angle:144deg;--line-width:172px;"></div>
+              <div class="scene-line" style="--line-angle:324deg;--line-width:168px;"></div>
+              <div class="scene-line" style="--line-angle:36deg;--line-width:168px;"></div>
+              <div class="scene-flow"><span></span></div>
+            </div>
           </div>
         </div>
       </div>
@@ -2149,7 +2170,6 @@
     const processScenes = Array.from(document.querySelectorAll("[data-process-scene]"));
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const desktopMotion = window.matchMedia("(min-width: 641px)");
-    const pinMotion = window.matchMedia("(min-width: 981px)");
     const ringRadius = 94;
     const ringCircumference = 2 * Math.PI * ringRadius;
     let productCardIndex = 0;
@@ -2327,14 +2347,13 @@
       const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
       scrollStories.forEach((story) => {
         const rect = story.getBoundingClientRect();
+        const sticky = story.querySelector(".story-sticky");
         const scene = story.querySelector(".story-visual");
         const copy = story.querySelector(".story-copy");
-        const stickyHeight = Math.max(scene?.offsetHeight || 0, copy?.offsetHeight || 0);
-        const stickyTop = 112;
+        const stickyHeight = sticky?.offsetHeight || Math.max(scene?.offsetHeight || 0, copy?.offsetHeight || 0);
+        const stickyTop = sticky ? parseFloat(window.getComputedStyle(sticky).top) || 0 : 112;
         const stickyRange = Math.max(1, rect.height - stickyHeight);
-        const progress = pinMotion.matches
-          ? (stickyTop - rect.top) / stickyRange
-          : (viewportHeight - rect.top) / (viewportHeight + rect.height);
+        const progress = (stickyTop - rect.top) / stickyRange;
         setSceneProgress(story, progress);
       });
 
@@ -2421,8 +2440,6 @@
       startProductCardCycle();
       if (productCards[productCardIndex]) animateProductCard(productCards[productCardIndex]);
     });
-
-    pinMotion.addEventListener("change", requestScrollSceneUpdate);
 
     window.addEventListener("scroll", requestScrollSceneUpdate, { passive: true });
     window.addEventListener("resize", requestScrollSceneUpdate);
