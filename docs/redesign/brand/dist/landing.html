@@ -1668,32 +1668,40 @@
       --card-shadow-y: 0px;
       --card-shadow-a: 0;
       --artifact-scale: 0.96;
-      min-height: 320px;
+      --route-dash: 1;
+      min-height: 330px;
       padding: 22px;
       display: grid;
       align-content: space-between;
+      border: 1px solid rgba(5,5,5,0.12);
+      border-radius: var(--radius);
+      background: #fff;
+      color: #050505;
       box-shadow: 0 var(--card-shadow-y) 52px rgba(5, 5, 5, var(--card-shadow-a));
       transform: translateY(var(--card-y));
-      transition: border-color 160ms ease, box-shadow 160ms ease;
+      transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
       will-change: transform;
     }
 
     .process-card.is-active {
-      border-color: rgba(143,70,255,0.42) !important;
+      border-color: rgba(143,70,255,0.42);
     }
 
     .process-art {
-      height: 150px;
+      height: 158px;
       border-radius: var(--radius);
-      background: rgba(255,255,255,0.05);
-      border: 1px solid var(--line);
+      background:
+        radial-gradient(circle at 30% 70%, rgba(20,241,149,0.12), transparent 42%),
+        radial-gradient(circle at 72% 28%, rgba(143,70,255,0.14), transparent 46%),
+        #f1efe9;
+      border: 1px solid rgba(5,5,5,0.1);
       display: grid;
       place-items: center;
       overflow: hidden;
       position: relative;
       isolation: isolate;
       transform: scale(var(--artifact-scale));
-      transition: border-color 160ms ease;
+      transition: border-color 160ms ease, background 160ms ease;
       will-change: transform;
     }
 
@@ -1706,274 +1714,154 @@
     }
 
     .process-art::before {
-      inset: 0;
-      opacity: 0.34;
-      background-image:
-        linear-gradient(rgba(5,5,5,0.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(5,5,5,0.08) 1px, transparent 1px);
-      background-size: 28px 28px;
-      mask-image: radial-gradient(circle at 50% 50%, #000 0%, transparent 76%);
+      inset: 8% 10%;
+      border-radius: 50%;
+      opacity: 0.48;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.72), transparent 34%),
+        conic-gradient(from 210deg, rgba(20,241,149,0.2), rgba(143,70,255,0.14), rgba(0,194,255,0.12), rgba(20,241,149,0.2));
+      filter: blur(1px);
     }
 
     .process-art::after {
-      left: 12%;
-      right: 12%;
-      bottom: 28px;
+      left: 14%;
+      right: 14%;
+      bottom: 22px;
       height: 1px;
       border-radius: 999px;
-      background: var(--accent);
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
       box-shadow: 0 0 18px rgba(143,70,255,0.24);
       transform-origin: left center;
       transform: scaleX(var(--card-p, 0));
       opacity: var(--artifact-opacity, 0.28);
     }
 
-    .process-art.dark-art::before {
-      background-image:
-        linear-gradient(rgba(255,255,255,0.07) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.07) 1px, transparent 1px);
+    .account-process .process-art {
+      background:
+        radial-gradient(circle at 52% 52%, rgba(143,70,255,0.18), transparent 44%),
+        radial-gradient(circle at 20% 74%, rgba(20,241,149,0.1), transparent 38%),
+        #050505;
+      border-color: #050505;
     }
 
-    .process-art.dark-art::after {
-      background: var(--green);
+    .account-process .process-art::before {
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.08), transparent 36%),
+        conic-gradient(from 210deg, rgba(20,241,149,0.2), rgba(143,70,255,0.16), rgba(0,194,255,0.12), rgba(20,241,149,0.2));
+    }
+
+    .account-process .process-art::after {
+      background: linear-gradient(90deg, transparent, var(--green), transparent);
       box-shadow: 0 0 18px rgba(20,241,149,0.24);
     }
 
     .process-card.is-active .process-art {
-      border-color: rgba(143,70,255,0.34) !important;
+      border-color: rgba(143,70,255,0.34);
     }
 
-    .art-list {
-      width: min(78%, 240px);
-      display: grid;
-      gap: 9px;
-    }
-
-    .art-row {
-      display: grid;
-      grid-template-columns: 1fr 52px;
-      gap: 12px;
-      align-items: center;
-      color: rgba(5,5,5,0.58);
-      font-size: 11px;
-    }
-
-    .art-bar {
-      height: 3px;
-      border-radius: 999px;
-      background: rgba(5,5,5,0.12);
-      overflow: hidden;
-    }
-
-    .art-bar span {
-      display: block;
-      height: 100%;
-      background: var(--accent);
-    }
-
-    .source-map {
-      width: min(78%, 230px);
-      display: grid;
-      gap: 12px;
-    }
-
-    .source-node {
-      display: grid;
-      grid-template-columns: 52px 1fr;
-      gap: 10px;
-      align-items: center;
-      color: rgba(5,5,5,0.62);
-      font-size: 11px;
-    }
-
-    .source-node::before {
-      content: "";
-      height: 1px;
-      background: rgba(5,5,5,0.18);
-    }
-
-    .flow-lines {
-      width: 80%;
-      display: grid;
-      gap: 13px;
-    }
-
-    .flow-lines span {
-      display: block;
-      height: 2px;
-      background: rgba(255,255,255,0.22);
-      position: relative;
-    }
-
-    .flow-lines span::after {
-      content: "";
-      position: absolute;
-      right: 0;
-      top: -5px;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: var(--green);
-    }
-
-    .journey-art {
-      position: relative;
-      width: min(82%, 280px);
-      height: 112px;
+    .journey-svg {
+      width: min(92%, 330px);
+      height: 148px;
+      overflow: visible;
       z-index: 1;
     }
 
-    .journey-dot,
-    .journey-ring,
-    .journey-line,
-    .journey-block {
-      position: absolute;
+    .journey-axis {
+      fill: none;
+      stroke: rgba(5,5,5,0.13);
+      stroke-width: 1;
+      vector-effect: non-scaling-stroke;
     }
 
-    .journey-dot {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      background: var(--journey-color, var(--accent));
-      box-shadow: 0 0 16px var(--journey-color, var(--accent));
+    .account-process .journey-axis {
+      stroke: rgba(255,255,255,0.12);
     }
 
-    .journey-dot::before {
-      content: "";
-      position: absolute;
-      inset: -14px;
-      border: 1px solid var(--journey-color, var(--accent));
-      border-radius: inherit;
-      opacity: 0.18;
+    .journey-route {
+      fill: none;
+      stroke: var(--route-color, var(--accent));
+      stroke-width: var(--route-width, 1.8);
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      vector-effect: non-scaling-stroke;
+      stroke-dasharray: 1;
+      stroke-dashoffset: var(--route-dash, 1);
+      filter: drop-shadow(0 0 8px var(--route-glow, rgba(143,70,255,0.26)));
+      opacity: calc(var(--artifact-opacity, 0.28) + 0.18);
     }
 
-    .journey-ring {
-      left: 50%;
-      top: 50%;
-      width: 84px;
-      height: 84px;
-      border: 2px solid var(--accent);
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    .journey-ring::after {
-      content: "";
-      position: absolute;
-      inset: 20px;
-      border-radius: 50%;
-      background: #050505;
-    }
-
-    .journey-line {
-      height: 1px;
-      border-radius: 999px;
-      background: rgba(5,5,5,0.24);
-      transform-origin: left center;
-    }
-
-    .journey-block {
-      width: 46px;
-      height: 46px;
-      border: 1px solid rgba(5,5,5,0.16);
-      border-radius: var(--radius);
-      background: rgba(5,5,5,0.05);
-      transform: rotate(45deg);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.28);
-    }
-
-    .journey-art.core-choice .journey-dot:nth-child(1) { left: 12%; top: 18%; --journey-color: var(--green); }
-    .journey-art.core-choice .journey-dot:nth-child(2) { left: 16%; bottom: 14%; --journey-color: var(--cyan); }
-    .journey-art.core-choice .journey-dot:nth-child(3) { right: 14%; top: 28%; --journey-color: var(--pink); }
-    .journey-art.core-choice .journey-line:nth-child(4) { left: 20%; top: 30%; width: 92px; transform: rotate(20deg); }
-    .journey-art.core-choice .journey-line:nth-child(5) { left: 22%; bottom: 28%; width: 96px; transform: rotate(-18deg); }
-    .journey-art.core-choice .journey-line:nth-child(6) { right: 24%; top: 42%; width: 72px; transform: rotate(148deg); }
-
-    .journey-art.source-mix .journey-block:nth-child(1) { left: 10%; top: 20%; }
-    .journey-art.source-mix .journey-block:nth-child(2) { left: 40%; top: 8%; background: rgba(143,70,255,0.16); }
-    .journey-art.source-mix .journey-block:nth-child(3) { right: 10%; bottom: 18%; background: rgba(20,241,149,0.14); }
-    .journey-art.source-mix .journey-line:nth-child(4) { left: 25%; top: 46%; width: 116px; transform: rotate(-10deg); }
-    .journey-art.source-mix .journey-line:nth-child(5) { right: 24%; top: 58%; width: 96px; transform: rotate(18deg); }
-
-    .journey-art.account-track .journey-ring {
-      border-color: var(--green);
-    }
-
-    .journey-art.account-track .journey-dot:nth-child(2) { left: 12%; top: 18%; --journey-color: var(--accent); }
-    .journey-art.account-track .journey-dot:nth-child(3) { right: 14%; top: 22%; --journey-color: var(--cyan); }
-    .journey-art.account-track .journey-dot:nth-child(4) { left: 18%; bottom: 16%; --journey-color: var(--pink); }
-    .journey-art.account-track .journey-dot:nth-child(5) { right: 18%; bottom: 14%; --journey-color: var(--coral); }
-
-    .process-card .journey-dot,
-    .process-card .journey-ring,
-    .process-card .journey-block,
-    .process-card .journey-line {
-      opacity: var(--artifact-opacity, 0.28);
-    }
-
-    .process-card .journey-dot {
+    .journey-node {
+      fill: var(--node-color, var(--accent));
+      filter: drop-shadow(0 0 10px var(--node-color, var(--accent)));
+      opacity: calc(var(--artifact-opacity, 0.28) + 0.14);
+      transform-box: fill-box;
+      transform-origin: center;
       transform: translateY(var(--dot-y, 10px)) scale(var(--dot-scale, 0.72));
     }
 
-    .process-card .journey-ring {
-      transform: translate(-50%, -50%) scale(var(--ring-scale, 0.78));
+    .journey-orbit {
+      fill: none;
+      stroke: var(--orbit-color, var(--accent));
+      stroke-width: var(--orbit-width, 2);
+      stroke-dasharray: 0.32 0.08;
+      stroke-linecap: round;
+      opacity: calc(var(--artifact-opacity, 0.28) + 0.12);
+      transform-box: fill-box;
+      transform-origin: center;
+      transform: scale(var(--ring-scale, 0.78));
+      filter: drop-shadow(0 0 12px rgba(143,70,255,0.2));
     }
 
-    .process-card .journey-block {
-      transform: rotate(45deg) scale(var(--block-scale, 0.76));
+    .journey-tile {
+      fill: var(--tile-fill, rgba(5,5,5,0.05));
+      stroke: var(--tile-stroke, rgba(5,5,5,0.16));
+      stroke-width: 1;
+      opacity: calc(var(--artifact-opacity, 0.28) + 0.18);
     }
 
-    .process-card .journey-line {
-      clip-path: inset(0 var(--line-clip, 100%) 0 0);
+    .journey-stack rect {
+      fill: #050505;
+      opacity: calc(var(--artifact-opacity, 0.28) + 0.36);
+      filter: drop-shadow(0 0 8px rgba(5,5,5,0.18));
     }
 
-    .process-card.is-active .journey-ring {
-      box-shadow: 0 0 28px rgba(143,70,255,0.22);
+    .account-process .journey-stack rect {
+      fill: #fff;
+      filter: drop-shadow(0 0 10px rgba(255,255,255,0.16));
     }
 
-    .process-card.is-active .journey-dot {
-      animation: processDotPulse 1800ms ease-in-out infinite alternate;
+    .process-card.is-active .journey-route {
+      animation: processRouteGlow 1800ms ease-in-out infinite alternate;
     }
 
-    .process-card.is-active .journey-ring {
-      animation: processRingPulse 2200ms ease-in-out infinite alternate;
+    .process-card.is-active .journey-node {
+      animation: processNodePulse 1800ms ease-in-out infinite alternate;
     }
 
-    .process-card.is-active .journey-line {
-      animation: processLineGlow 1800ms ease-in-out infinite alternate;
+    .process-card.is-active .journey-orbit {
+      animation: processOrbitPulse 2200ms ease-in-out infinite alternate;
     }
 
-    .process-card.is-active .journey-block {
-      animation: processBlockFloat 2400ms ease-in-out infinite alternate;
+    .process-card.is-active .journey-tile {
+      animation: processTileFloat 2400ms ease-in-out infinite alternate;
     }
 
-    .process-card.is-active .core-choice .journey-dot:nth-child(1) { animation-delay: 0ms; }
-    .process-card.is-active .core-choice .journey-dot:nth-child(2) { animation-delay: 180ms; }
-    .process-card.is-active .core-choice .journey-dot:nth-child(3) { animation-delay: 360ms; }
-    .process-card.is-active .account-track .journey-dot:nth-child(2) { animation-delay: 0ms; }
-    .process-card.is-active .account-track .journey-dot:nth-child(3) { animation-delay: 170ms; }
-    .process-card.is-active .account-track .journey-dot:nth-child(4) { animation-delay: 340ms; }
-    .process-card.is-active .account-track .journey-dot:nth-child(5) { animation-delay: 510ms; }
-    .process-card.is-active .source-mix .journey-block:nth-child(1) { animation-delay: 0ms; }
-    .process-card.is-active .source-mix .journey-block:nth-child(2) { animation-delay: 220ms; }
-    .process-card.is-active .source-mix .journey-block:nth-child(3) { animation-delay: 440ms; }
-
-    @keyframes processDotPulse {
-      from { filter: brightness(0.82); translate: 0 0; }
-      to { filter: brightness(1.25); translate: 0 -8px; }
+    @keyframes processRouteGlow {
+      from { filter: drop-shadow(0 0 5px var(--route-glow, rgba(143,70,255,0.18))); }
+      to { filter: drop-shadow(0 0 12px var(--route-glow, rgba(143,70,255,0.34))); }
     }
 
-    @keyframes processRingPulse {
-      from { box-shadow: 0 0 12px rgba(143,70,255,0.16); }
-      to { box-shadow: 0 0 34px rgba(143,70,255,0.32); }
+    @keyframes processNodePulse {
+      from { filter: drop-shadow(0 0 7px var(--node-color, var(--accent))); }
+      to { filter: drop-shadow(0 0 18px var(--node-color, var(--accent))); }
     }
 
-    @keyframes processLineGlow {
-      from { opacity: 0.48; }
-      to { opacity: 1; }
+    @keyframes processOrbitPulse {
+      from { opacity: 0.42; }
+      to { opacity: 0.88; }
     }
 
-    @keyframes processBlockFloat {
+    @keyframes processTileFloat {
       from { filter: brightness(0.94); translate: 0 0; }
       to { filter: brightness(1.12); translate: 0 -7px; }
     }
@@ -2226,7 +2114,8 @@
       font-weight: 650;
     }
 
-    .footer-col a {
+    .footer-col a,
+    .footer-col span {
       color: var(--faint);
       font-size: 13px;
       text-decoration: none;
@@ -2235,6 +2124,10 @@
     .footer-col a:hover,
     .footer-col a:focus-visible {
       color: #fff;
+    }
+
+    .footer-col span {
+      color: rgba(255,255,255,0.34);
     }
 
     .yield-ticker {
@@ -2518,10 +2411,10 @@
       .stats-svg .trace,
       .stats-orb,
       .stats-ribbon::after,
-      .process-card.is-active .journey-dot,
-      .process-card.is-active .journey-ring,
-      .process-card.is-active .journey-line,
-      .process-card.is-active .journey-block {
+      .process-card.is-active .journey-route,
+      .process-card.is-active .journey-node,
+      .process-card.is-active .journey-orbit,
+      .process-card.is-active .journey-tile {
         animation: none !important;
       }
 
@@ -2544,10 +2437,10 @@
     }
   </style>
 </head>
-<body>
+<body id="top">
   <header class="site-header">
     <nav class="wrap nav" aria-label="Primary">
-      <a class="brand" href="#">
+      <a class="brand" href="#top">
         <svg viewBox="0 0 200 200" fill="currentColor" aria-hidden="true">
           <g transform="translate(20 30)">
             <rect width="160" height="22" rx="3"></rect>
@@ -2559,7 +2452,7 @@
         SolStacker
       </a>
       <div class="nav-links">
-        <a href="#">Home</a>
+        <a href="#top">Home</a>
         <a href="#cores">Cores</a>
         <a href="#products">Auto Stack</a>
         <a href="#stats">Stats</a>
@@ -2838,47 +2731,67 @@
           <p>Choose the allocation that matches your intent, review where yield comes from, then track the position as it performs.</p>
         </div>
         <div class="process-grid">
-          <article class="process-card" style="background:#fff;border-color:rgba(5,5,5,0.12);color:#050505;">
-            <div class="process-art" style="background:#f1efe9;border-color:rgba(5,5,5,0.1);">
-              <div class="journey-art core-choice" aria-hidden="true">
-                <span class="journey-dot"></span>
-                <span class="journey-dot"></span>
-                <span class="journey-dot"></span>
-                <span class="journey-line"></span>
-                <span class="journey-line"></span>
-                <span class="journey-line"></span>
-                <span class="journey-ring"></span>
-              </div>
+          <article class="process-card core-process">
+            <div class="process-art">
+              <svg class="journey-svg core-choice" viewBox="0 0 320 150" aria-hidden="true">
+                <path class="journey-axis" d="M42 112 H278"></path>
+                <path class="journey-route" pathLength="1" style="--route-color:var(--green);--route-glow:rgba(20,241,149,0.28);" d="M54 44 C98 50 128 72 166 84"></path>
+                <path class="journey-route" pathLength="1" style="--route-color:var(--cyan);--route-glow:rgba(0,194,255,0.26);" d="M62 108 C104 100 130 92 166 84"></path>
+                <path class="journey-route" pathLength="1" style="--route-color:var(--pink);--route-glow:rgba(255,79,216,0.25);" d="M268 52 C226 58 198 72 166 84"></path>
+                <circle class="journey-node" cx="54" cy="44" r="7" style="--node-color:var(--green);"></circle>
+                <circle class="journey-node" cx="62" cy="108" r="7" style="--node-color:var(--cyan);"></circle>
+                <circle class="journey-node" cx="268" cy="52" r="7" style="--node-color:var(--pink);"></circle>
+                <circle class="journey-orbit" cx="166" cy="84" r="48" style="--orbit-color:var(--accent);"></circle>
+                <g class="journey-stack" transform="translate(142 66) rotate(-8 28 22)">
+                  <rect x="0" y="0" width="70" height="8" rx="2"></rect>
+                  <rect x="8" y="18" width="62" height="8" rx="2"></rect>
+                  <rect x="0" y="36" width="70" height="8" rx="2"></rect>
+                </g>
+              </svg>
             </div>
             <div>
               <h3>Choose a Core</h3>
               <p class="muted" style="margin-top:10px;">Start from an allocation style: Simple, SOL, RWA, Markets, Active, or High Yield.</p>
             </div>
           </article>
-          <article class="process-card" style="background:#fff;border-color:rgba(5,5,5,0.12);color:#050505;">
-            <div class="process-art" style="background:#f1efe9;border-color:rgba(5,5,5,0.1);">
-              <div class="journey-art source-mix" aria-hidden="true">
-                <span class="journey-block"></span>
-                <span class="journey-block"></span>
-                <span class="journey-block"></span>
-                <span class="journey-line"></span>
-                <span class="journey-line"></span>
-              </div>
+          <article class="process-card mix-process">
+            <div class="process-art">
+              <svg class="journey-svg source-mix" viewBox="0 0 320 150" aria-hidden="true">
+                <path class="journey-axis" d="M58 112 H264"></path>
+                <path class="journey-route" pathLength="1" style="--route-color:var(--accent);--route-glow:rgba(143,70,255,0.28);" d="M74 82 C114 70 126 52 160 50 C200 48 216 76 252 70"></path>
+                <path class="journey-route" pathLength="1" style="--route-color:var(--green);--route-glow:rgba(20,241,149,0.24);--route-width:1.35;" d="M76 110 C126 96 160 92 206 96 C232 98 246 92 264 82"></path>
+                <rect class="journey-tile" x="58" y="48" width="48" height="48" rx="8" transform="rotate(45 82 72)" style="--tile-fill:rgba(5,5,5,0.045);"></rect>
+                <rect class="journey-tile" x="136" y="25" width="52" height="52" rx="8" transform="rotate(45 162 51)" style="--tile-fill:rgba(143,70,255,0.14);"></rect>
+                <rect class="journey-tile" x="218" y="56" width="48" height="48" rx="8" transform="rotate(45 242 80)" style="--tile-fill:rgba(20,241,149,0.12);"></rect>
+                <circle class="journey-node" cx="88" cy="112" r="5" style="--node-color:var(--green);"></circle>
+                <circle class="journey-node" cx="162" cy="50" r="5" style="--node-color:var(--accent);"></circle>
+                <circle class="journey-node" cx="252" cy="70" r="5" style="--node-color:var(--cyan);"></circle>
+              </svg>
             </div>
             <div>
               <h3>Review the mix</h3>
               <p class="muted" style="margin-top:10px;">See sources, assets, APY, risk, and liquidity profile before committing capital.</p>
             </div>
           </article>
-          <article class="process-card" style="background:#fff;border-color:rgba(5,5,5,0.12);color:#050505;">
-            <div class="process-art dark-art" style="background:#050505;border-color:#050505;">
-              <div class="journey-art account-track" aria-hidden="true">
-                <span class="journey-ring"></span>
-                <span class="journey-dot"></span>
-                <span class="journey-dot"></span>
-                <span class="journey-dot"></span>
-                <span class="journey-dot"></span>
-              </div>
+          <article class="process-card account-process">
+            <div class="process-art">
+              <svg class="journey-svg account-track" viewBox="0 0 320 150" aria-hidden="true">
+                <path class="journey-axis" d="M46 42 H274"></path>
+                <path class="journey-axis" d="M46 76 H274"></path>
+                <path class="journey-axis" d="M46 110 H274"></path>
+                <path class="journey-route" pathLength="1" style="--route-color:var(--green);--route-glow:rgba(20,241,149,0.28);" d="M50 42 C96 44 126 62 158 76"></path>
+                <path class="journey-route" pathLength="1" style="--route-color:var(--cyan);--route-glow:rgba(0,194,255,0.24);" d="M272 42 C224 48 196 60 158 76"></path>
+                <path class="journey-route" pathLength="1" style="--route-color:var(--pink);--route-glow:rgba(255,79,216,0.24);" d="M270 110 C224 104 194 90 158 76"></path>
+                <circle class="journey-orbit" cx="158" cy="76" r="46" style="--orbit-color:var(--green);"></circle>
+                <circle class="journey-node" cx="50" cy="42" r="6" style="--node-color:var(--green);"></circle>
+                <circle class="journey-node" cx="272" cy="42" r="6" style="--node-color:var(--cyan);"></circle>
+                <circle class="journey-node" cx="270" cy="110" r="6" style="--node-color:var(--pink);"></circle>
+                <g class="journey-stack" transform="translate(132 58) rotate(-6 28 22)">
+                  <rect x="0" y="0" width="70" height="8" rx="2"></rect>
+                  <rect x="8" y="18" width="62" height="8" rx="2"></rect>
+                  <rect x="0" y="36" width="70" height="8" rx="2"></rect>
+                </g>
+              </svg>
             </div>
             <div>
               <h3>Track in Account</h3>
@@ -2993,7 +2906,7 @@
       </div>
       <div class="footer-col">
         <strong>Product</strong>
-        <a href="#">Home</a>
+        <a href="#top">Home</a>
         <a href="#cores">Cores</a>
         <a href="#products">Auto Stack</a>
         <a href="#stats">Stats</a>
@@ -3008,17 +2921,17 @@
       </div>
       <div class="footer-col">
         <strong>Resources</strong>
-        <a href="#">Docs</a>
-        <a href="#">Audits</a>
-        <a href="#">Risk</a>
-        <a href="#">FAQ</a>
-        <a href="#">Support</a>
+        <a href="#products">Docs</a>
+        <a href="#stats">Audits</a>
+        <a href="#stats">Risk</a>
+        <a href="#cores">FAQ</a>
+        <a href="mailto:support@solstacker.app">Support</a>
       </div>
       <div class="footer-col">
         <strong>Legal</strong>
-        <a href="#">Terms of Service</a>
-        <a href="#">Privacy Policy</a>
-        <a href="#">Disclosures</a>
+        <span>Terms of Service</span>
+        <span>Privacy Policy</span>
+        <span>Disclosures</span>
       </div>
     </div>
   </footer>
@@ -3294,7 +3207,7 @@
           card.style.setProperty("--dot-scale", (0.72 + localProgress * 0.28).toFixed(3));
           card.style.setProperty("--ring-scale", (0.78 + localProgress * 0.22).toFixed(3));
           card.style.setProperty("--block-scale", (0.76 + localProgress * 0.24).toFixed(3));
-          card.style.setProperty("--line-clip", `${(1 - localProgress) * 100}%`);
+          card.style.setProperty("--route-dash", (1 - localProgress).toFixed(3));
           card.classList.toggle("is-active", localProgress > 0.55);
         });
       });
