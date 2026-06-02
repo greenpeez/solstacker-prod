@@ -247,6 +247,95 @@
       z-index: 0;
     }
 
+    .hero-flow-svg {
+      position: absolute;
+      inset: -24px -34px -18px -28px;
+      width: calc(100% + 62px);
+      height: calc(100% + 42px);
+      overflow: visible;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .hero-flow-svg .flow-orbit,
+    .hero-flow-svg .flow-guide {
+      fill: none;
+      stroke: rgba(255,255,255,0.075);
+      stroke-width: 1;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .hero-flow-svg .flow-orbit.emphasis {
+      stroke: rgba(143,70,255,0.22);
+    }
+
+    .flow-ribbon {
+      fill: none;
+      stroke: var(--flow-color, var(--accent));
+      stroke-width: var(--flow-width, 13);
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 1;
+      stroke-dashoffset: 0.84;
+      opacity: 0.82;
+      filter: drop-shadow(0 0 14px var(--flow-glow, rgba(143,70,255,0.42)));
+      animation: heroRibbonResolve 7600ms cubic-bezier(.55,0,.24,1) infinite;
+    }
+
+    .flow-ribbon.two { animation-delay: 560ms; }
+    .flow-ribbon.three { animation-delay: 1120ms; }
+    .flow-ribbon.four { animation-delay: 1680ms; }
+
+    .flow-thread {
+      fill: none;
+      stroke: var(--flow-color, rgba(255,255,255,0.3));
+      stroke-width: 1.2;
+      stroke-linecap: round;
+      stroke-dasharray: 1;
+      stroke-dashoffset: 0.74;
+      opacity: 0.58;
+      filter: drop-shadow(0 0 10px var(--flow-glow, rgba(255,255,255,0.2)));
+      animation: heroThreadTrace 6100ms ease-in-out infinite;
+    }
+
+    .flow-node {
+      fill: var(--flow-color, var(--accent));
+      filter: drop-shadow(0 0 18px var(--flow-glow, rgba(143,70,255,0.42)));
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: heroNodePulse 5200ms ease-in-out infinite;
+    }
+
+    .flow-node.two { animation-delay: 700ms; }
+    .flow-node.three { animation-delay: 1300ms; }
+    .flow-node.four { animation-delay: 1900ms; }
+
+    .hero-glint {
+      position: absolute;
+      width: 120px;
+      height: 1px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.76), transparent);
+      filter: blur(0.2px);
+      opacity: 0;
+      transform-origin: center;
+      z-index: 4;
+      animation: heroGlintSweep 6200ms ease-in-out infinite;
+    }
+
+    .hero-glint.one {
+      left: 42%;
+      top: 37%;
+      transform: rotate(-7deg);
+    }
+
+    .hero-glint.two {
+      left: 48%;
+      top: 54%;
+      transform: rotate(-7deg);
+      animation-delay: 1500ms;
+    }
+
     .signal-ring,
     .signal-line,
     .signal-node,
@@ -382,40 +471,65 @@
       position: absolute;
       left: 50%;
       top: 48%;
-      width: 142px;
-      height: 112px;
+      width: 164px;
+      height: 136px;
       transform: translate(-50%, -50%) rotate(-7deg);
-      z-index: 2;
+      z-index: 3;
       animation: heroMarkFloat 6200ms ease-in-out infinite alternate;
     }
 
-    .hero-stack-mark::before,
-    .hero-stack-mark::after,
-    .hero-stack-mark span {
-      content: "";
+    .hero-stack-mark i {
       position: absolute;
-      left: 0;
-      right: 0;
-      height: 18px;
+      height: 20px;
       border-radius: 4px;
       background: #fff;
-      box-shadow: 0 0 28px rgba(255,255,255,0.18);
+      box-shadow:
+        0 0 26px rgba(255,255,255,0.22),
+        0 18px 44px rgba(143,70,255,0.14);
     }
 
-    .hero-stack-mark::before {
-      top: 8px;
+    .hero-stack-mark i:nth-child(1) {
+      left: 0;
+      top: 6px;
       width: 100%;
     }
 
-    .hero-stack-mark span {
-      top: 45px;
+    .hero-stack-mark i:nth-child(2) {
       left: 12px;
-      width: 126px;
+      top: 42px;
+      width: 152px;
     }
 
-    .hero-stack-mark::after {
-      top: 82px;
+    .hero-stack-mark i:nth-child(3) {
+      left: 0;
+      top: 78px;
       width: 100%;
+    }
+
+    .hero-stack-mark i:nth-child(4) {
+      left: 18px;
+      top: 114px;
+      width: 146px;
+    }
+
+    @keyframes heroRibbonResolve {
+      0%, 100% { stroke-dashoffset: 0.92; opacity: 0.24; }
+      42%, 72% { stroke-dashoffset: 0.08; opacity: 0.88; }
+    }
+
+    @keyframes heroThreadTrace {
+      0%, 100% { stroke-dashoffset: 0.86; opacity: 0.22; }
+      48%, 70% { stroke-dashoffset: 0.05; opacity: 0.72; }
+    }
+
+    @keyframes heroNodePulse {
+      0%, 100% { transform: scale(0.84); opacity: 0.72; }
+      48%, 72% { transform: scale(1.08); opacity: 1; }
+    }
+
+    @keyframes heroGlintSweep {
+      0%, 46%, 100% { opacity: 0; translate: -42px 0; }
+      56%, 64% { opacity: 0.72; translate: 42px 0; }
     }
 
     @keyframes signalTrace {
@@ -2247,6 +2361,10 @@
         min-height: auto;
       }
 
+      .hero-grid {
+        gap: 34px;
+      }
+
       .hero-visual {
         min-height: 440px;
       }
@@ -2286,6 +2404,24 @@
       .hero h1 {
         font-size: 42px;
         line-height: 1.03;
+      }
+
+      .hero-grid {
+        gap: 26px;
+      }
+
+      .hero-visual {
+        min-height: 330px;
+      }
+
+      .hero-flow-svg {
+        inset: -8px -20px -8px -22px;
+        width: calc(100% + 42px);
+        height: calc(100% + 16px);
+      }
+
+      .hero-stack-mark {
+        transform: translate(-50%, -50%) rotate(-7deg) scale(0.82);
       }
 
       .hero-actions .button,
@@ -2407,6 +2543,10 @@
       .signal-node,
       .signal-ring,
       .signal-band::after,
+      .flow-ribbon,
+      .flow-thread,
+      .flow-node,
+      .hero-glint,
       .hero-stack-mark,
       .stats-svg .trace,
       .stats-orb,
@@ -2421,6 +2561,17 @@
       .stats-svg .trace {
         stroke-dashoffset: 0;
         opacity: 0.72;
+      }
+
+      .flow-ribbon,
+      .flow-thread {
+        stroke-dashoffset: 0.08;
+        opacity: 0.74;
+      }
+
+      .flow-node {
+        transform: scale(1);
+        opacity: 0.9;
       }
 
       .stats-ribbon::after {
@@ -2473,19 +2624,29 @@
           </div>
         </div>
         <div class="hero-visual" aria-label="SolStacker product visual">
+          <svg class="hero-flow-svg" viewBox="0 0 560 560" aria-hidden="true">
+            <circle class="flow-orbit" cx="344" cy="276" r="196"></circle>
+            <circle class="flow-orbit emphasis" cx="344" cy="276" r="118"></circle>
+            <circle class="flow-orbit" cx="344" cy="276" r="72"></circle>
+            <path class="flow-guide" d="M106 332 C200 324 264 300 344 276 C418 254 470 246 530 254"></path>
+            <path class="flow-thread" pathLength="1" style="--flow-color:var(--green);--flow-glow:rgba(20,241,149,0.34);" d="M56 164 C118 174 174 214 224 248 C266 276 302 286 344 276"></path>
+            <path class="flow-thread" pathLength="1" style="--flow-color:var(--cyan);--flow-glow:rgba(0,194,255,0.3);" d="M78 396 C150 372 202 336 254 306 C286 288 314 278 344 276"></path>
+            <path class="flow-thread" pathLength="1" style="--flow-color:var(--pink);--flow-glow:rgba(255,79,216,0.3);" d="M518 178 C456 188 416 220 382 248 C368 260 356 270 344 276"></path>
+            <path class="flow-thread" pathLength="1" style="--flow-color:var(--coral);--flow-glow:rgba(255,107,74,0.28);" d="M512 404 C452 386 416 350 384 320 C370 306 356 292 344 276"></path>
+            <path class="flow-ribbon one" pathLength="1" style="--flow-color:var(--green);--flow-glow:rgba(20,241,149,0.34);--flow-width:15;" d="M64 372 C132 350 198 330 260 306 C294 292 320 282 344 276"></path>
+            <path class="flow-ribbon two" pathLength="1" style="--flow-color:var(--accent);--flow-glow:rgba(143,70,255,0.42);--flow-width:17;" d="M72 430 C154 410 224 376 282 338 C314 316 336 296 344 276"></path>
+            <path class="flow-ribbon three" pathLength="1" style="--flow-color:var(--cyan);--flow-glow:rgba(0,194,255,0.32);--flow-width:14;" d="M82 488 C150 470 214 438 270 398 C314 366 342 324 344 276"></path>
+            <path class="flow-ribbon four" pathLength="1" style="--flow-color:var(--pink);--flow-glow:rgba(255,79,216,0.34);--flow-width:12;" d="M516 118 C466 134 420 168 386 210 C362 240 350 262 344 276"></path>
+            <circle class="flow-node one" cx="64" cy="164" r="8" style="--flow-color:var(--green);--flow-glow:rgba(20,241,149,0.46);"></circle>
+            <circle class="flow-node two" cx="78" cy="396" r="8" style="--flow-color:var(--cyan);--flow-glow:rgba(0,194,255,0.4);"></circle>
+            <circle class="flow-node three" cx="518" cy="178" r="8" style="--flow-color:var(--pink);--flow-glow:rgba(255,79,216,0.42);"></circle>
+            <circle class="flow-node four" cx="512" cy="404" r="8" style="--flow-color:var(--coral);--flow-glow:rgba(255,107,74,0.38);"></circle>
+          </svg>
           <span class="signal-ring hero-ring-primary"></span>
           <span class="signal-ring hero-ring-secondary"></span>
-          <span class="signal-line hero-line hero-line-one"></span>
-          <span class="signal-line hero-line hero-line-two"></span>
-          <span class="signal-line hero-line hero-line-three"></span>
-          <span class="signal-node hero-node-one"></span>
-          <span class="signal-node hero-node-two"></span>
-          <span class="signal-node hero-node-three"></span>
-          <span class="signal-node hero-node-four"></span>
-          <span class="signal-band hero-band-one"></span>
-          <span class="signal-band hero-band-two"></span>
-          <span class="signal-band hero-band-three"></span>
-          <span class="hero-stack-mark" aria-hidden="true"><span></span></span>
+          <span class="hero-glint one"></span>
+          <span class="hero-glint two"></span>
+          <span class="hero-stack-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
         </div>
       </div>
     </section>
