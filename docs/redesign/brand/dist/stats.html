@@ -1,0 +1,770 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stats - SolStacker</title>
+  <meta name="description" content="Review SolStacker protocol metrics, Core APY history, source mix, and yield distribution before allocating.">
+  <link rel="icon" href='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"%3E%3Crect x="20" y="30" width="160" height="22" rx="3" fill="white"/%3E%3Crect x="26" y="68" width="154" height="22" rx="3" fill="white"/%3E%3Crect x="20" y="106" width="160" height="22" rx="3" fill="white"/%3E%3Crect x="32" y="144" width="148" height="22" rx="3" fill="white"/%3E%3C/svg%3E'>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #050505;
+      --panel: #171816;
+      --line: rgba(255, 255, 255, 0.16);
+      --line-strong: rgba(255, 255, 255, 0.28);
+      --text: #f7f7f3;
+      --muted: rgba(247, 247, 243, 0.66);
+      --soft: rgba(247, 247, 243, 0.42);
+      --purple: #8845ff;
+      --green: #20e88b;
+      --blue: #22b8f3;
+      --pink: #ee47cf;
+      --orange: #ff7050;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      background: var(--bg);
+      color: var(--text);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background:
+        radial-gradient(circle at 72% 0%, rgba(136, 69, 255, 0.22), transparent 34rem),
+        radial-gradient(circle at 10% 18%, rgba(32, 232, 139, 0.12), transparent 30rem),
+        var(--bg);
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .wrap {
+      margin: 0 auto;
+      max-width: 1500px;
+      padding: 0 clamp(20px, 4vw, 48px);
+      width: 100%;
+    }
+
+    .site-header {
+      backdrop-filter: blur(18px);
+      background: rgba(5, 5, 5, 0.72);
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .nav {
+      align-items: center;
+      display: flex;
+      gap: 24px;
+      justify-content: space-between;
+      min-height: 76px;
+    }
+
+    .brand,
+    .nav-links,
+    .button {
+      align-items: center;
+      display: inline-flex;
+    }
+
+    .brand {
+      font-size: 20px;
+      font-weight: 800;
+      gap: 12px;
+      letter-spacing: 0;
+    }
+
+    .brand svg {
+      height: 28px;
+      width: 28px;
+    }
+
+    .nav-links {
+      color: var(--muted);
+      gap: clamp(16px, 2vw, 32px);
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .nav-links a {
+      transition: color 160ms ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus-visible,
+    .nav-links a[aria-current="page"] {
+      color: var(--text);
+    }
+
+    .button {
+      background: #f8f8f5;
+      border: 1px solid #f8f8f5;
+      border-radius: 999px;
+      color: #050505;
+      font-size: 15px;
+      font-weight: 800;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0 24px;
+      transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      background: #050505;
+      border-color: #f8f8f5;
+      color: #f8f8f5;
+      outline: none;
+    }
+
+    main {
+      overflow: hidden;
+    }
+
+    .hero {
+      padding: clamp(72px, 10vw, 150px) 0 clamp(56px, 7vw, 112px);
+    }
+
+    .hero-grid {
+      align-items: end;
+      display: grid;
+      gap: clamp(36px, 6vw, 90px);
+      grid-template-columns: minmax(0, 0.95fr) minmax(420px, 1.05fr);
+    }
+
+    .eyebrow {
+      color: var(--soft);
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      margin: 0 0 18px;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: clamp(72px, 11vw, 176px);
+      letter-spacing: 0;
+      line-height: 0.86;
+    }
+
+    .lead {
+      color: var(--muted);
+      font-size: clamp(20px, 2.35vw, 34px);
+      font-weight: 700;
+      line-height: 1.35;
+      margin-top: 28px;
+      max-width: 830px;
+    }
+
+    .metric-grid {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .metric {
+      border-top: 1px solid var(--line-strong);
+      min-height: 122px;
+      padding-top: 22px;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: clamp(42px, 5vw, 76px);
+      letter-spacing: 0;
+      line-height: 0.9;
+    }
+
+    .metric span {
+      color: var(--soft);
+      display: block;
+      font-size: 18px;
+      font-weight: 800;
+      margin-top: 14px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: clamp(24px, 3vw, 40px);
+    }
+
+    .section {
+      padding: clamp(56px, 8vw, 118px) 0;
+    }
+
+    .section-head {
+      margin-bottom: clamp(28px, 4vw, 54px);
+      max-width: 980px;
+    }
+
+    .section-head h2 {
+      font-size: clamp(48px, 7vw, 110px);
+      letter-spacing: 0;
+      line-height: 0.9;
+    }
+
+    .section-head p {
+      color: var(--muted);
+      font-size: clamp(19px, 2vw, 28px);
+      font-weight: 700;
+      line-height: 1.38;
+      margin-top: 22px;
+      max-width: 850px;
+    }
+
+    .analytics-grid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: minmax(0, 1.24fr) minmax(330px, 0.76fr);
+    }
+
+    .chart-panel {
+      min-height: 520px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .panel-title {
+      align-items: flex-start;
+      display: flex;
+      gap: 24px;
+      justify-content: space-between;
+      margin-bottom: 34px;
+    }
+
+    .panel-title h3 {
+      font-size: clamp(28px, 3vw, 48px);
+      line-height: 0.98;
+    }
+
+    .panel-title span {
+      color: var(--soft);
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-align: right;
+      text-transform: uppercase;
+    }
+
+    .chart {
+      height: clamp(300px, 40vw, 420px);
+      position: relative;
+    }
+
+    .chart svg {
+      height: 100%;
+      overflow: visible;
+      width: 100%;
+    }
+
+    .grid-line {
+      stroke: rgba(255, 255, 255, 0.12);
+      stroke-width: 1;
+    }
+
+    .curve {
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 5;
+    }
+
+    .curve.thin {
+      opacity: 0.55;
+      stroke-width: 3;
+    }
+
+    .dot {
+      filter: drop-shadow(0 0 14px currentColor);
+    }
+
+    .source-list {
+      display: grid;
+      gap: 16px;
+    }
+
+    .source-row {
+      display: grid;
+      gap: 14px;
+    }
+
+    .source-meta {
+      align-items: center;
+      color: var(--muted);
+      display: flex;
+      font-size: 15px;
+      font-weight: 800;
+      justify-content: space-between;
+    }
+
+    .track {
+      background: rgba(255, 255, 255, 0.1);
+      height: 4px;
+      overflow: hidden;
+    }
+
+    .fill {
+      display: block;
+      height: 100%;
+    }
+
+    .composition-grid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .core-card {
+      min-height: 260px;
+    }
+
+    .core-card small {
+      color: var(--soft);
+      display: block;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+    }
+
+    .core-card h3 {
+      font-size: clamp(28px, 3vw, 40px);
+      margin-bottom: 18px;
+    }
+
+    .core-card p {
+      color: var(--muted);
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .stat-line {
+      border-top: 1px solid var(--line);
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 42px;
+      padding-top: 18px;
+    }
+
+    .stat-line span {
+      color: var(--soft);
+      display: block;
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .stat-line strong {
+      font-size: 21px;
+    }
+
+    .table {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .table-row {
+      align-items: center;
+      display: grid;
+      gap: 18px;
+      grid-template-columns: 1.1fr 0.8fr 0.8fr 0.8fr;
+      min-height: 72px;
+      padding: 0 clamp(18px, 3vw, 34px);
+    }
+
+    .table-row + .table-row {
+      border-top: 1px solid var(--line);
+    }
+
+    .table-head {
+      color: var(--soft);
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      min-height: 56px;
+      text-transform: uppercase;
+    }
+
+    .table-row strong {
+      font-size: 19px;
+    }
+
+    .table-row span {
+      color: var(--muted);
+      font-weight: 750;
+    }
+
+    .risk-grid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .text-panel h3 {
+      font-size: clamp(32px, 4vw, 60px);
+      line-height: 0.95;
+      margin-bottom: 22px;
+    }
+
+    .text-panel p {
+      color: var(--muted);
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.48;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 52px 0 70px;
+    }
+
+    footer .wrap {
+      display: grid;
+      gap: 30px;
+      grid-template-columns: minmax(280px, 1.35fr) repeat(4, minmax(130px, 0.45fr));
+    }
+
+    .footer-brand strong,
+    .footer-col strong {
+      display: block;
+      font-size: 16px;
+      margin-bottom: 16px;
+    }
+
+    .footer-brand p,
+    .footer-col a,
+    .footer-col span {
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.6;
+    }
+
+    .footer-col a,
+    .footer-col span {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .footer-col a:hover,
+    .footer-col a:focus-visible {
+      color: var(--text);
+    }
+
+    @media (max-width: 1000px) {
+      .hero-grid,
+      .analytics-grid,
+      .composition-grid,
+      .risk-grid,
+      footer .wrap {
+        grid-template-columns: 1fr;
+      }
+
+      .nav {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 18px clamp(20px, 4vw, 48px);
+      }
+
+      .nav-links {
+        flex-wrap: wrap;
+      }
+
+      .button {
+        width: 100%;
+      }
+
+      .metric-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .table-row {
+        grid-template-columns: 1fr;
+        padding-bottom: 18px;
+        padding-top: 18px;
+      }
+
+      .table-head {
+        display: none;
+      }
+    }
+
+    @media (max-width: 620px) {
+      h1 {
+        font-size: clamp(64px, 23vw, 104px);
+      }
+
+      .metric-grid,
+      .stat-line {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 54px;
+      }
+    }
+  </style>
+</head>
+<body id="top">
+  <header class="site-header">
+    <nav class="wrap nav" aria-label="Primary">
+      <a class="brand" href="landing.html">
+        <svg viewBox="0 0 200 200" fill="currentColor" aria-hidden="true">
+          <g transform="translate(20 30)">
+            <rect width="160" height="22" rx="3"></rect>
+            <rect x="6" y="38" width="154" height="22" rx="3"></rect>
+            <rect y="76" width="160" height="22" rx="3"></rect>
+            <rect x="12" y="114" width="148" height="22" rx="3"></rect>
+          </g>
+        </svg>
+        SolStacker
+      </a>
+      <div class="nav-links">
+        <a href="landing.html">Home</a>
+        <a href="landing.html#cores">Cores</a>
+        <a href="landing.html#products">Auto Stack</a>
+        <a href="stats.html" aria-current="page">Stats</a>
+      </div>
+      <a class="button" href="landing.html#cores">Launch App</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow">Protocol Stats</p>
+          <h1>Read the yield layer.</h1>
+          <p class="lead">Review protocol activity, Core composition, APY history, and yield distribution before choosing where to start.</p>
+        </div>
+        <div class="metric-grid" aria-label="SolStacker protocol metrics">
+          <div class="metric">
+            <strong>$842M</strong>
+            <span>Capital routed</span>
+          </div>
+          <div class="metric">
+            <strong>12</strong>
+            <span>Curated Cores</span>
+          </div>
+          <div class="metric">
+            <strong>8.9%</strong>
+            <span>Median Core APY</span>
+          </div>
+          <div class="metric">
+            <strong>$18.6M</strong>
+            <span>Yield distributed</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="apy-history">
+      <div class="wrap analytics-grid">
+        <article class="panel chart-panel">
+          <div class="panel-title">
+            <h3>Core APY history</h3>
+            <span>30D View</span>
+          </div>
+          <div class="chart" aria-label="APY history chart">
+            <svg viewBox="0 0 900 420" role="img" aria-labelledby="apy-title">
+              <title id="apy-title">APY history across selected SolStacker Cores</title>
+              <line class="grid-line" x1="20" y1="70" x2="880" y2="70"></line>
+              <line class="grid-line" x1="20" y1="160" x2="880" y2="160"></line>
+              <line class="grid-line" x1="20" y1="250" x2="880" y2="250"></line>
+              <line class="grid-line" x1="20" y1="340" x2="880" y2="340"></line>
+              <path class="curve thin" stroke="var(--blue)" d="M40 352 C130 330 205 296 286 285 C382 270 450 230 528 206 C620 178 698 146 840 118"></path>
+              <path class="curve thin" stroke="var(--pink)" d="M40 286 C150 272 232 288 314 250 C398 210 496 214 592 186 C710 152 778 128 860 86"></path>
+              <path class="curve" stroke="var(--green)" d="M40 330 C146 296 212 236 320 214 C442 188 470 132 602 122 C720 114 776 106 860 82"></path>
+              <path class="curve" stroke="var(--purple)" d="M40 374 C154 350 230 292 318 270 C406 248 460 190 552 160 C660 122 742 110 860 64"></path>
+              <circle class="dot" cx="320" cy="214" r="12" fill="var(--green)" style="color: var(--green);"></circle>
+              <circle class="dot" cx="552" cy="160" r="12" fill="var(--purple)" style="color: var(--purple);"></circle>
+              <circle class="dot" cx="840" cy="118" r="12" fill="var(--blue)" style="color: var(--blue);"></circle>
+              <circle class="dot" cx="860" cy="86" r="12" fill="var(--pink)" style="color: var(--pink);"></circle>
+            </svg>
+          </div>
+        </article>
+
+        <aside class="panel">
+          <div class="panel-title">
+            <h3>Source mix</h3>
+            <span>Live Blend</span>
+          </div>
+          <div class="source-list">
+            <div class="source-row">
+              <div class="source-meta"><span>Lending</span><strong>34%</strong></div>
+              <div class="track"><span class="fill" style="width: 34%; background: var(--green);"></span></div>
+            </div>
+            <div class="source-row">
+              <div class="source-meta"><span>Liquid staking</span><strong>27%</strong></div>
+              <div class="track"><span class="fill" style="width: 27%; background: var(--purple);"></span></div>
+            </div>
+            <div class="source-row">
+              <div class="source-meta"><span>Real-world yield</span><strong>18%</strong></div>
+              <div class="track"><span class="fill" style="width: 18%; background: var(--blue);"></span></div>
+            </div>
+            <div class="source-row">
+              <div class="source-meta"><span>Markets</span><strong>13%</strong></div>
+              <div class="track"><span class="fill" style="width: 13%; background: var(--pink);"></span></div>
+            </div>
+            <div class="source-row">
+              <div class="source-meta"><span>Active strategies</span><strong>8%</strong></div>
+              <div class="track"><span class="fill" style="width: 8%; background: var(--orange);"></span></div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="core-composition">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Composition by Core.</h2>
+          <p>Inspect the balance between APY, risk, liquidity, and source type before moving from research into allocation.</p>
+        </div>
+        <div class="composition-grid">
+          <article class="panel core-card">
+            <small>Default Core</small>
+            <h3>Balanced</h3>
+            <p>A diversified Core for SOL, stable yield, lending, and RWA exposure.</p>
+            <div class="stat-line">
+              <div><span>APY</span><strong>9.8%</strong></div>
+              <div><span>Risk</span><strong>Medium</strong></div>
+              <div><span>TVL</span><strong>$184M</strong></div>
+            </div>
+          </article>
+          <article class="panel core-card">
+            <small>Income Core</small>
+            <h3>Cashflow</h3>
+            <p>Stable lending and real-world yield sources for steady allocation.</p>
+            <div class="stat-line">
+              <div><span>APY</span><strong>7.4%</strong></div>
+              <div><span>Risk</span><strong>Low</strong></div>
+              <div><span>TVL</span><strong>$229M</strong></div>
+            </div>
+          </article>
+          <article class="panel core-card">
+            <small>Active Core</small>
+            <h3>Boost</h3>
+            <p>A higher-yield Core that leans into active strategy allocation.</p>
+            <div class="stat-line">
+              <div><span>APY</span><strong>14.2%</strong></div>
+              <div><span>Risk</span><strong>High</strong></div>
+              <div><span>TVL</span><strong>$96M</strong></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="yield-distribution">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Yield distribution.</h2>
+          <p>Compare current Core behavior from the same surface before opening the app.</p>
+        </div>
+        <div class="table" role="table" aria-label="Core yield distribution">
+          <div class="table-row table-head" role="row">
+            <span role="columnheader">Core</span>
+            <span role="columnheader">Current APY</span>
+            <span role="columnheader">30D Change</span>
+            <span role="columnheader">Liquidity</span>
+          </div>
+          <div class="table-row" role="row">
+            <strong role="cell">Balanced</strong>
+            <span role="cell">9.8%</span>
+            <span role="cell">+0.4%</span>
+            <span role="cell">High</span>
+          </div>
+          <div class="table-row" role="row">
+            <strong role="cell">Cashflow</strong>
+            <span role="cell">7.4%</span>
+            <span role="cell">+0.1%</span>
+            <span role="cell">High</span>
+          </div>
+          <div class="table-row" role="row">
+            <strong role="cell">Liquid Staking</strong>
+            <span role="cell">8.1%</span>
+            <span role="cell">-0.2%</span>
+            <span role="cell">High</span>
+          </div>
+          <div class="table-row" role="row">
+            <strong role="cell">Boost</strong>
+            <span role="cell">14.2%</span>
+            <span role="cell">+1.2%</span>
+            <span role="cell">Medium</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="risk">
+      <div class="wrap risk-grid">
+        <article class="panel text-panel">
+          <h3>Risk is part of the read.</h3>
+          <p>Stats should make risk easier to compare: liquidity depth, source concentration, APY movement, and strategy type stay visible before a user allocates.</p>
+        </article>
+        <article class="panel text-panel" id="audits">
+          <h3>Audit status belongs with product context.</h3>
+          <p>Protocol and source-level review should sit next to the metrics it affects, so users can evaluate a Core from yield, composition, and verification together.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="footer-brand">
+        <strong>SolStacker</strong>
+        <p>SolStacker organizes Solana yield into curated Cores, helping users allocate, accumulate, and track yield from one Account.</p>
+      </div>
+      <div class="footer-col">
+        <strong>Product</strong>
+        <a href="landing.html">Home</a>
+        <a href="landing.html#cores">Cores</a>
+        <a href="landing.html#products">Auto Stack</a>
+        <a href="stats.html">Stats</a>
+      </div>
+      <div class="footer-col">
+        <strong>Cores</strong>
+        <a href="landing.html#cores">Simple</a>
+        <a href="landing.html#cores">Cashflow</a>
+        <a href="landing.html#cores">Liquid Staking</a>
+        <a href="landing.html#cores">Balanced</a>
+        <a href="landing.html#cores">Boost</a>
+      </div>
+      <div class="footer-col">
+        <strong>Resources</strong>
+        <a href="landing.html#products">Docs</a>
+        <a href="landing.html#cores">FAQ</a>
+        <a href="mailto:support@solstacker.app">Support</a>
+      </div>
+      <div class="footer-col">
+        <strong>Legal</strong>
+        <span>Terms of Service</span>
+        <span>Privacy Policy</span>
+        <span>Disclosures</span>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
