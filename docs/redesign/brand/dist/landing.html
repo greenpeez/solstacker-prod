@@ -589,6 +589,84 @@
       isolation: isolate;
     }
 
+    .source-lens,
+    .source-signal,
+    .source-spark,
+    .projection-halo,
+    .deposit-pulse,
+    .account-shell,
+    .account-packet {
+      position: absolute;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .source-lens {
+      left: 50%;
+      top: 50%;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(var(--lens-scale, 0.86));
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.075), transparent 34%),
+        conic-gradient(from 210deg, rgba(20,241,149,0.24), rgba(143,70,255,0.18), rgba(0,194,255,0.16), rgba(20,241,149,0.24));
+      filter: blur(0.2px) drop-shadow(0 0 42px rgba(143,70,255,0.16));
+      opacity: var(--lens-opacity, 0.28);
+      mix-blend-mode: screen;
+    }
+
+    .source-lens::after {
+      content: "";
+      position: absolute;
+      inset: 28px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: inherit;
+    }
+
+    .source-signal {
+      left: 50%;
+      top: 50%;
+      width: var(--signal-w, 240px);
+      height: 1px;
+      transform: translate(-50%, -50%) rotate(var(--signal-r, 0deg)) scaleX(var(--signal-scale, 0.42));
+      transform-origin: center;
+      background: linear-gradient(90deg, transparent, var(--signal-color, var(--accent)), transparent);
+      box-shadow: 0 0 18px var(--signal-color, var(--accent));
+      opacity: var(--signal-opacity, 0.18);
+    }
+
+    .source-signal.one { --signal-r: -29deg; --signal-w: 390px; --signal-color: var(--green); }
+    .source-signal.two { --signal-r: 23deg; --signal-w: 360px; --signal-color: var(--cyan); }
+    .source-signal.three { --signal-r: -7deg; --signal-w: 460px; --signal-color: var(--accent); }
+    .source-signal.four { --signal-r: 34deg; --signal-w: 320px; --signal-color: var(--coral); }
+
+    .source-spark {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      left: var(--spark-left, 50%);
+      top: var(--spark-top, 50%);
+      background: var(--spark-color, var(--green));
+      box-shadow: 0 0 18px var(--spark-color, var(--green));
+      transform: translate(-50%, -50%) scale(var(--spark-scale, 0.7));
+      opacity: var(--spark-opacity, 0.42);
+    }
+
+    .source-spark::before {
+      content: "";
+      position: absolute;
+      inset: -18px;
+      border-radius: inherit;
+      border: 1px solid var(--spark-color, var(--green));
+      opacity: 0.15;
+    }
+
+    .source-spark.one { --spark-left: 14%; --spark-top: 25%; --spark-color: var(--green); }
+    .source-spark.two { --spark-left: 18%; --spark-top: 72%; --spark-color: var(--cyan); }
+    .source-spark.three { --spark-left: 86%; --spark-top: 28%; --spark-color: var(--pink); }
+    .source-spark.four { --spark-left: 80%; --spark-top: 74%; --spark-color: var(--coral); }
+
     .stream-band {
       position: absolute;
       left: var(--stream-left, 8%);
@@ -601,6 +679,7 @@
       opacity: var(--stream-opacity, 0.76);
       transform: translateX(var(--stream-x, 0)) scaleX(var(--stream-scale, 1));
       transform-origin: left center;
+      z-index: 3;
     }
 
     .stream-band::before {
@@ -610,6 +689,16 @@
       height: 1px;
       background: rgba(5,5,5,0.28);
       opacity: 0.4;
+    }
+
+    .stream-band::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      width: 34%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.52), transparent);
+      transform: translateX(var(--stream-sweep, -120%));
+      opacity: var(--stream-sweep-opacity, 0.12);
     }
 
     .stream-one { --stream-top: 14%; --stream-left: 4%; --stream-width: 390px; --stream-color: var(--green); }
@@ -627,6 +716,7 @@
       height: 104px;
       transform: translate(-50%, -50%) rotate(var(--emblem-rotate, -5deg)) scale(var(--emblem-scale, 1));
       filter: drop-shadow(0 22px 54px rgba(143,70,255,0.18));
+      z-index: 5;
     }
 
     .core-emblem::before,
@@ -711,6 +801,19 @@
     .compound-bars span:nth-child(11) { --bar-h: 90%; --fill: 92%; --bar-color: var(--coral); }
     .compound-bars span:nth-child(12) { --bar-h: 98%; --fill: 96%; --bar-color: var(--green); }
 
+    .projection-halo {
+      left: var(--model-marker-x, 66%);
+      top: var(--model-marker-y, 28%);
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(var(--projection-halo-scale, 0.64));
+      background: radial-gradient(circle at 50% 50%, rgba(143,70,255,0.2), transparent 58%);
+      opacity: var(--projection-halo-opacity, 0.18);
+      filter: blur(2px);
+      z-index: 1;
+    }
+
     .projection-marker {
       position: absolute;
       left: var(--model-marker-x, 66%);
@@ -733,11 +836,83 @@
       box-shadow: 0 0 22px rgba(143,70,255,0.56);
     }
 
+    .deposit-pulse {
+      left: var(--pulse-left, 20%);
+      top: var(--pulse-top, 72%);
+      width: var(--pulse-size, 12px);
+      height: var(--pulse-size, 12px);
+      border-radius: 50%;
+      background: var(--pulse-color, var(--green));
+      box-shadow: 0 0 20px var(--pulse-color, var(--green));
+      opacity: var(--deposit-opacity, 0.2);
+      transform: translate(-50%, -50%) scale(var(--deposit-scale, 0.62));
+      z-index: 4;
+    }
+
+    .deposit-pulse::before {
+      content: "";
+      position: absolute;
+      inset: -12px;
+      border: 1px solid var(--pulse-color, var(--green));
+      border-radius: inherit;
+      opacity: var(--deposit-ring-opacity, 0.08);
+    }
+
+    .deposit-pulse.one { --pulse-left: 17%; --pulse-top: 76%; --pulse-color: var(--green); --pulse-size: 9px; }
+    .deposit-pulse.two { --pulse-left: 38%; --pulse-top: 62%; --pulse-color: var(--cyan); --pulse-size: 10px; }
+    .deposit-pulse.three { --pulse-left: 60%; --pulse-top: 42%; --pulse-color: var(--accent); --pulse-size: 12px; }
+    .deposit-pulse.four { --pulse-left: 78%; --pulse-top: 22%; --pulse-color: var(--pink); --pulse-size: 9px; }
+
     .account-ledger {
       position: absolute;
       inset: 4% 2%;
       z-index: 2;
     }
+
+    .account-shell {
+      left: 50%;
+      top: 50%;
+      width: 260px;
+      height: 190px;
+      transform: translate(-50%, -50%) scale(var(--account-shell-scale, 0.82));
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.07), transparent 34%),
+        radial-gradient(circle at 58% 42%, rgba(143,70,255,0.18), transparent 64%);
+      opacity: var(--account-shell-opacity, 0.24);
+      filter: drop-shadow(0 0 42px rgba(20,241,149,0.08));
+      z-index: 1;
+    }
+
+    .account-shell::before,
+    .account-shell::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .account-shell::before { inset: 22px 42px; }
+    .account-shell::after { inset: 54px 84px; opacity: 0.68; }
+
+    .account-packet {
+      left: var(--packet-left, 12%);
+      top: var(--packet-top, 20%);
+      width: 34px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--packet-color, var(--accent));
+      box-shadow: 0 0 18px var(--packet-color, var(--accent));
+      transform: translateX(var(--account-node-x, 0px)) scaleX(var(--packet-scale, 0.64));
+      transform-origin: left center;
+      opacity: var(--packet-opacity, 0.24);
+      z-index: 4;
+    }
+
+    .account-packet.one { --packet-left: 4%; --packet-top: 19%; --packet-color: var(--green); }
+    .account-packet.two { --packet-left: 14%; --packet-top: 36%; --packet-color: var(--accent); }
+    .account-packet.three { --packet-left: 6%; --packet-top: 52%; --packet-color: var(--cyan); }
+    .account-packet.four { --packet-left: 20%; --packet-top: 69%; --packet-color: var(--pink); }
 
     .account-row {
       position: absolute;
@@ -2443,6 +2618,15 @@
                 <path class="scene-fill" d="M263 156 L337 156 L352 180 L337 204 L263 204 L248 180 Z"></path>
               </svg>
               <div class="scene-artifact source-streams" aria-hidden="true">
+                <span class="source-lens"></span>
+                <span class="source-signal one"></span>
+                <span class="source-signal two"></span>
+                <span class="source-signal three"></span>
+                <span class="source-signal four"></span>
+                <span class="source-spark one"></span>
+                <span class="source-spark two"></span>
+                <span class="source-spark three"></span>
+                <span class="source-spark four"></span>
                 <span class="stream-band stream-one"></span>
                 <span class="stream-band stream-two"></span>
                 <span class="stream-band stream-three"></span>
@@ -2518,11 +2702,16 @@
                 <path class="scene-path" pathLength="1" style="--path-color:var(--green);--path-glow:rgba(20,241,149,0.28);--path-width:1.3;" d="M96 274 C176 252 226 226 292 204"></path>
               </svg>
               <div class="scene-artifact model-artifact" aria-hidden="true">
+                <span class="projection-halo"></span>
                 <div class="compound-bars">
                   <span></span><span></span><span></span><span></span>
                   <span></span><span></span><span></span><span></span>
                   <span></span><span></span><span></span><span></span>
                 </div>
+                <span class="deposit-pulse one"></span>
+                <span class="deposit-pulse two"></span>
+                <span class="deposit-pulse three"></span>
+                <span class="deposit-pulse four"></span>
                 <span class="projection-marker"></span>
               </div>
             </div>
@@ -2720,6 +2909,11 @@
                 <path class="scene-fill" d="M250 134 H350 V154 H250 Z M230 172 H370 V192 H230 Z M250 210 H350 V230 H250 Z"></path>
               </svg>
               <div class="scene-artifact account-ledger" aria-hidden="true">
+                <span class="account-shell"></span>
+                <span class="account-packet one"></span>
+                <span class="account-packet two"></span>
+                <span class="account-packet three"></span>
+                <span class="account-packet four"></span>
                 <span class="account-row one"></span>
                 <span class="account-row two"></span>
                 <span class="account-row three"></span>
@@ -3037,16 +3231,33 @@
       scene.style.setProperty("--story-field-scale", (0.92 + p * 0.08).toFixed(3));
       scene.style.setProperty("--story-flow-scale", (0.18 + p * 0.82).toFixed(3));
       scene.style.setProperty("--story-flow-opacity", (0.45 + p * 0.45).toFixed(3));
+      scene.style.setProperty("--lens-scale", (0.86 + eased * 0.1).toFixed(3));
+      scene.style.setProperty("--lens-opacity", (0.28 + eased * 0.28).toFixed(3));
+      scene.style.setProperty("--signal-scale", (0.42 + eased * 0.58).toFixed(3));
+      scene.style.setProperty("--signal-opacity", (0.18 + eased * 0.48).toFixed(3));
+      scene.style.setProperty("--spark-scale", (0.7 + eased * 0.46).toFixed(3));
+      scene.style.setProperty("--spark-opacity", (0.42 + eased * 0.4).toFixed(3));
+      scene.style.setProperty("--stream-sweep", `${-120 + eased * 330}%`);
+      scene.style.setProperty("--stream-sweep-opacity", (0.12 + eased * 0.32).toFixed(3));
       scene.style.setProperty("--stream-x", `${-42 + eased * 72}px`);
       scene.style.setProperty("--stream-x-reverse", `${34 - eased * 64}px`);
       scene.style.setProperty("--stream-scale", (0.78 + eased * 0.22).toFixed(3));
       scene.style.setProperty("--stream-opacity", (0.42 + eased * 0.46).toFixed(3));
       scene.style.setProperty("--emblem-scale", (0.9 + eased * 0.12).toFixed(3));
       scene.style.setProperty("--emblem-rotate", `${-8 + eased * 6}deg`);
+      scene.style.setProperty("--projection-halo-scale", (0.64 + eased * 0.22).toFixed(3));
+      scene.style.setProperty("--projection-halo-opacity", (0.18 + eased * 0.3).toFixed(3));
+      scene.style.setProperty("--deposit-scale", (0.62 + eased * 0.36).toFixed(3));
+      scene.style.setProperty("--deposit-opacity", (0.2 + eased * 0.62).toFixed(3));
+      scene.style.setProperty("--deposit-ring-opacity", (0.08 + eased * 0.16).toFixed(3));
       scene.style.setProperty("--model-scale", (0.62 + eased * 0.38).toFixed(3));
       scene.style.setProperty("--model-opacity", (0.34 + eased * 0.58).toFixed(3));
       scene.style.setProperty("--model-marker-x", `${42 + eased * 34}%`);
       scene.style.setProperty("--model-marker-y", `${62 - eased * 39}%`);
+      scene.style.setProperty("--account-shell-scale", (0.82 + eased * 0.12).toFixed(3));
+      scene.style.setProperty("--account-shell-opacity", (0.24 + eased * 0.22).toFixed(3));
+      scene.style.setProperty("--packet-scale", (0.64 + eased * 0.24).toFixed(3));
+      scene.style.setProperty("--packet-opacity", (0.24 + eased * 0.46).toFixed(3));
       scene.style.setProperty("--account-progress", (0.2 + eased * 0.8).toFixed(3));
       scene.style.setProperty("--account-node-x", `${eased * 84}px`);
     }
