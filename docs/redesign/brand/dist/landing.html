@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SolStacker</title>
   <link rel="icon" href='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"%3E%3Crect x="20" y="30" width="160" height="22" rx="3" fill="white"/%3E%3Crect x="26" y="68" width="154" height="22" rx="3" fill="white"/%3E%3Crect x="20" y="106" width="160" height="22" rx="3" fill="white"/%3E%3Crect x="32" y="144" width="148" height="22" rx="3" fill="white"/%3E%3C/svg%3E'>
+  <script>document.documentElement.classList.add("reveal-prime");</script>
   <style>
     :root {
       --bg: #050505;
@@ -23,10 +24,14 @@
       --cyan: #00c2ff;
       --pink: #ff4fd8;
       --coral: #ff6b4a;
+      --yield-mint: #5af0af;
+      --yield-purple: #9d78ff;
+      --yield-cyan: #4dc9ff;
       --danger: #f05d5e;
       --radius: 8px;
-      --page: 1200px;
+      --page: 1160px;
       --ticker-height: 42px;
+      --ticker-bottom-offset: 0px;
     }
 
     * { box-sizing: border-box; }
@@ -43,11 +48,8 @@
       margin: 0;
       min-width: 320px;
       overflow-x: hidden;
-      padding-bottom: var(--ticker-height);
-      background:
-        radial-gradient(circle at 18% 10%, rgba(143, 70, 255, 0.16), transparent 28rem),
-        radial-gradient(circle at 82% 14%, rgba(0, 194, 255, 0.12), transparent 24rem),
-        linear-gradient(180deg, #050505 0%, #0d0d0b 54%, #050505 100%);
+      padding-bottom: calc(var(--ticker-height) + var(--ticker-bottom-offset));
+      background: linear-gradient(180deg, #050505 0%, #0d0d0b 54%, #050505 100%);
     }
 
     body::before {
@@ -83,19 +85,59 @@
       font-family: "IBM Plex Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
 
+    .micro-reveal {
+      opacity: 0;
+      transform: translate3d(0, 16px, 0);
+      transition:
+        opacity 520ms ease,
+        transform 760ms cubic-bezier(0.16, 1.08, 0.34, 1);
+      transition-delay: calc(var(--micro-reveal-index, 0) * 125ms);
+    }
+
+    [data-smart-hero] :is(.hero-copy, .core-copy) > .micro-reveal {
+      transition-delay: calc(200ms + (var(--micro-reveal-index, 0) * 125ms));
+    }
+
+    html.reveal-prime .hero-copy > :is(h1, h2, p, .lead, .hero-actions):not(.is-visible),
+    html.reveal-prime .core-copy > :is(h1, h2, p, .lead, .hero-actions):not(.is-visible),
+    html.reveal-prime .story-copy > :is(h1, h2, p, .lead, .hero-actions):not(.is-visible),
+    html.reveal-prime .section-head > :is(h1, h2, p, .lead, .hero-actions):not(.is-visible),
+    html.reveal-prime .yield-sources-head > :is(h1, h2, p, .lead, .hero-actions):not(.is-visible),
+    html.reveal-prime .final-cta .wrap > :is(h1, h2, p, .lead, .hero-actions):not(.is-visible) {
+      opacity: 0;
+      transform: translate3d(0, 16px, 0);
+    }
+
+    .micro-reveal.is-visible {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+
     .site-header {
       position: sticky;
       top: 0;
       z-index: 20;
-      border-bottom: 1px solid var(--line);
       background: rgba(5, 5, 5, 0.76);
       backdrop-filter: blur(18px);
+      transition: transform 220ms cubic-bezier(0.25, 1, 0.5, 1), opacity 180ms ease;
+      will-change: transform;
+    }
+
+    .site-header .nav-links {
+      transition: opacity 180ms ease, transform 180ms ease, max-height 180ms ease, margin-top 180ms ease;
+    }
+
+    .site-header.is-header-hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-100%);
     }
 
     .nav {
+      position: relative;
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-start;
       min-height: 68px;
       gap: 24px;
     }
@@ -115,6 +157,9 @@
     }
 
     .nav-links {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
       display: flex;
       align-items: center;
       gap: 26px;
@@ -122,33 +167,129 @@
       font-size: 14px;
     }
 
+    .nav > .button {
+      flex: 0 0 auto;
+      margin-left: auto;
+    }
+
     .nav-links a {
       text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus-visible {
+      color: #fff;
+      background: transparent;
+      text-shadow: none;
     }
 
     .button {
+      --glass-x: 50%;
+      --glass-y: 16%;
+      --glass-pull-x: 0px;
+      --glass-pull-y: 0px;
+      --glass-warp-x: 0px;
+      --glass-warp-y: 0px;
+      --glass-scale-x: 1;
+      --glass-scale-y: 1;
+      --glass-rim-angle: 135deg;
+      --lg-displacement-scale: 70;
+      --lg-blur: 8px;
+      --lg-saturation: 132%;
+      --lg-aberration-red: 3px;
+      --lg-aberration-blue: -3px;
+      --lg-elasticity: 0.15;
+      --lg-corner-radius: 999px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       min-height: 42px;
       border: 1px solid transparent;
-      border-radius: 999px;
+      border-radius: var(--lg-corner-radius);
       padding: 0 18px;
       background: #fff;
       color: #050505;
       font-weight: 700;
       font-size: 14px;
+      text-shadow: none;
       text-decoration: none;
       cursor: pointer;
-      transition: background 160ms ease, color 160ms ease, border-color 160ms ease, transform 160ms ease;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      transition:
+        background 260ms cubic-bezier(0.22, 1, 0.36, 1),
+        color 180ms ease,
+        border-color 260ms cubic-bezier(0.22, 1, 0.36, 1),
+        transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 260ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .button::before {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: inherit;
+      pointer-events: none;
+      opacity: 0;
+      background:
+        radial-gradient(ellipse at 42% 0%, rgba(255,255,255,0.16), rgba(255,255,255,0.045) 24%, transparent 58%),
+        linear-gradient(100deg, rgba(82,140,255,0.045), transparent 20%, transparent 72%, rgba(255,216,132,0.04)),
+        linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.012) 50%, rgba(0,0,0,0.10));
+      box-shadow:
+        inset 0 0 0 0.35px rgba(255,255,255,0.08),
+        inset 0 0.5px 0 rgba(255,255,255,0.12),
+        inset 0 -0.5px 0 rgba(0,0,0,0.16);
+      transform: none;
+      transition:
+        opacity 320ms cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     .button:hover,
     .button:focus-visible {
-      border-color: rgba(255,255,255,0.86);
-      background: #050505;
+      border-color: rgba(255,255,255,0.10);
+      background:
+        radial-gradient(ellipse at 44% 0%, rgba(255,255,255,0.06), transparent 56%),
+        linear-gradient(104deg, rgba(82,140,255,0.045), transparent 22%, transparent 72%, rgba(255,216,132,0.04)),
+        linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012) 52%, rgba(0,0,0,0.12)),
+        rgba(13,15,16,0.36);
       color: #fff;
+      text-shadow:
+        0 1px 2px rgba(0,0,0,0.72),
+        0 0 10px rgba(0,0,0,0.40);
       transform: translateY(-1px);
+      -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(var(--lg-saturation));
+      backdrop-filter: blur(var(--lg-blur)) saturate(var(--lg-saturation));
+      box-shadow:
+        inset 0 0 0 0.35px rgba(255,255,255,0.08),
+        inset 0 1px 0 rgba(255,255,255,0.10),
+        inset 0 -1px 0 rgba(0,0,0,0.16),
+        0 10px 24px rgba(0,0,0,0.14);
+    }
+
+    .button:hover::before,
+    .button:focus-visible::before {
+      opacity: 0.42;
+      transform: none;
+    }
+
+    .button:focus-visible {
+      outline: 2px solid rgba(255,255,255,0.18);
+      outline-offset: 3px;
+    }
+
+    .button:active {
+      transform: translateY(0);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.22),
+        inset 0 2px 10px rgba(0,0,0,0.42),
+        0 8px 20px rgba(0,0,0,0.18);
+    }
+
+    .button:active::before {
+      opacity: 0.72;
+      transform: translate3d(0, 1px, 0) scale(1);
     }
 
     .button.secondary {
@@ -159,23 +300,46 @@
 
     .button.secondary:hover,
     .button.secondary:focus-visible {
-      background: #050505;
+      background:
+        radial-gradient(ellipse at 44% 0%, rgba(255,255,255,0.06), transparent 56%),
+        linear-gradient(104deg, rgba(82,140,255,0.045), transparent 22%, transparent 72%, rgba(255,216,132,0.04)),
+        linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012) 52%, rgba(0,0,0,0.12)),
+        rgba(13,15,16,0.36);
       color: #fff;
-      border-color: rgba(255,255,255,0.86);
+      border-color: rgba(255,255,255,0.10);
     }
 
     .hero {
+      position: relative;
+      --smart-hero-min-height: 720px;
+      --smart-visual-height: 260px;
+      --smart-visual-scale: 0.86;
+      --smart-visual-top: 54%;
       min-height: 820px;
       display: grid;
       align-items: center;
       padding: 96px 0 64px;
+      overflow: hidden;
+      isolation: isolate;
     }
 
     .hero-grid {
+      position: relative;
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 460px;
-      gap: 64px;
+      grid-template-columns: minmax(0, 760px) minmax(320px, 1fr);
+      gap: 48px;
       align-items: center;
+    }
+
+    @media (min-width: 981px) {
+      .hero-grid {
+        transform: translateY(-34px);
+      }
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 2;
     }
 
     .eyebrow {
@@ -189,10 +353,80 @@
     .hero h1 {
       max-width: 760px;
       margin-top: 18px;
-      font-size: clamp(52px, 7vw, 92px);
+      font-size: calc(clamp(52px, 6.5vw, 86px) * var(--smart-title-scale, 1));
       line-height: 0.95;
       letter-spacing: 0;
       font-weight: 690;
+    }
+
+    .hero-title-line {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.22em;
+      white-space: nowrap;
+    }
+
+    .hero-title-tail,
+    .hero-title-word {
+      white-space: nowrap;
+    }
+
+    .hero-headline[data-title-fit="home-2"] .hero-title-line,
+    .hero-headline[data-title-fit="home-3"] .hero-title-line {
+      display: inline-flex;
+    }
+
+    .hero-headline[data-title-fit="home-2"] .hero-title-tail {
+      display: inline;
+    }
+
+    .hero-headline[data-title-fit="home-3"] .hero-title-tail,
+    .hero-headline[data-title-fit="home-4"] .hero-title-line,
+    .hero-headline[data-title-fit="home-4"] .hero-title-tail {
+      display: block;
+    }
+
+    .hero-headline[data-title-fit="home-3"] .hero-title-tail .hero-title-word,
+    .hero-headline[data-title-fit="home-4"] .hero-title-line .hero-title-word,
+    .hero-headline[data-title-fit="home-4"] .hero-typewriter,
+    .hero-headline[data-title-fit="home-4"] .hero-title-tail .hero-title-word {
+      display: block;
+    }
+
+    .hero-headline[data-title-fit="home-4"] .headline-break {
+      display: none;
+    }
+
+    .hero-typewriter {
+      display: inline-block;
+      min-width: var(--hero-typewriter-reserved-width, 3.85em);
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    .hero-headline[data-title-fit="home-4"] .hero-typewriter {
+      text-align: center;
+    }
+
+    .hero-typewriter::after {
+      content: "";
+      display: inline-block;
+      width: 0.055em;
+      height: 0.78em;
+      margin-left: 0.08em;
+      background: currentColor;
+      opacity: 0;
+      transform: translateY(0.08em);
+    }
+
+    .hero-typewriter.is-deleting::after {
+      opacity: 1;
+      animation: typeCaretBlink 920ms steps(1, end) infinite;
+    }
+
+    @keyframes typeCaretBlink {
+      0%, 54% { opacity: 1; }
+      55%, 100% { opacity: 0; }
     }
 
     .lead {
@@ -201,6 +435,7 @@
       color: var(--muted);
       font-size: 19px;
       line-height: 1.65;
+      text-wrap: balance;
     }
 
     .hero-actions {
@@ -217,19 +452,25 @@
       isolation: isolate;
     }
 
+    .hero-signal-canvas {
+      position: absolute;
+      left: -72px;
+      right: -28px;
+      top: 18px;
+      width: calc(100% + 100px);
+      height: 500px;
+      pointer-events: none;
+      opacity: 0.78;
+      z-index: 0;
+      contain: paint;
+    }
+
     .hero-visual::before {
       content: "";
       position: absolute;
       inset: -64px -48px;
-      opacity: 0.72;
-      background-image:
-        radial-gradient(circle at 68% 26%, rgba(143,70,255,0.2), transparent 18rem),
-        radial-gradient(circle at 16% 72%, rgba(20,241,149,0.12), transparent 16rem),
-        radial-gradient(circle at 84% 76%, rgba(255,79,216,0.11), transparent 14rem),
-        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.032) 1px, transparent 1px);
-      background-size: auto, auto, auto, 46px 46px, 46px 46px;
-      mask-image: radial-gradient(circle at 54% 48%, #000 0%, rgba(0,0,0,0.74) 48%, transparent 77%);
+      opacity: 0;
+      background: none;
       z-index: 0;
     }
 
@@ -242,9 +483,297 @@
       height: 1px;
       border: 0;
       border-radius: 999px;
-      background: linear-gradient(90deg, transparent, rgba(20,241,149,0.42), rgba(143,70,255,0.72), transparent);
-      box-shadow: 0 0 26px rgba(143,70,255,0.3);
+      background: none;
+      box-shadow: none;
+      opacity: 0;
       z-index: 0;
+    }
+
+    .hero-pass-scene {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .hero-pass-capsule {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 220px;
+      height: 88px;
+      transform: translate(-50%, -50%);
+      border-radius: 999px;
+      background: #fff;
+      box-shadow:
+        0 22px 70px rgba(255,255,255,0.08),
+        0 0 0 1px rgba(255,255,255,0.08);
+      animation:
+        heroCapsuleProcess 9600ms cubic-bezier(.55,0,.24,1) 1 both,
+        heroCapsuleIdle 9600ms ease-in-out 9600ms infinite;
+    }
+
+    .hero-pass-capsule::before,
+    .hero-pass-capsule::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 42px;
+      height: 18px;
+      transform: translateY(-50%);
+      border-radius: 999px;
+      background: #050505;
+    }
+
+    .hero-pass-capsule::before { left: 18px; }
+    .hero-pass-capsule::after { right: 18px; }
+
+    .hero-motion-coin,
+    .hero-yield-token {
+      position: absolute;
+      display: block;
+      width: 62px;
+      height: 62px;
+      transform-origin: center;
+      filter: drop-shadow(0 18px 28px rgba(0,0,0,0.34));
+    }
+
+    .hero-motion-coin img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .hero-coin-usdc {
+      left: -18px;
+      top: 120px;
+      animation: heroCoinUSDC 9600ms cubic-bezier(.55,0,.24,1) 1 both;
+    }
+
+    .hero-coin-usdt0 {
+      left: 52px;
+      bottom: 100px;
+      animation: heroCoinUSDT 9600ms cubic-bezier(.55,0,.24,1) 1 both;
+    }
+
+    .hero-coin-msol {
+      right: 58px;
+      top: 96px;
+      animation: heroCoinMSOL 9600ms cubic-bezier(.55,0,.24,1) 1 both;
+    }
+
+    .hero-coin-jito {
+      right: -8px;
+      bottom: 120px;
+      animation: heroCoinJito 9600ms cubic-bezier(.55,0,.24,1) 1 both;
+    }
+
+    .hero-coin-skr {
+      left: 118px;
+      top: -8px;
+      animation: heroCoinSKR 9600ms cubic-bezier(.55,0,.24,1) 1 both;
+    }
+
+    .hero-yield-token {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--yield-color, #9d78ff);
+      opacity: 0;
+      box-shadow:
+        inset -8px -10px 16px rgba(0,0,0,0.18),
+        inset 7px 7px 12px rgba(255,255,255,0.28),
+        0 0 22px var(--yield-glow, rgba(157,120,255,0.28));
+    }
+
+    .hero-yield-token::before {
+      content: "";
+      position: absolute;
+      left: 7px;
+      top: 6px;
+      width: 13px;
+      height: 9px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.78);
+    }
+
+    .hero-yield-token::after {
+      content: "";
+      position: absolute;
+      right: 8px;
+      bottom: 9px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.68);
+    }
+
+    .hero-yield-one {
+      left: 58%;
+      top: 46%;
+      --yield-color: var(--yield-mint);
+      --yield-glow: rgba(90,240,175,0.32);
+      animation:
+        heroYieldOne 9600ms cubic-bezier(.55,0,.24,1) 1 both,
+        heroYieldIdle 11800ms ease-in-out 9600ms infinite;
+    }
+
+    .hero-yield-two {
+      left: 62%;
+      top: 54%;
+      --yield-color: var(--yield-purple);
+      --yield-glow: rgba(157,120,255,0.32);
+      animation:
+        heroYieldTwo 9600ms cubic-bezier(.55,0,.24,1) 1 both,
+        heroYieldIdle 12600ms ease-in-out 10100ms infinite;
+    }
+
+    .hero-yield-three {
+      left: 68%;
+      top: 48%;
+      --yield-color: var(--yield-cyan);
+      --yield-glow: rgba(77,201,255,0.3);
+      animation:
+        heroYieldThree 9600ms cubic-bezier(.55,0,.24,1) 1 both,
+        heroYieldIdle 13400ms ease-in-out 10600ms infinite;
+    }
+
+    .hero-yield-four {
+      left: 72%;
+      top: 57%;
+      --yield-color: var(--yield-mint);
+      --yield-glow: rgba(90,240,175,0.28);
+      animation:
+        heroYieldFour 9600ms cubic-bezier(.55,0,.24,1) 1 both,
+        heroYieldIdle 14200ms ease-in-out 11100ms infinite;
+    }
+
+    @keyframes heroCapsuleProcess {
+      0%, 40%, 100% { transform: translate(-50%, -50%) scale(1); }
+      46%, 56% { transform: translate(-50%, -50%) scaleX(0.93) scaleY(1.06); }
+      64% { transform: translate(-50%, -50%) scaleX(1.04) scaleY(0.98); }
+    }
+
+    @keyframes heroCapsuleIdle {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scaleX(1.015) scaleY(0.995); }
+    }
+
+    @keyframes heroCoinUSDC {
+      0% { transform: translate(0,0) scale(0.96) rotate(-8deg); opacity: 1; }
+      12% { transform: translate(112px,46px) scale(1) rotate(4deg); opacity: 1; }
+      22% { transform: translate(236px,126px) scale(0.82) rotate(16deg); opacity: 1; }
+      38% { transform: translate(270px,132px) scale(0.52) rotate(20deg); opacity: 1; }
+      48%, 100% { transform: translate(270px,132px) scale(0.5) rotate(20deg); opacity: 0; }
+    }
+
+    @keyframes heroCoinUSDT {
+      0%, 8% { transform: translate(0,0) scale(0.94) rotate(7deg); opacity: 1; }
+      20% { transform: translate(108px,-54px) scale(1) rotate(-3deg); opacity: 1; }
+      31% { transform: translate(210px,-110px) scale(0.78) rotate(-16deg); opacity: 1; }
+      44% { transform: translate(246px,-112px) scale(0.52) rotate(-18deg); opacity: 1; }
+      52%, 100% { transform: translate(246px,-112px) scale(0.5) rotate(-18deg); opacity: 0; }
+    }
+
+    @keyframes heroCoinMSOL {
+      0%, 16% { transform: translate(0,0) scale(0.94) rotate(-5deg); opacity: 1; }
+      30% { transform: translate(-112px,66px) scale(1) rotate(3deg); opacity: 1; }
+      41% { transform: translate(-210px,126px) scale(0.78) rotate(14deg); opacity: 1; }
+      52% { transform: translate(-246px,130px) scale(0.52) rotate(18deg); opacity: 1; }
+      60%, 100% { transform: translate(-246px,130px) scale(0.5) rotate(18deg); opacity: 0; }
+    }
+
+    @keyframes heroCoinJito {
+      0%, 22% { transform: translate(0,0) scale(0.92) rotate(9deg); opacity: 1; }
+      36% { transform: translate(-124px,-44px) scale(1) rotate(0deg); opacity: 1; }
+      48% { transform: translate(-232px,-100px) scale(0.78) rotate(-12deg); opacity: 1; }
+      58% { transform: translate(-268px,-104px) scale(0.52) rotate(-16deg); opacity: 1; }
+      66%, 100% { transform: translate(-268px,-104px) scale(0.5) rotate(-16deg); opacity: 0; }
+    }
+
+    @keyframes heroCoinSKR {
+      0%, 28% { transform: translate(0,0) scale(0.9) rotate(-11deg); opacity: 1; }
+      44% { transform: translate(94px,116px) scale(1) rotate(3deg); opacity: 1; }
+      56% { transform: translate(154px,186px) scale(0.78) rotate(16deg); opacity: 1; }
+      64% { transform: translate(176px,198px) scale(0.52) rotate(20deg); opacity: 1; }
+      72%, 100% { transform: translate(176px,198px) scale(0.5) rotate(20deg); opacity: 0; }
+    }
+
+    @keyframes heroYieldOne {
+      0%, 54% { transform: translate(0,0) scale(0.4); opacity: 0; }
+      68% { transform: translate(70px,-32px) scale(1); opacity: 1; }
+      100% { transform: translate(94px,-40px) scale(1); opacity: 1; }
+    }
+
+    @keyframes heroYieldTwo {
+      0%, 60% { transform: translate(0,0) scale(0.4); opacity: 0; }
+      74% { transform: translate(78px,12px) scale(0.92); opacity: 1; }
+      100% { transform: translate(106px,18px) scale(0.92); opacity: 1; }
+    }
+
+    @keyframes heroYieldThree {
+      0%, 66% { transform: translate(0,0) scale(0.4); opacity: 0; }
+      80% { transform: translate(64px,-10px) scale(0.84); opacity: 1; }
+      100% { transform: translate(88px,-14px) scale(0.84); opacity: 1; }
+    }
+
+    @keyframes heroYieldFour {
+      0%, 72% { transform: translate(0,0) scale(0.4); opacity: 0; }
+      86% { transform: translate(54px,22px) scale(0.72); opacity: 1; }
+      100% { transform: translate(76px,26px) scale(0.72); opacity: 1; }
+    }
+
+    @keyframes heroYieldIdle {
+      0%, 100% { margin-top: 0; margin-left: 0; }
+      50% { margin-top: -7px; margin-left: 6px; }
+    }
+
+    .hero-portal-scene {
+      display: grid;
+      place-items: center;
+      overflow: visible;
+      perspective: none;
+      transform-style: flat;
+    }
+
+    .hero-portal-frame {
+      position: relative;
+      width: min(232%, 1580px);
+      aspect-ratio: 1600 / 1013;
+      transform: translateX(2%) scale(var(--smart-visual-scale, 1));
+      transform-origin: center;
+      filter: drop-shadow(0 42px 92px rgba(143,70,255,0.2));
+    }
+
+    .hero-portal-canvas,
+    .hero-portal-poster {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
+      mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
+    }
+
+    .hero-portal-canvas {
+      opacity: 0;
+      transition: opacity 260ms ease;
+    }
+
+    .hero-portal-canvas.is-ready {
+      opacity: 1;
+    }
+
+    .hero-portal-poster {
+      opacity: 1;
+      transition: opacity 260ms ease;
+    }
+
+    .hero-portal-frame.is-playing .hero-portal-poster {
+      opacity: 0;
     }
 
     .hero-flow-svg {
@@ -355,7 +884,7 @@
       top: 56px;
       width: 480px;
       height: 480px;
-      animation: heroRingDrift 14s ease-in-out infinite alternate;
+      animation: heroRingFloat 14s ease-in-out infinite alternate;
     }
 
     .hero-ring-secondary {
@@ -364,7 +893,7 @@
       width: 236px;
       height: 236px;
       border-color: rgba(143,70,255,0.2);
-      animation: heroRingDrift 11s ease-in-out infinite alternate-reverse;
+      animation: heroRingFloat 11s ease-in-out infinite alternate-reverse;
     }
 
     .hero-ring-primary::before,
@@ -547,7 +1076,7 @@
       to { transform: translate3d(0, -10px, 0) scale(1); }
     }
 
-    @keyframes heroRingDrift {
+    @keyframes heroRingFloat {
       from { transform: rotate(-10deg) scale(0.98); }
       to { transform: rotate(8deg) scale(1.04); }
     }
@@ -559,7 +1088,6 @@
 
     .section {
       padding: 96px 0;
-      border-top: 1px solid var(--line);
     }
 
     .section.light {
@@ -591,7 +1119,7 @@
     }
 
     .story-panel {
-      margin-bottom: 42px;
+      margin-bottom: 32px;
       min-height: 520px;
     }
 
@@ -605,9 +1133,9 @@
 
     .scroll-story {
       align-items: start;
-      min-height: clamp(900px, 130vh, 1120px);
+      min-height: clamp(620px, 86vh, 780px);
       margin-bottom: 0;
-      padding-top: 6vh;
+      padding-top: 0;
       position: relative;
     }
 
@@ -619,7 +1147,7 @@
 
     .scroll-story + .product-grid,
     .scroll-story + .featured-layout {
-      margin-top: clamp(48px, 5vh, 76px);
+      margin-top: clamp(28px, 3vw, 44px);
     }
 
     .story-copy h2 {
@@ -677,6 +1205,20 @@
       transform-origin: left center;
       transform: scaleX(var(--story-flow-scale, 0.18));
       opacity: var(--story-flow-opacity, 0.45);
+    }
+
+    #products {
+      padding-top: 32px;
+    }
+
+    #products .scroll-story {
+      min-height: clamp(600px, 82vh, 740px);
+      padding-top: 0;
+    }
+
+    #products .story-visual::before,
+    #products .metaphor-haze {
+      display: none;
     }
 
     .scene-grid {
@@ -1123,6 +1665,486 @@
       opacity: var(--story-flow-opacity, 0.45);
     }
 
+    .metaphor-stage {
+      position: absolute;
+      inset: -6% -4%;
+      overflow: visible;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .metaphor-haze {
+      position: absolute;
+      inset: 2% 3%;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 54% 46%, rgba(255,255,255,0.08), transparent 19%),
+        radial-gradient(circle at 38% 68%, rgba(20,241,149,0.11), transparent 34%),
+        radial-gradient(circle at 70% 32%, rgba(143,70,255,0.18), transparent 42%);
+      filter: blur(18px);
+      opacity: 0.84;
+    }
+
+    .core-stage {
+      --module-w: min(38vw, 258px);
+      --module-h: 172px;
+    }
+
+    .core-source,
+    .core-output,
+    .dock-rail {
+      position: absolute;
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, transparent, var(--rail-color, var(--accent)), rgba(255,255,255,0.34), transparent);
+      box-shadow: 0 0 20px var(--rail-glow, rgba(143,70,255,0.22));
+      opacity: var(--stream-opacity, 0.66);
+      transform-origin: left center;
+      z-index: 2;
+    }
+
+    .core-source::before,
+    .dock-rail::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--rail-color, var(--accent));
+      box-shadow: 0 0 22px var(--rail-glow, rgba(143,70,255,0.34));
+      transform: translate(-50%, -50%);
+    }
+
+    .core-source::after,
+    .dock-rail::after {
+      content: "";
+      position: absolute;
+      right: 4px;
+      top: 50%;
+      width: 36px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--rail-color, var(--accent));
+      box-shadow: 0 0 18px var(--rail-glow, rgba(143,70,255,0.28));
+      transform: translateY(-50%) scaleX(var(--stream-scale, 0.78));
+      transform-origin: right center;
+      opacity: 0.42;
+    }
+
+    .source-a {
+      left: 8%;
+      top: 22%;
+      width: 42%;
+      --rail-color: var(--green);
+      --rail-glow: rgba(20,241,149,0.34);
+      transform: translateX(var(--stream-x, 0)) scaleX(var(--stream-scale, 1));
+    }
+
+    .source-b {
+      left: 2%;
+      top: 42%;
+      width: 48%;
+      --rail-color: var(--cyan);
+      --rail-glow: rgba(0,194,255,0.3);
+      transform: translateX(var(--stream-x, 0)) scaleX(var(--stream-scale, 1));
+    }
+
+    .source-c {
+      right: 9%;
+      top: 27%;
+      width: 38%;
+      --rail-color: var(--pink);
+      --rail-glow: rgba(255,79,216,0.3);
+      transform: translateX(var(--stream-x-reverse, 0)) scaleX(var(--stream-scale, 1));
+    }
+
+    .source-d {
+      right: 5%;
+      top: 66%;
+      width: 42%;
+      --rail-color: var(--coral);
+      --rail-glow: rgba(255,107,74,0.28);
+      transform: translateX(var(--stream-x-reverse, 0)) scaleX(var(--stream-scale, 1));
+    }
+
+    .source-e {
+      left: 11%;
+      top: 74%;
+      width: 39%;
+      --rail-color: var(--accent);
+      --rail-glow: rgba(143,70,255,0.32);
+      transform: translateX(var(--stream-x, 0)) scaleX(var(--stream-scale, 1));
+    }
+
+    .core-output {
+      left: 50%;
+      top: 51%;
+      width: 42%;
+      --rail-color: var(--green);
+      --rail-glow: rgba(20,241,149,0.22);
+      transform: translateX(8%) scaleX(var(--story-flow-scale, 0.18));
+      opacity: var(--story-flow-opacity, 0.45);
+    }
+
+    .core-output::after {
+      content: "";
+      position: absolute;
+      right: -6px;
+      top: 50%;
+      width: 18px;
+      height: 18px;
+      border-right: 2px solid var(--green);
+      border-top: 2px solid var(--green);
+      transform: translateY(-50%) rotate(45deg);
+      opacity: 0.72;
+    }
+
+    .core-cartridge,
+    .projection-core,
+    .ledger-spine {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) rotate(var(--emblem-rotate, -5deg)) scale(var(--emblem-scale, 1));
+      width: var(--module-w, 238px);
+      height: var(--module-h, 160px);
+      border-radius: 14px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.015)),
+        rgba(15,15,14,0.78);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.16),
+        inset 0 -1px 0 rgba(0,0,0,0.5),
+        0 28px 80px rgba(0,0,0,0.34),
+        0 0 52px rgba(143,70,255,0.16);
+      z-index: 5;
+    }
+
+    .core-cartridge::before,
+    .projection-core::before,
+    .ledger-spine::before {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      background:
+        linear-gradient(90deg, transparent 0 18%, rgba(255,255,255,0.05) 18% 19%, transparent 19% 100%),
+        radial-gradient(circle at 72% 30%, rgba(143,70,255,0.18), transparent 42%);
+    }
+
+    .core-cartridge i,
+    .projection-core i,
+    .ledger-spine i {
+      position: absolute;
+      left: 38px;
+      right: 38px;
+      height: 15px;
+      border-radius: 4px;
+      background: #fff;
+      box-shadow: 0 0 24px rgba(255,255,255,0.18);
+      z-index: 2;
+    }
+
+    .core-cartridge i:nth-child(1),
+    .projection-core i:nth-child(1),
+    .ledger-spine i:nth-child(1) { top: 43px; }
+    .core-cartridge i:nth-child(2),
+    .projection-core i:nth-child(2),
+    .ledger-spine i:nth-child(2) { top: 72px; left: 52px; right: 28px; }
+    .core-cartridge i:nth-child(3),
+    .projection-core i:nth-child(3),
+    .ledger-spine i:nth-child(3) { top: 101px; left: 32px; right: 50px; }
+    .core-cartridge i:nth-child(4),
+    .projection-core i:nth-child(4),
+    .ledger-spine i:nth-child(4) { top: 130px; left: 56px; right: 36px; opacity: 0.92; }
+
+    .core-cartridge b {
+      position: absolute;
+      left: 22px;
+      top: 50%;
+      width: 6px;
+      height: 96px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, var(--green), var(--accent), var(--pink));
+      box-shadow: 0 0 24px rgba(143,70,255,0.3);
+      transform: translateY(-50%) scaleY(var(--stream-scale, 0.9));
+      z-index: 3;
+    }
+
+    .core-lock {
+      position: absolute;
+      left: calc(50% - 126px);
+      top: 50%;
+      width: 26px;
+      height: 26px;
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 50%;
+      box-shadow: 0 0 20px rgba(143,70,255,0.16);
+      transform: translate(-50%, -50%) scale(var(--spark-scale, 0.82));
+      opacity: var(--spark-opacity, 0.42);
+      z-index: 4;
+    }
+
+    .core-lock.two { left: calc(50% + 126px); }
+
+    .projection-stage {
+      --module-w: 178px;
+      --module-h: 120px;
+    }
+
+    .projection-field {
+      position: absolute;
+      left: 52%;
+      top: 46%;
+      width: 460px;
+      height: 280px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 44% 48%, rgba(255,255,255,0.08), transparent 24%),
+        radial-gradient(circle at 55% 46%, rgba(143,70,255,0.16), transparent 56%),
+        radial-gradient(circle at 18% 82%, rgba(20,241,149,0.1), transparent 46%);
+      filter: blur(0.3px);
+      transform: translate(-50%, -50%) rotate(var(--story-field-rotate, -6deg)) scale(var(--story-field-scale, 0.94));
+      opacity: 0.88;
+      z-index: 0;
+    }
+
+    .projection-core {
+      left: 35%;
+      top: 47%;
+      transform: translate(-50%, -50%) rotate(-8deg) scale(var(--model-scale, 0.82));
+      opacity: var(--model-opacity, 0.62);
+      z-index: 5;
+    }
+
+    .projection-chart {
+      position: absolute;
+      inset: 5% 4% 4% 4%;
+      width: 92%;
+      height: 92%;
+      overflow: visible;
+      z-index: 2;
+    }
+
+    .projection-chart .chart-guide {
+      fill: none;
+      stroke: rgba(255,255,255,0.1);
+      stroke-width: 1;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .projection-chart .chart-curve {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 1;
+      stroke-dashoffset: calc(1 - var(--p, 0));
+      filter: drop-shadow(0 0 16px rgba(143,70,255,0.42));
+    }
+
+    .projection-chart .chart-curve.secondary {
+      stroke: var(--green);
+      stroke-width: 3;
+      opacity: 0.58;
+      filter: drop-shadow(0 0 12px rgba(20,241,149,0.24));
+    }
+
+    .projection-columns {
+      position: absolute;
+      left: 12%;
+      right: 11%;
+      bottom: 15%;
+      display: grid;
+      grid-template-columns: repeat(10, minmax(0, 1fr));
+      align-items: end;
+      gap: 12px;
+      height: 45%;
+      z-index: 1;
+    }
+
+    .projection-columns span {
+      height: var(--column-h, 32%);
+      border-radius: 999px 999px 2px 2px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.32), var(--column-color, var(--accent)) 48%, rgba(255,255,255,0.08));
+      box-shadow: 0 0 24px var(--column-glow, rgba(143,70,255,0.18));
+      opacity: var(--model-opacity, 0.55);
+      transform: scaleY(var(--model-scale, 0.68));
+      transform-origin: bottom center;
+    }
+
+    .projection-columns span:nth-child(1) { --column-h: 18%; --column-color: var(--green); --column-glow: rgba(20,241,149,0.22); }
+    .projection-columns span:nth-child(2) { --column-h: 26%; --column-color: var(--green); --column-glow: rgba(20,241,149,0.2); }
+    .projection-columns span:nth-child(3) { --column-h: 34%; --column-color: var(--cyan); --column-glow: rgba(0,194,255,0.2); }
+    .projection-columns span:nth-child(4) { --column-h: 43%; --column-color: var(--accent); }
+    .projection-columns span:nth-child(5) { --column-h: 52%; --column-color: var(--accent); }
+    .projection-columns span:nth-child(6) { --column-h: 62%; --column-color: var(--accent); }
+    .projection-columns span:nth-child(7) { --column-h: 72%; --column-color: var(--pink); --column-glow: rgba(255,79,216,0.2); }
+    .projection-columns span:nth-child(8) { --column-h: 82%; --column-color: var(--coral); --column-glow: rgba(255,107,74,0.2); }
+    .projection-columns span:nth-child(9) { --column-h: 91%; --column-color: var(--coral); --column-glow: rgba(255,107,74,0.2); }
+    .projection-columns span:nth-child(10) { --column-h: 100%; --column-color: var(--green); --column-glow: rgba(20,241,149,0.2); }
+
+    .projection-cursor {
+      position: absolute;
+      left: var(--model-marker-x, 66%);
+      top: var(--model-marker-y, 28%);
+      width: 72px;
+      height: 72px;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 50%;
+      box-shadow: 0 0 36px rgba(143,70,255,0.28);
+      transform: translate(-50%, -50%) scale(var(--model-scale, 0.9));
+      z-index: 4;
+    }
+
+    .projection-cursor::after {
+      content: "";
+      position: absolute;
+      inset: 26px;
+      border-radius: inherit;
+      background: var(--accent);
+      box-shadow: 0 0 24px rgba(143,70,255,0.56);
+    }
+
+    .commitment-node {
+      position: absolute;
+      left: var(--node-left, 14%);
+      top: var(--node-top, 74%);
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--node-color, var(--green));
+      box-shadow: 0 0 26px var(--node-color, var(--green));
+      opacity: var(--deposit-opacity, 0.32);
+      transform: translate(-50%, -50%) scale(var(--deposit-scale, 0.72));
+      z-index: 5;
+    }
+
+    .commitment-node::after {
+      content: "";
+      position: absolute;
+      inset: -18px;
+      border: 1px solid var(--node-color, var(--green));
+      border-radius: inherit;
+      opacity: var(--deposit-ring-opacity, 0.12);
+    }
+
+    .commitment-node.two { --node-left: 38%; --node-top: 58%; --node-color: var(--cyan); }
+    .commitment-node.three { --node-left: 60%; --node-top: 40%; --node-color: var(--accent); }
+    .commitment-node.four { --node-left: 80%; --node-top: 24%; --node-color: var(--pink); }
+
+    .account-stage {
+      --module-w: 210px;
+      --module-h: 238px;
+    }
+
+    .ledger-field {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 520px;
+      height: 300px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.075), transparent 22%),
+        radial-gradient(circle at 56% 50%, rgba(143,70,255,0.18), transparent 52%),
+        radial-gradient(circle at 20% 78%, rgba(20,241,149,0.1), transparent 44%);
+      transform: translate(-50%, -50%) rotate(var(--story-field-rotate, -4deg)) scale(var(--account-shell-scale, 0.9));
+      opacity: var(--account-shell-opacity, 0.3);
+      filter: blur(4px);
+      z-index: 0;
+    }
+
+    .ledger-spine {
+      width: 210px;
+      height: 238px;
+      transform: translate(-50%, -50%) rotate(-4deg) scale(var(--account-shell-scale, 0.9));
+      opacity: 0.88;
+      z-index: 5;
+    }
+
+    .ledger-spine::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 18px;
+      bottom: 18px;
+      width: 2px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, transparent, rgba(255,255,255,0.18), transparent);
+      transform: translateX(-50%);
+    }
+
+    .ledger-spine i:nth-child(1) { top: 56px; }
+    .ledger-spine i:nth-child(2) { top: 93px; }
+    .ledger-spine i:nth-child(3) { top: 130px; }
+    .ledger-spine i:nth-child(4) { top: 167px; }
+
+    .dock-rail {
+      width: 39%;
+      --rail-color: var(--accent);
+      --rail-glow: rgba(143,70,255,0.3);
+      opacity: var(--packet-opacity, 0.36);
+    }
+
+    .dock-rail.left {
+      left: 5%;
+      transform: translateX(var(--stream-x, 0)) scaleX(var(--account-progress, 0.36));
+    }
+
+    .dock-rail.right {
+      right: 5%;
+      transform: translateX(var(--stream-x-reverse, 0)) scaleX(var(--account-progress, 0.36));
+      transform-origin: right center;
+    }
+
+    .dock-rail.right::before {
+      left: auto;
+      right: 0;
+      transform: translate(50%, -50%);
+    }
+
+    .dock-rail.left::after { right: 2px; }
+    .dock-rail.right::after { left: 2px; right: auto; transform-origin: left center; }
+
+    .dock-a { top: 24%; --rail-color: var(--green); --rail-glow: rgba(20,241,149,0.32); }
+    .dock-b { top: 42%; --rail-color: var(--accent); --rail-glow: rgba(143,70,255,0.32); }
+    .dock-c { top: 60%; --rail-color: var(--cyan); --rail-glow: rgba(0,194,255,0.3); }
+    .dock-d { top: 78%; --rail-color: var(--pink); --rail-glow: rgba(255,79,216,0.3); }
+
+    .account-token {
+      position: absolute;
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.11), rgba(255,255,255,0.02)),
+        rgba(18,18,17,0.78);
+      box-shadow: 0 0 26px var(--token-glow, rgba(143,70,255,0.2));
+      transform: translateX(var(--account-node-x, 0)) scale(var(--packet-scale, 0.76));
+      opacity: var(--packet-opacity, 0.32);
+      z-index: 4;
+    }
+
+    .account-token::after {
+      content: "";
+      position: absolute;
+      inset: 13px;
+      border-radius: 50%;
+      background: var(--token-color, var(--accent));
+      box-shadow: 0 0 18px var(--token-glow, rgba(143,70,255,0.32));
+    }
+
+    .token-a { left: 11%; top: 17%; --token-color: var(--green); --token-glow: rgba(20,241,149,0.32); }
+    .token-b { right: 12%; top: 32%; --token-color: var(--accent); --token-glow: rgba(143,70,255,0.34); transform: translateX(var(--account-node-x-reverse, 0)) scale(var(--packet-scale, 0.76)); }
+    .token-c { left: 8%; top: 54%; --token-color: var(--cyan); --token-glow: rgba(0,194,255,0.3); }
+    .token-d { right: 8%; top: 72%; --token-color: var(--pink); --token-glow: rgba(255,79,216,0.3); transform: translateX(var(--account-node-x-reverse, 0)) scale(var(--packet-scale, 0.76)); }
+
     .light .section-head p,
     .light .muted {
       color: rgba(5,5,5,0.62);
@@ -1158,7 +2180,7 @@
     .product-card.is-active,
     .product-card:hover,
     .product-card:focus-visible {
-      border-color: rgba(143,70,255,0.64);
+      border-color: rgba(255,255,255,0.34);
       background: #1d1c1a;
       transform: translateY(-2px);
     }
@@ -1227,7 +2249,10 @@
     .mini-mark,
     .mini-barset,
     .mini-marker,
-    .mini-ledger-row {
+    .mini-ledger-row,
+    .auto-path,
+    .auto-coin,
+    .auto-yield {
       position: absolute;
       z-index: 1;
     }
@@ -1341,6 +2366,105 @@
       box-shadow: 0 0 18px rgba(143,70,255,0.52);
     }
 
+    .auto-path {
+      left: 18%;
+      right: 16%;
+      top: 50%;
+      height: 2px;
+      background: rgba(255,255,255,0.18);
+      transform: translateY(-50%);
+    }
+
+    .auto-coin {
+      width: 50px;
+      height: 50px;
+      top: calc(50% - 25px);
+      filter: drop-shadow(0 14px 24px rgba(0,0,0,0.38));
+    }
+
+    .auto-coin img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .auto-usdc {
+      left: 20%;
+      animation: autoUSDCSlide 5000ms cubic-bezier(.55,0,.24,1) 1 both paused;
+    }
+
+    .auto-sol {
+      right: 18%;
+      opacity: 0;
+      animation: autoSOLEmerge 5000ms cubic-bezier(.55,0,.24,1) 1 both paused;
+    }
+
+    .auto-yield {
+      width: 18px;
+      height: 18px;
+      left: 26%;
+      top: 50%;
+      border-radius: 50%;
+      background: var(--yield-color, #9d78ff);
+      opacity: 0;
+      box-shadow:
+        inset -4px -5px 8px rgba(0,0,0,0.18),
+        inset 4px 4px 6px rgba(255,255,255,0.32),
+        0 0 16px var(--yield-glow, rgba(157,120,255,0.28));
+      animation: autoYieldFloat 5000ms cubic-bezier(.55,0,.24,1) 1 both paused;
+    }
+
+    .auto-yield::before {
+      content: "";
+      position: absolute;
+      left: 4px;
+      top: 3px;
+      width: 6px;
+      height: 4px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.78);
+    }
+
+    .auto-yield.one {
+      --yield-color: var(--yield-mint);
+      --yield-glow: rgba(90,240,175,0.26);
+      --yield-x: -14px;
+      --yield-y: -52px;
+    }
+
+    .auto-yield.two {
+      --yield-color: var(--yield-purple);
+      --yield-glow: rgba(157,120,255,0.28);
+      --yield-x: 56px;
+      --yield-y: -28px;
+      animation-delay: 110ms;
+    }
+
+    .auto-yield.three {
+      --yield-color: var(--yield-cyan);
+      --yield-glow: rgba(77,201,255,0.26);
+      --yield-x: 46px;
+      --yield-y: 36px;
+      animation-delay: 220ms;
+    }
+
+    .auto-yield.four {
+      --yield-color: var(--yield-mint);
+      --yield-glow: rgba(90,240,175,0.24);
+      --yield-x: -36px;
+      --yield-y: 34px;
+      animation-delay: 330ms;
+    }
+
+    .auto-yield.five {
+      --yield-color: var(--yield-purple);
+      --yield-glow: rgba(157,120,255,0.24);
+      --yield-x: -58px;
+      --yield-y: -8px;
+      animation-delay: 440ms;
+    }
+
     .mini-ledger-row {
       left: var(--mini-row-left, 9%);
       right: var(--mini-row-right, 9%);
@@ -1392,6 +2516,12 @@
       animation: miniMarkerClimb 5000ms cubic-bezier(0.2, 0.8, 0.2, 1) 1 both;
     }
 
+    .product-card.is-animating[data-product-card="autostack"] .auto-usdc,
+    .product-card.is-animating[data-product-card="autostack"] .auto-sol,
+    .product-card.is-animating[data-product-card="autostack"] .auto-yield {
+      animation-play-state: running;
+    }
+
     .product-card.is-animating[data-product-card="account"] .mini-ledger-row::before {
       animation: miniLedgerNode 5000ms ease-in-out 1 both;
     }
@@ -1422,6 +2552,25 @@
       0% { transform: translate(-118px, 78px) scale(0.78); opacity: 0.52; }
       62% { transform: translate(-20px, 12px) scale(1.04); opacity: 1; }
       100% { transform: translate(0, 0) scale(0.96); opacity: 0.86; }
+    }
+
+    @keyframes autoUSDCSlide {
+      0%, 22% { transform: translateX(0) scale(1); opacity: 1; }
+      48% { transform: translateX(10px) scale(1); opacity: 1; }
+      72%, 100% { transform: translateX(142px) scale(0.82); opacity: 0; }
+    }
+
+    @keyframes autoSOLEmerge {
+      0%, 46% { transform: translateX(-120px) scale(0.84); opacity: 0; }
+      72% { transform: translateX(-16px) scale(1); opacity: 1; }
+      100% { transform: translateX(0) scale(1); opacity: 1; }
+    }
+
+    @keyframes autoYieldFloat {
+      0%, 18% { transform: translate(0, 0) scale(0.45); opacity: 0; }
+      38% { transform: translate(calc(var(--yield-x) * 0.72), calc(var(--yield-y) * 0.72)) scale(1); opacity: 1; }
+      70% { transform: translate(var(--yield-x), var(--yield-y)) scale(0.92); opacity: 0.92; }
+      100% { transform: translate(calc(var(--yield-x) + 22px), calc(var(--yield-y) - 4px)) scale(0.66); opacity: 0.42; }
     }
 
     @keyframes miniLedgerNode {
@@ -1460,7 +2609,7 @@
 
     .featured-card:hover,
     .featured-card.active {
-      border-color: rgba(143,70,255,0.72);
+      border-color: rgba(255,255,255,0.34);
       background: #1d1c1a;
       transform: translateY(-2px);
     }
@@ -1496,122 +2645,302 @@
       min-height: 494px;
     }
 
-    .sim-top {
-      display: flex;
-      align-items: start;
-      justify-content: space-between;
-      gap: 18px;
-      margin-bottom: 20px;
+    .sim-chart-card {
+      margin: 8px 0 20px;
+      position: relative;
+      padding: 22px 12px 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at 82% 10%, rgba(143,70,255,0.08), transparent 38%),
+        rgba(26,26,29,0.28);
+      overflow: visible;
+      isolation: isolate;
     }
 
-    .sim-top h3 {
-      font-size: 24px;
-      line-height: 1.08;
-    }
-
-    .sim-meta {
+    .sim-projection-summary {
       display: grid;
-      gap: 2px;
-      text-align: right;
-      color: var(--faint);
-      font-size: 11px;
-      white-space: nowrap;
+      justify-items: center;
+      gap: 5px;
+      padding: 0 6px 5px;
+      text-align: center;
     }
 
-    .sim-meta strong {
-      color: #fff;
-      font-size: 13px;
+    .sim-projection-label {
+      color: var(--muted);
+      font-size: 12px;
       font-weight: 650;
     }
 
-    .ring-wrap {
-      display: grid;
-      place-items: center;
-      margin: 12px 0 24px;
+    .sim-projection-summary .projected-total {
+      color: #fff;
+      margin-bottom: 4px;
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 760;
+      line-height: 0.98;
+      letter-spacing: 0;
+      transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    .ring {
-      width: 222px;
-      aspect-ratio: 1;
+    .sim-projection-summary .projected-total.is-updating {
+      transform: scale(1.025);
+    }
+
+    .sim-earned-line {
+      color: var(--faint);
+      font-size: 12px;
+      line-height: 1.25;
+    }
+
+    .sim-earned-line strong {
+      color: #fff;
+      font-size: inherit;
+      font-weight: 760;
+    }
+
+    .sim-earned-line span {
+      color: inherit;
+      font: inherit;
+    }
+
+    .sim-chart-wrap {
       position: relative;
-      display: grid;
-      place-items: center;
+      cursor: default;
+      overflow: visible;
     }
 
-    .ring::before,
-    .ring::after {
+    .sim-chart {
+      display: block;
+      width: 100%;
+      height: auto;
+      min-height: 214px;
+      overflow: visible;
+    }
+
+    .chart-hit-area {
+      fill: transparent;
+      pointer-events: all;
+    }
+
+    .chart-grid-line {
+      stroke: rgba(255,255,255,0.055);
+      stroke-width: 0.55;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .chart-y-axis text,
+    .chart-x-axis text {
+      fill: rgba(255,255,255,0.36);
+      font-family: "IBM Plex Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 10px;
+      letter-spacing: 0.01em;
+    }
+
+    .chart-year-marker {
+      stroke: rgba(255,255,255,0.18);
+      stroke-width: 0.6;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .chart-path {
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      vector-effect: non-scaling-stroke;
+      transition: d 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .chart-path-core {
+      stroke: var(--green);
+      stroke-width: 1.3;
+      filter: none;
+    }
+
+    .chart-path-benchmark {
+      stroke: rgba(255,255,255,0.52);
+      stroke-width: 0.85;
+      stroke-dasharray: 4 6;
+    }
+
+    .chart-path-inflation {
+      stroke: #ff5572;
+      stroke-width: 0.85;
+      stroke-dasharray: 1 6;
+    }
+
+    .chart-area {
+      fill: url(#coreChartFill);
+      opacity: 0.72;
+      transition: d 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .chart-end {
+      transition: cx 420ms cubic-bezier(0.2, 0.8, 0.2, 1), cy 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .chart-end-core {
+      fill: var(--green);
+      stroke: none;
+      stroke-width: 0;
+    }
+
+    .chart-end-benchmark {
+      fill: rgba(255,255,255,0.66);
+    }
+
+    .chart-end-inflation {
+      fill: #ff5572;
+    }
+
+    .chart-hover-mark {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 140ms ease;
+    }
+
+    .sim-chart-card.is-hovering .chart-hover-mark {
+      opacity: 1;
+    }
+
+    .chart-hover-line {
+      stroke: rgba(255,255,255,0.18);
+      stroke-width: 0.65;
+      stroke-dasharray: 2 5;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .chart-hover-dot {
+      fill: var(--green);
+      stroke: none;
+      stroke-width: 0;
+    }
+
+    .chart-tooltip {
+      --tooltip-x: 0px;
+      --tooltip-y: 0px;
+      --tooltip-arrow-x: 50%;
+      position: absolute;
+      left: 0;
+      top: 0;
+      min-width: 150px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: #070707;
+      transform: translate3d(var(--tooltip-x), var(--tooltip-y), 0) translate(-50%, calc(-100% - 14px));
+      opacity: 0;
+      visibility: hidden;
+      transition:
+        transform 130ms cubic-bezier(0.25, 1, 0.5, 1),
+        opacity 80ms ease;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .sim-chart-card.is-hovering .chart-tooltip {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .chart-tooltip::after {
       content: "";
       position: absolute;
-      border-radius: 50%;
-      pointer-events: none;
+      left: var(--tooltip-arrow-x);
+      bottom: -8px;
+      width: 16px;
+      height: 16px;
+      border-right: 1px solid rgba(255,255,255,0.08);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: #070707;
+      transform: translateX(-50%) rotate(45deg);
+      border-radius: 2px;
     }
 
-    .ring::before {
-      inset: 21px;
-      border: 1px solid rgba(255,255,255,0.055);
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.025);
-    }
-
-    .ring::after {
-      inset: 54px;
-      border: 1px solid rgba(255,255,255,0.045);
-      transform: rotate(22deg);
-    }
-
-    .ring svg {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      overflow: visible;
-      transform: rotate(-90deg);
-    }
-
-    .ring-track,
-    .ring-progress {
-      fill: none;
-      cx: 111px;
-      cy: 111px;
-      r: 94px;
-    }
-
-    .ring-track {
-      stroke: rgba(255,255,255,0.14);
-      stroke-width: 3;
-    }
-
-    .ring-progress {
-      stroke: var(--accent);
-      stroke-linecap: round;
-      stroke-width: 5;
-      filter: drop-shadow(0 0 10px rgba(143,70,255,0.28));
-      transition: stroke-dashoffset 520ms cubic-bezier(0.2, 0.8, 0.2, 1);
-    }
-
-    .ring-inner {
-      width: 146px;
-      aspect-ratio: 1;
-      border-radius: 50%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-      text-align: center;
-      padding: 16px;
+    .chart-tooltip-row {
       position: relative;
       z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 720;
+      line-height: 1.45;
     }
 
-    .ring-inner span {
-      color: var(--faint);
+    .chart-tooltip-row + .chart-tooltip-row {
+      margin-top: 5px;
+    }
+
+    .chart-tooltip-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: #fff;
+    }
+
+    .chart-tooltip-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.86);
+    }
+
+    .chart-tooltip-dot.earned {
+      background: var(--green);
+    }
+
+    .chart-tooltip strong {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 760;
+    }
+
+    .chart-legend {
+      display: grid;
+      grid-template-columns: repeat(2, max-content);
+      justify-content: center;
+      align-items: center;
+      gap: 24px;
+      padding-top: 11px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .chart-legend span {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 10px;
+      white-space: nowrap;
+    }
+
+    .chart-legend em {
+      font-style: normal;
+    }
+
+    .chart-legend i {
+      width: 8px;
+      height: 8px;
+      flex: 0 0 auto;
+      border-radius: 3px;
+      background: var(--green);
+    }
+
+    .chart-legend strong {
+      color: #fff;
       font-size: 11px;
+      font-weight: 740;
     }
 
-    .ring-inner strong {
-      display: block;
-      font-size: 28px;
-      line-height: 1;
+    .chart-legend .legend-benchmark {
+      background: rgba(255,255,255,0.56);
+    }
+
+    .chart-legend .legend-inflation {
+      background: #ff5572;
     }
 
     .control-group {
@@ -1645,40 +2974,60 @@
     input[type="range"]::-webkit-slider-runnable-track {
       height: 3px;
       border-radius: 999px;
-      background: linear-gradient(90deg, var(--accent) 0 var(--range-fill), rgba(255,255,255,0.74) var(--range-fill) 100%);
+      background: linear-gradient(90deg, rgba(255,255,255,0.96) 0 var(--range-fill), rgba(255,255,255,0.42) var(--range-fill) 100%);
     }
 
     input[type="range"]::-webkit-slider-thumb {
-      width: 15px;
-      height: 15px;
-      margin-top: -6px;
-      border: 2px solid var(--surface);
+      width: 16px;
+      height: 16px;
+      margin-top: -6.5px;
+      border: 0;
       border-radius: 50%;
-      background: var(--accent);
+      background: #f7f7f4;
       appearance: none;
       -webkit-appearance: none;
-      box-shadow: 0 0 0 1px rgba(255,255,255,0.14);
+      box-shadow: none;
+      transition: none;
+    }
+
+    input[type="range"]:hover::-webkit-slider-thumb,
+    input[type="range"]:focus-visible::-webkit-slider-thumb {
+      box-shadow: none;
+    }
+
+    input[type="range"]:active::-webkit-slider-thumb {
+      transform: none;
+      box-shadow: none;
     }
 
     input[type="range"]::-moz-range-track {
       height: 3px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.74);
+      background: rgba(255,255,255,0.42);
     }
 
     input[type="range"]::-moz-range-progress {
       height: 3px;
       border-radius: 999px;
-      background: var(--accent);
+      background: rgba(255,255,255,0.96);
     }
 
     input[type="range"]::-moz-range-thumb {
-      width: 13px;
-      height: 13px;
-      border: 2px solid var(--surface);
+      width: 16px;
+      height: 16px;
+      border: 0;
       border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 0 1px rgba(255,255,255,0.14);
+      background: #f7f7f4;
+      box-shadow: none;
+    }
+
+    input[type="range"]:hover::-moz-range-thumb,
+    input[type="range"]:focus-visible::-moz-range-thumb {
+      box-shadow: none;
+    }
+
+    input[type="range"]:active::-moz-range-thumb {
+      box-shadow: none;
     }
 
     .core-options {
@@ -1689,48 +3038,102 @@
     }
 
     .core-option {
+      --glass-x: 50%;
+      --glass-y: 16%;
+      --glass-pull-x: 0px;
+      --glass-pull-y: 0px;
+      --glass-warp-x: 0px;
+      --glass-warp-y: 0px;
+      --glass-scale-x: 1;
+      --glass-scale-y: 1;
+      --glass-rim-angle: 135deg;
+      --lg-displacement-scale: 70;
+      --lg-blur: 8px;
+      --lg-saturation: 125%;
+      --lg-aberration-red: 3px;
+      --lg-aberration-blue: -3px;
+      --lg-elasticity: 0.15;
+      --lg-corner-radius: 999px;
       min-height: 32px;
       border: 1px solid var(--line);
-      border-radius: 999px;
+      border-radius: var(--lg-corner-radius);
       background: transparent;
       color: var(--muted);
       font-size: 12px;
+      text-shadow: none;
       cursor: pointer;
-      transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      transition:
+        border-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
+        background 220ms cubic-bezier(0.22, 1, 0.36, 1),
+        color 160ms ease,
+        transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    .core-option:hover,
-    .core-option:focus-visible {
-      border-color: rgba(255,255,255,0.72);
+    .core-option::before {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: inherit;
+      pointer-events: none;
+      opacity: 0;
+      background:
+        radial-gradient(ellipse at 42% 0%, rgba(255,255,255,0.12), rgba(255,255,255,0.034) 24%, transparent 58%),
+        linear-gradient(100deg, rgba(82,140,255,0.032), transparent 20%, transparent 72%, rgba(255,216,132,0.03)),
+        linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01) 50%, rgba(0,0,0,0.08));
+      box-shadow:
+        inset 0 0 0 0.35px rgba(255,255,255,0.07),
+        inset 0 0.5px 0 rgba(255,255,255,0.10),
+        inset 0 -0.5px 0 rgba(0,0,0,0.14);
+      transform: none;
+      transition:
+        opacity 240ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .core-option:not(.active):hover,
+    .core-option:not(.active):focus-visible {
+      border-color: rgba(255,255,255,0.10);
+      background:
+        radial-gradient(ellipse at 44% 0%, rgba(255,255,255,0.045), transparent 56%),
+        linear-gradient(104deg, rgba(82,140,255,0.035), transparent 22%, transparent 72%, rgba(255,216,132,0.032)),
+        linear-gradient(180deg, rgba(255,255,255,0.038), rgba(255,255,255,0.01) 50%, rgba(0,0,0,0.10)),
+        rgba(13,15,16,0.30);
       color: #fff;
+      text-shadow:
+        0 1px 2px rgba(0,0,0,0.58),
+        0 0 10px rgba(0,0,0,0.28);
+      transform: translateY(-1px);
+      -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(var(--lg-saturation));
+      backdrop-filter: blur(var(--lg-blur)) saturate(var(--lg-saturation));
+      box-shadow:
+        inset 0 0 0 0.35px rgba(255,255,255,0.07),
+        inset 0 1px 0 rgba(255,255,255,0.08),
+        inset 0 -1px 0 rgba(0,0,0,0.14),
+        0 10px 24px rgba(0,0,0,0.12);
+    }
+
+    .core-option:not(.active):hover::before,
+    .core-option:not(.active):focus-visible::before {
+      opacity: 0.38;
+      transform: none;
+    }
+
+    .core-option:focus-visible {
+      outline: 2px solid rgba(255,255,255,0.18);
+      outline-offset: 3px;
+    }
+
+    .core-option:active {
+      transform: translateY(0);
     }
 
     .core-option.active {
       border-color: #fff;
       background: #fff;
       color: #050505;
-    }
-
-    .segments {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 6px;
-      margin-top: 2px;
-    }
-
-    .segment {
-      min-height: 34px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: transparent;
-      color: var(--muted);
-      cursor: pointer;
-    }
-
-    .segment.active {
-      background: #fff;
-      color: #050505;
-      border-color: #fff;
     }
 
     .sim-summary {
@@ -1758,11 +3161,41 @@
       font-size: 16px;
     }
 
-    .disclaimer {
+    .summary-cell strong.is-negative {
+      color: #ff5572;
+    }
+
+    .sim-reward-note {
       margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.08);
       color: var(--faint);
-      font-size: 11px;
-      line-height: 1.45;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .sim-reward-note p {
+      margin: 0;
+    }
+
+    .sim-reward-note p + p {
+      margin-top: 1px;
+    }
+
+    .sim-reward-note .reward-rate {
+      color: #fff;
+    }
+
+    .sim-reward-note a {
+      color: inherit;
+      font-weight: inherit;
+      text-decoration: underline;
+      text-underline-offset: 0.12em;
+    }
+
+    .sim-reward-note a:hover,
+    .sim-reward-note a:focus-visible {
+      color: inherit;
     }
 
     .process-grid {
@@ -1773,7 +3206,9 @@
 
     .process-section {
       --process: 0;
-      margin-top: clamp(64px, 8vw, 112px);
+      margin-top: 0;
+      background: transparent;
+      color: #fff;
     }
 
     .process-card {
@@ -1787,18 +3222,19 @@
       padding: 22px;
       display: grid;
       align-content: space-between;
-      border: 1px solid rgba(5,5,5,0.12);
+      border: 1px solid var(--line);
       border-radius: var(--radius);
-      background: #fff;
-      color: #050505;
-      box-shadow: 0 var(--card-shadow-y) 52px rgba(5, 5, 5, var(--card-shadow-a));
+      background: var(--surface);
+      color: #fff;
+      box-shadow: 0 var(--card-shadow-y) 52px rgba(0, 0, 0, var(--card-shadow-a));
       transform: translateY(var(--card-y));
-      transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+      transition: border-color 160ms ease, background 160ms ease, box-shadow 160ms ease, transform 160ms ease;
       will-change: transform;
     }
 
     .process-card.is-active {
-      border-color: rgba(143,70,255,0.42);
+      border-color: rgba(255,255,255,0.30);
+      background: #1a1918;
     }
 
     .process-art {
@@ -1806,9 +3242,9 @@
       border-radius: var(--radius);
       background:
         radial-gradient(circle at 30% 70%, rgba(20,241,149,0.12), transparent 42%),
-        radial-gradient(circle at 72% 28%, rgba(143,70,255,0.14), transparent 46%),
-        #f1efe9;
-      border: 1px solid rgba(5,5,5,0.1);
+        radial-gradient(circle at 72% 28%, rgba(143,70,255,0.16), transparent 46%),
+        #070707;
+      border: 1px solid rgba(255,255,255,0.1);
       display: grid;
       place-items: center;
       overflow: hidden;
@@ -1832,7 +3268,7 @@
       border-radius: 50%;
       opacity: 0.48;
       background:
-        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.72), transparent 34%),
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.1), transparent 34%),
         conic-gradient(from 210deg, rgba(20,241,149,0.2), rgba(143,70,255,0.14), rgba(0,194,255,0.12), rgba(20,241,149,0.2));
       filter: blur(1px);
     }
@@ -1870,7 +3306,7 @@
     }
 
     .process-card.is-active .process-art {
-      border-color: rgba(143,70,255,0.34);
+      border-color: rgba(255,255,255,0.24);
     }
 
     .journey-svg {
@@ -1882,13 +3318,9 @@
 
     .journey-axis {
       fill: none;
-      stroke: rgba(5,5,5,0.13);
+      stroke: rgba(255,255,255,0.12);
       stroke-width: 1;
       vector-effect: non-scaling-stroke;
-    }
-
-    .account-process .journey-axis {
-      stroke: rgba(255,255,255,0.12);
     }
 
     .journey-route {
@@ -1927,21 +3359,21 @@
     }
 
     .journey-tile {
-      fill: var(--tile-fill, rgba(5,5,5,0.05));
-      stroke: var(--tile-stroke, rgba(5,5,5,0.16));
+      fill: var(--tile-fill, rgba(255,255,255,0.055));
+      stroke: var(--tile-stroke, rgba(255,255,255,0.14));
       stroke-width: 1;
       opacity: calc(var(--artifact-opacity, 0.28) + 0.18);
     }
 
-    .journey-stack rect {
-      fill: #050505;
-      opacity: calc(var(--artifact-opacity, 0.28) + 0.36);
-      filter: drop-shadow(0 0 8px rgba(5,5,5,0.18));
+    .process-section .journey-tile {
+      fill: rgba(255,255,255,0.055);
+      stroke: rgba(255,255,255,0.14);
     }
 
-    .account-process .journey-stack rect {
+    .journey-stack rect {
       fill: #fff;
       filter: drop-shadow(0 0 10px rgba(255,255,255,0.16));
+      opacity: calc(var(--artifact-opacity, 0.28) + 0.36);
     }
 
     .process-card.is-active .journey-route {
@@ -1980,10 +3412,163 @@
       to { filter: brightness(1.12); translate: 0 -7px; }
     }
 
+    .yield-sources-section {
+      overflow: hidden;
+      background: #050505;
+      color: #fff;
+    }
+
+    .yield-sources-head {
+      max-width: 960px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .yield-sources-head h2 {
+      font-size: clamp(46px, 7vw, 96px);
+      line-height: 0.96;
+      font-weight: 720;
+      letter-spacing: 0;
+    }
+
+    .yield-sources-head p {
+      max-width: 790px;
+      margin: 24px auto 0;
+      color: var(--muted);
+      font-size: clamp(17px, 2vw, 24px);
+      line-height: 1.5;
+    }
+
+    .source-logo-marquee {
+      position: relative;
+      width: 100%;
+      margin-top: clamp(56px, 8vw, 92px);
+      overflow: hidden;
+      user-select: none;
+    }
+
+    .source-logo-marquee::before,
+    .source-logo-marquee::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      z-index: 2;
+      width: min(180px, 18vw);
+      pointer-events: none;
+    }
+
+    .source-logo-marquee::before {
+      left: 0;
+      background: linear-gradient(90deg, #050505, rgba(5,5,5,0));
+    }
+
+    .source-logo-marquee::after {
+      right: 0;
+      background: linear-gradient(270deg, #050505, rgba(5,5,5,0));
+    }
+
+    .source-logo-track {
+      display: flex;
+      width: max-content;
+      transform: translateX(-50%);
+      animation: sourceLogoScroll 48s linear infinite;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .source-logo-marquee:hover .source-logo-track {
+        animation-play-state: paused;
+      }
+    }
+
+    .source-logo-group {
+      display: flex;
+      align-items: center;
+      gap: clamp(56px, 5vw, 80px);
+      padding-right: clamp(56px, 5vw, 80px);
+    }
+
+    .source-logo {
+      flex: 0 0 auto;
+      height: clamp(70px, 5.8vw, 93px);
+      display: grid;
+      place-items: center;
+    }
+
+    .source-logo img {
+      display: block;
+      width: auto;
+      height: clamp(51px, 4.2vw, 64px);
+      max-width: none;
+      max-height: none;
+      object-fit: contain;
+      opacity: 1;
+      mix-blend-mode: screen;
+    }
+
+    .source-logo.is-wordmark img {
+      width: auto;
+      max-width: none;
+      max-height: none;
+    }
+
+    .source-logo.is-usdc img {
+      height: clamp(51px, 4.2vw, 64px);
+      max-height: none;
+    }
+
+    .top-logo-reel {
+      position: relative;
+      z-index: 3;
+      padding: 18px 0 8px;
+      overflow: hidden;
+      background: #050505;
+    }
+
+    .top-logo-reel .source-logo-marquee {
+      margin-top: 0;
+    }
+
+    .top-logo-reel .source-logo-marquee::before,
+    .top-logo-reel .source-logo-marquee::after {
+      width: min(120px, 16vw);
+    }
+
+    .top-logo-reel .source-logo-group {
+      gap: clamp(42px, 4vw, 64px);
+      padding-right: clamp(42px, 4vw, 64px);
+    }
+
+    .top-logo-reel .source-logo {
+      flex: 0 0 auto;
+      height: clamp(35px, 3.5vw, 48px);
+    }
+
+    .top-logo-reel .source-logo img {
+      width: auto;
+      height: clamp(22px, 2.17vw, 31px);
+      max-width: none;
+      max-height: none;
+    }
+
+    .top-logo-reel .source-logo.is-wordmark img {
+      width: auto;
+      max-width: none;
+    }
+
+    .top-logo-reel .source-logo.is-usdc img {
+      height: clamp(22px, 2.17vw, 31px);
+      max-height: none;
+    }
+
+    @keyframes sourceLogoScroll {
+      from { transform: translateX(-50%); }
+      to { transform: translateX(0); }
+    }
+
     .final-cta {
       padding: 100px 0;
       text-align: center;
-      border-top: 1px solid var(--line);
     }
 
     .final-cta h2 {
@@ -2002,7 +3587,6 @@
     }
 
     footer {
-      border-top: 1px solid var(--line);
       padding: 68px 0 42px;
       color: var(--faint);
     }
@@ -2030,6 +3614,54 @@
       color: var(--faint);
       font-size: 14px;
       line-height: 1.65;
+    }
+
+    .footer-socials {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 0;
+    }
+
+    .footer-social {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.58);
+      text-decoration: none;
+    }
+
+    .footer-social svg {
+      width: 22px;
+      height: 22px;
+      display: block;
+      flex: 0 0 auto;
+      margin: auto;
+    }
+
+    .footer-social.is-discord svg {
+      width: 29px;
+      height: 29px;
+    }
+
+    a.footer-social {
+      transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+    }
+
+    a.footer-social:hover,
+    a.footer-social:focus-visible {
+      background: rgba(255,255,255,0.13);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    .footer-social.is-disabled {
+      pointer-events: none;
     }
 
     .footer-col {
@@ -2063,36 +3695,143 @@
       position: fixed;
       left: 0;
       right: 0;
-      bottom: 0;
-      z-index: 40;
+      bottom: var(--ticker-bottom-offset);
+      z-index: 80;
       height: var(--ticker-height);
       overflow: hidden;
-      border-top: 1px solid rgba(255,255,255,0.12);
-      background: rgba(11, 12, 16, 0.96);
-      box-shadow: 0 -18px 34px rgba(0,0,0,0.34);
-      backdrop-filter: blur(16px);
+      border-top: 1px solid rgba(255,255,255,0.065);
+      background:
+        radial-gradient(ellipse at 18% -20%, rgba(255,255,255,0.08), transparent 40%),
+        linear-gradient(100deg, rgba(82,128,255,0.035), transparent 25%, transparent 76%, rgba(255,211,126,0.032)),
+        linear-gradient(180deg, rgba(255,255,255,0.052), rgba(255,255,255,0.014) 52%, rgba(0,0,0,0.14)),
+        rgba(7, 8, 10, 0.42);
+      background-blend-mode: normal, normal, normal, normal;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.08),
+        inset 0 -1px 0 rgba(0,0,0,0.22),
+        0 -12px 24px rgba(0,0,0,0.24);
+      -webkit-backdrop-filter: blur(14px) saturate(136%) contrast(1.04);
+      backdrop-filter: blur(14px) saturate(136%) contrast(1.04);
+      transform: none;
+      will-change: auto;
       user-select: none;
     }
 
     .yield-ticker::before,
     .yield-ticker::after {
       content: "";
+      display: none;
       position: absolute;
       top: 0;
       bottom: 0;
       z-index: 2;
-      width: min(84px, 18vw);
+      width: min(96px, 20vw);
       pointer-events: none;
     }
 
     .yield-ticker::before {
       left: 0;
-      background: linear-gradient(90deg, #0b0c10, rgba(11,12,16,0));
+      background:
+        linear-gradient(90deg, rgba(7,8,10,0.70), rgba(7,8,10,0)),
+        linear-gradient(90deg, rgba(84,132,255,0.24), rgba(84,132,255,0)),
+        linear-gradient(180deg, rgba(255,255,255,0.06), transparent);
     }
 
     .yield-ticker::after {
       right: 0;
-      background: linear-gradient(270deg, #0b0c10, rgba(11,12,16,0));
+      background:
+        linear-gradient(270deg, rgba(7,8,10,0.70), rgba(7,8,10,0)),
+        linear-gradient(270deg, rgba(255,198,112,0.22), rgba(255,198,112,0)),
+        linear-gradient(180deg, rgba(255,255,255,0.052), transparent);
+    }
+
+    .button > .glass-label,
+    .core-option > .glass-label {
+      position: relative;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: inherit;
+      pointer-events: none;
+    }
+
+    .button::before,
+    .core-option::before {
+      z-index: 1;
+    }
+
+    html.svg-glass-ready .button:hover,
+    html.svg-glass-ready .button:focus-visible,
+    html.svg-glass-ready .button.secondary:hover,
+    html.svg-glass-ready .button.secondary:focus-visible,
+    html.svg-glass-ready .core-option:not(.active):hover,
+    html.svg-glass-ready .core-option:not(.active):focus-visible {
+      border-color: rgba(255,255,255,0.12);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.012) 52%, rgba(0,0,0,0.14)),
+        rgba(9, 10, 11, 0.36);
+      color: #fff;
+      -webkit-backdrop-filter: blur(13px) saturate(132%) contrast(1.04);
+      backdrop-filter: blur(13px) saturate(132%) contrast(1.04);
+      box-shadow:
+        inset 0 0 0 0.5px rgba(255,255,255,0.075),
+        inset 0 0.75px 0 rgba(255,255,255,0.10),
+        inset 0 -0.75px 0 rgba(0,0,0,0.22),
+        0 10px 22px rgba(0,0,0,0.16);
+    }
+
+    html.svg-glass-ready .button:hover::before,
+    html.svg-glass-ready .button:focus-visible::before,
+    html.svg-glass-ready .core-option:not(.active):hover::before,
+    html.svg-glass-ready .core-option:not(.active):focus-visible::before {
+      inset: 2px;
+      opacity: 0.68;
+      background:
+        radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.07), rgba(255,255,255,0.018) 44%, transparent 72%),
+        linear-gradient(100deg, rgba(108,155,255,0.012), transparent 34%, transparent 74%, rgba(255,222,150,0.012));
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+      filter: none;
+      box-shadow:
+        inset 0 0 0 0.35px rgba(255,255,255,0.06),
+        inset 0 0.7px 1px rgba(255,255,255,0.07),
+        inset 0 -0.7px 1px rgba(0,0,0,0.15);
+      transform: none;
+    }
+
+    html.svg-glass-ready .button:focus-visible,
+    html.svg-glass-ready .core-option:focus-visible {
+      outline: none;
+    }
+
+    html.svg-glass-ready .yield-ticker {
+      isolation: isolate;
+      border-top-color: rgba(255,255,255,0.055);
+      background:
+        radial-gradient(ellipse at 18% -40%, rgba(255,255,255,0.055), transparent 45%),
+        linear-gradient(100deg, rgba(98,142,255,0.018), transparent 30%, transparent 78%, rgba(255,218,142,0.016)),
+        linear-gradient(180deg, rgba(255,255,255,0.032), rgba(255,255,255,0.010) 56%, rgba(0,0,0,0.14)),
+        rgba(7, 8, 10, 0.34);
+      -webkit-backdrop-filter: blur(15px) saturate(130%) contrast(1.04);
+      backdrop-filter: blur(15px) saturate(130%) contrast(1.04);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.045),
+        inset 0 -1px 0 rgba(0,0,0,0.18),
+        0 -10px 22px rgba(0,0,0,0.18);
+    }
+
+    html.svg-glass-ready .yield-ticker::before {
+      display: none;
+    }
+
+    html.svg-glass-ready .yield-ticker::after {
+      display: none;
+    }
+
+    html.svg-glass-ready .ticker-track {
+      position: relative;
+      z-index: 1;
     }
 
     .ticker-track {
@@ -2114,14 +3853,15 @@
       display: inline-flex;
       align-items: baseline;
       gap: 12px;
-      color: rgba(255,255,255,0.86);
+      color: rgba(255,255,255,0.94);
       font-size: 14px;
       font-weight: 660;
       line-height: var(--ticker-height);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.46);
     }
 
     .ticker-source {
-      color: rgba(255,255,255,0.4);
+      color: rgba(255,255,255,0.50);
       font-family: "IBM Plex Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       font-size: 12px;
       font-weight: 620;
@@ -2141,16 +3881,74 @@
       to { transform: translateX(-50%); }
     }
 
+    @media (max-width: 1180px) {
+      footer .wrap {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 34px;
+        row-gap: 44px;
+      }
+
+      .footer-brand {
+        grid-column: 1 / -1;
+        max-width: 640px;
+      }
+    }
+
     @media (max-width: 980px) {
+      .nav {
+        min-height: auto;
+        padding: 12px 0 12px;
+        flex-wrap: wrap;
+        row-gap: 14px;
+        column-gap: 16px;
+      }
+
+      .nav > .button {
+        margin-left: auto;
+        min-height: 38px;
+        padding: 0 15px;
+      }
+
       .nav-links {
+        position: static;
+        order: 3;
+        flex: 1 0 100%;
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        max-height: 32px;
+        margin-top: 12px;
+        justify-content: center;
+        gap: clamp(16px, 5vw, 26px);
+        overflow-x: auto;
+        transform: none;
+        font-size: 13px;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .nav-links::-webkit-scrollbar {
         display: none;
       }
 
-      .hero-grid,
+      .hero-headline[data-title-fit="home-2"] .hero-title-line,
+      .hero-headline[data-title-fit="home-3"] .hero-title-line {
+        transform: translateX(calc((var(--hero-typewriter-reserved-width, 0px) - var(--hero-current-typewriter-width, var(--hero-typewriter-reserved-width, 0px))) / 2));
+        transition: transform 90ms ease-out;
+      }
+
       .featured-layout,
       .section-head,
       .story-sticky {
         grid-template-columns: 1fr;
+      }
+
+      .featured-layout .simulator {
+        order: 1;
+      }
+
+      .featured-layout .featured-grid {
+        order: 2;
       }
 
       .story-sticky {
@@ -2159,28 +3957,84 @@
       }
 
       .scroll-story {
-        min-height: clamp(760px, 155vh, 1040px);
+        min-height: auto;
         padding-top: 0;
       }
 
       .scroll-story .story-sticky {
-        top: 88px;
+        position: relative;
+        top: auto;
       }
 
       .story-copy p {
         max-width: 640px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .story-visual {
+        order: -1;
+      }
+
+      .story-copy {
+        text-align: center;
       }
 
       .hero {
         min-height: auto;
+        padding: 72px 0 84px;
       }
 
       .hero-grid {
-        gap: 34px;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: clamp(26px, 5vw, 42px);
       }
 
       .hero-visual {
-        min-height: 440px;
+        position: relative;
+        order: 0;
+        left: auto;
+        right: auto;
+        top: auto;
+        width: min(100%, 620px);
+        min-height: var(--smart-visual-height, 320px);
+        margin: 0 auto;
+        transform: scale(var(--smart-visual-scale, 0.92));
+        transform-origin: center;
+        opacity: 0.76;
+        z-index: 1;
+      }
+
+      .hero-signal-canvas {
+        left: -28px;
+        right: -28px;
+        top: -6px;
+        width: calc(100% + 56px);
+        height: var(--smart-visual-height, 320px);
+        opacity: 0.66;
+      }
+
+      .hero-portal-frame {
+        width: min(100%, 720px);
+        transform: scale(var(--smart-visual-scale, 1));
+      }
+
+      .hero-copy {
+        order: 1;
+        width: 100%;
+        align-self: stretch;
+        text-align: center;
+      }
+
+      .hero-copy .lead {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .hero-actions {
+        justify-content: center;
       }
 
       .product-grid,
@@ -2201,6 +4055,34 @@
         max-width: var(--page);
       }
 
+      .nav {
+        padding: 10px 0 8px;
+        row-gap: 9px;
+        column-gap: 12px;
+      }
+
+      .brand {
+        gap: 10px;
+        font-size: 15px;
+      }
+
+      .brand svg {
+        width: 24px;
+        height: 24px;
+      }
+
+      .nav-links {
+        justify-content: center;
+        gap: 18px;
+        font-size: 13px;
+      }
+
+      .nav > .button {
+        min-height: 36px;
+        padding: 0 14px;
+        font-size: 13px;
+      }
+
       :root {
         --ticker-height: 40px;
       }
@@ -2211,17 +4093,44 @@
         padding: 64px 0;
       }
 
-      .hero h1 {
-        font-size: 42px;
-        line-height: 1.03;
+      .hero {
+        padding: 56px 0 64px;
       }
 
       .hero-grid {
-        gap: 26px;
+        gap: clamp(20px, 4vw, 30px);
+        transform: none;
+      }
+
+      .hero h1 {
+        font-size: calc(42px * var(--smart-title-scale, 1));
+        line-height: 1.03;
+      }
+
+      .hero .lead {
+        margin-top: 22px;
+      }
+
+      .hero .hero-actions {
+        margin-top: 28px;
       }
 
       .hero-visual {
-        min-height: 330px;
+        width: min(100%, 440px);
+        min-height: var(--smart-visual-height, 260px);
+        transform: scale(var(--smart-visual-scale, 1));
+      }
+
+      .hero-signal-canvas {
+        left: -18px;
+        right: -18px;
+        width: calc(100% + 36px);
+        height: var(--smart-visual-height, 260px);
+        opacity: 0.66;
+      }
+
+      .hero-portal-frame {
+        width: min(100%, 560px);
       }
 
       .hero-flow-svg {
@@ -2239,12 +4148,92 @@
         width: 100%;
       }
 
+      .yield-sources-head {
+        text-align: center;
+      }
+
+      .yield-sources-head p {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .source-logo-marquee {
+        margin-top: 44px;
+      }
+
+      .source-logo-group {
+        gap: 44px;
+        padding-right: 44px;
+      }
+
+      .source-logo {
+        flex-basis: auto;
+        height: 55px;
+      }
+
+      .source-logo img {
+        height: 37px;
+        max-width: none;
+        max-height: none;
+      }
+
+      .source-logo.is-usdc img {
+        height: 37px;
+        max-height: none;
+      }
+
+      .top-logo-reel {
+        padding: 14px 0 6px;
+      }
+
+      .top-logo-reel .source-logo-marquee {
+        margin-top: 0;
+      }
+
+      .top-logo-reel .source-logo-group {
+        gap: 32px;
+        padding-right: 32px;
+      }
+
+      .top-logo-reel .source-logo {
+        flex-basis: auto;
+        height: 35px;
+      }
+
+      .top-logo-reel .source-logo img {
+        height: 20px;
+        max-width: none;
+        max-height: none;
+      }
+
+      .top-logo-reel .source-logo.is-usdc img {
+        height: 20px;
+        max-height: none;
+      }
+
       .product-grid,
       .featured-grid,
       .process-grid,
-      .core-options,
-      .sim-summary {
+      .core-options {
         grid-template-columns: 1fr;
+      }
+
+      .sim-chart-card {
+        padding: 12px 10px 10px;
+      }
+
+      .chart-legend {
+        grid-template-columns: repeat(2, max-content);
+        justify-content: center;
+        gap: 16px;
+      }
+
+      .sim-summary {
+        gap: 8px;
+      }
+
+      .summary-cell {
+        padding: 10px;
       }
 
       .story-copy h2 {
@@ -2259,11 +4248,11 @@
       }
 
       .scroll-story {
-        min-height: clamp(740px, 155vh, 920px);
+        min-height: auto;
       }
 
       .scroll-story .story-sticky {
-        top: 76px;
+        top: auto;
       }
 
       .story-visual {
@@ -2302,10 +4291,6 @@
         width: min(var(--band-width, 320px), calc(100% - 56px));
       }
 
-      footer .wrap {
-        grid-template-columns: 1fr;
-      }
-
       .ticker-group {
         gap: 28px;
         padding-right: 28px;
@@ -2327,6 +4312,9 @@
       .product-card.is-animating .mini-mark,
       .product-card.is-animating .mini-barset span,
       .product-card.is-animating .mini-marker,
+      .product-card.is-animating .auto-usdc,
+      .product-card.is-animating .auto-sol,
+      .product-card.is-animating .auto-yield,
       .product-card.is-animating .mini-ledger-row::before,
       .product-card.is-animating .mini-ledger-row::after,
       .signal-line,
@@ -2351,6 +4339,20 @@
         opacity: 0.74;
       }
 
+      .auto-usdc {
+        opacity: 0.42;
+      }
+
+      .auto-sol {
+        opacity: 1;
+        transform: none;
+      }
+
+      .auto-yield {
+        opacity: 0.88;
+        transform: translate(var(--yield-x), var(--yield-y)) scale(0.86);
+      }
+
       .flow-node {
         transform: scale(1);
         opacity: 0.9;
@@ -2359,12 +4361,35 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .ticker-track {
+      .hero-portal-frame.is-playing .hero-portal-poster,
+      .hero-portal-poster {
+        opacity: 1;
+      }
+
+      .hero-portal-canvas {
+        display: none;
+      }
+
+      .micro-reveal,
+      .micro-reveal.is-visible {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+
+      .ticker-track,
+      .source-logo-track {
         animation: none !important;
         transform: translateX(0);
       }
+
+      .hero-typewriter::after {
+        animation: none;
+        opacity: 0;
+      }
     }
   </style>
+  <script src="liquid-glass.js"></script>
 </head>
 <body id="top">
   <header class="site-header">
@@ -2382,49 +4407,83 @@
       </a>
       <div class="nav-links">
         <a href="#top">Home</a>
-        <a href="#cores">Cores</a>
-        <a href="#products">Auto Stack</a>
+        <a href="cores.html">Cores</a>
+        <a href="autostack.html">Auto Stack</a>
         <a href="stats.html">Stats</a>
       </div>
       <a class="button" href="#cores">Launch App</a>
     </nav>
   </header>
 
+  <div class="top-logo-reel" aria-label="Featured Solana yield sources">
+    <div class="source-logo-marquee">
+      <div class="source-logo-track" aria-hidden="true">
+        <div class="source-logo-group">
+          <span class="source-logo is-wordmark"><img src="assets/source-logos/marinade-ref.png" alt=""></span>
+          <span class="source-logo is-wordmark"><img src="assets/source-logos/kamino-ref.png" alt=""></span>
+          <span class="source-logo is-wordmark"><img src="assets/source-logos/jito-ref.png" alt=""></span>
+          <span class="source-logo is-wordmark"><img src="assets/source-logos/ondo-ref.png" alt=""></span>
+          <span class="source-logo is-wordmark"><img src="assets/source-logos/lince-ref.png" alt=""></span>
+          <span class="source-logo is-wordmark"><img src="assets/source-logos/sanctum-ref.png" alt=""></span>
+          <span class="source-logo is-wordmark"><img src="assets/source-logos/xstocks-ref.png" alt=""></span>
+          <span class="source-logo"><img src="assets/source-logos/invesco-ref.png" alt=""></span>
+          <span class="source-logo is-wordmark"><img src="assets/source-logos/raydium-ref.png" alt=""></span>
+          <span class="source-logo is-wordmark"><img src="assets/source-logos/skr-ref.png" alt=""></span>
+          <span class="source-logo is-wordmark is-usdc"><img src="assets/source-logos/usdc-ref.png" alt=""></span>
+          <span class="source-logo is-wordmark"><img src="assets/source-logos/sol-ref.png" alt=""></span>
+        </div>
+        <div class="source-logo-group">
+          <span class="source-logo is-wordmark"><img src="assets/source-logos/marinade-ref.png" alt=""></span>
+          <span class="source-logo is-wordmark"><img src="assets/source-logos/kamino-ref.png" alt=""></span>
+          <span class="source-logo is-wordmark"><img src="assets/source-logos/jito-ref.png" alt=""></span>
+          <span class="source-logo is-wordmark"><img src="assets/source-logos/ondo-ref.png" alt=""></span>
+          <span class="source-logo is-wordmark"><img src="assets/source-logos/lince-ref.png" alt=""></span>
+          <span class="source-logo is-wordmark"><img src="assets/source-logos/sanctum-ref.png" alt=""></span>
+          <span class="source-logo is-wordmark"><img src="assets/source-logos/xstocks-ref.png" alt=""></span>
+          <span class="source-logo"><img src="assets/source-logos/invesco-ref.png" alt=""></span>
+          <span class="source-logo is-wordmark"><img src="assets/source-logos/raydium-ref.png" alt=""></span>
+          <span class="source-logo is-wordmark"><img src="assets/source-logos/skr-ref.png" alt=""></span>
+          <span class="source-logo is-wordmark is-usdc"><img src="assets/source-logos/usdc-ref.png" alt=""></span>
+          <span class="source-logo is-wordmark"><img src="assets/source-logos/sol-ref.png" alt=""></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <main>
-    <section class="hero">
+    <section class="hero" data-smart-hero>
       <div class="wrap hero-grid">
-        <div>
-          <h1>The simplest way to access Solana yield.</h1>
-          <p class="lead">SolStacker organizes multiple Solana yield sources into curated Cores you can compare, allocate to, and manage from one Account.</p>
+        <div class="hero-copy" data-smart-copy>
+          <h1 class="hero-headline" data-smart-title="home"><span class="hero-title-line"><span class="hero-title-word">Intelligent</span> <span class="hero-typewriter" data-hero-typewriter data-hero-typewriter-words="yield|savings|rewards">yield</span></span><br class="headline-break"><span class="hero-title-tail"><span class="hero-title-word">on your</span> <span class="hero-title-word">Seeker</span></span></h1>
+          <p class="lead">Your cash, powered by curated yield.</p>
           <div class="hero-actions">
             <a class="button" href="#cores">Explore Cores</a>
             <a class="button secondary" href="#simulator">Model yield</a>
           </div>
         </div>
-        <div class="hero-visual" aria-label="SolStacker product visual">
-          <svg class="hero-flow-svg" viewBox="0 0 560 560" aria-hidden="true">
-            <circle class="flow-orbit" cx="344" cy="276" r="196"></circle>
-            <circle class="flow-orbit emphasis" cx="344" cy="276" r="118"></circle>
-            <circle class="flow-orbit" cx="344" cy="276" r="72"></circle>
-            <path class="flow-guide" d="M106 332 C200 324 264 300 344 276 C418 254 470 246 530 254"></path>
-            <path class="flow-thread" pathLength="1" style="--flow-color:var(--green);--flow-glow:rgba(20,241,149,0.34);" d="M56 164 C118 174 174 214 224 248 C266 276 302 286 344 276"></path>
-            <path class="flow-thread" pathLength="1" style="--flow-color:var(--cyan);--flow-glow:rgba(0,194,255,0.3);" d="M78 396 C150 372 202 336 254 306 C286 288 314 278 344 276"></path>
-            <path class="flow-thread" pathLength="1" style="--flow-color:var(--pink);--flow-glow:rgba(255,79,216,0.3);" d="M518 178 C456 188 416 220 382 248 C368 260 356 270 344 276"></path>
-            <path class="flow-thread" pathLength="1" style="--flow-color:var(--coral);--flow-glow:rgba(255,107,74,0.28);" d="M512 404 C452 386 416 350 384 320 C370 306 356 292 344 276"></path>
-            <path class="flow-ribbon one" pathLength="1" style="--flow-color:var(--green);--flow-glow:rgba(20,241,149,0.34);--flow-width:15;" d="M64 372 C132 350 198 330 260 306 C294 292 320 282 344 276"></path>
-            <path class="flow-ribbon two" pathLength="1" style="--flow-color:var(--accent);--flow-glow:rgba(143,70,255,0.42);--flow-width:17;" d="M72 430 C154 410 224 376 282 338 C314 316 336 296 344 276"></path>
-            <path class="flow-ribbon three" pathLength="1" style="--flow-color:var(--cyan);--flow-glow:rgba(0,194,255,0.32);--flow-width:14;" d="M82 488 C150 470 214 438 270 398 C314 366 342 324 344 276"></path>
-            <path class="flow-ribbon four" pathLength="1" style="--flow-color:var(--pink);--flow-glow:rgba(255,79,216,0.34);--flow-width:12;" d="M516 118 C466 134 420 168 386 210 C362 240 350 262 344 276"></path>
-            <circle class="flow-node one" cx="64" cy="164" r="8" style="--flow-color:var(--green);--flow-glow:rgba(20,241,149,0.46);"></circle>
-            <circle class="flow-node two" cx="78" cy="396" r="8" style="--flow-color:var(--cyan);--flow-glow:rgba(0,194,255,0.4);"></circle>
-            <circle class="flow-node three" cx="518" cy="178" r="8" style="--flow-color:var(--pink);--flow-glow:rgba(255,79,216,0.42);"></circle>
-            <circle class="flow-node four" cx="512" cy="404" r="8" style="--flow-color:var(--coral);--flow-glow:rgba(255,107,74,0.38);"></circle>
-          </svg>
-          <span class="signal-ring hero-ring-primary"></span>
-          <span class="signal-ring hero-ring-secondary"></span>
-          <span class="hero-glint one"></span>
-          <span class="hero-glint two"></span>
-          <span class="hero-stack-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <div class="hero-visual" data-smart-visual aria-label="Logo-marked assets passing through SolStacker and producing yield">
+          <canvas class="hero-signal-canvas" data-hero-signal-canvas aria-hidden="true"></canvas>
+          <div
+            class="hero-pass-scene hero-portal-scene"
+            aria-hidden="true"
+            data-hero-sequence
+            data-frame-count="384"
+            data-fps="16"
+            data-frame-prefix="../../landing/assets/blender/hero-portal-loop-web-alpha-v13-structural-final/hero_portal_"
+            data-frame-ext=".png"
+          >
+            <div class="hero-portal-frame">
+              <img
+                class="hero-portal-poster"
+                src="../../landing/assets/blender/hero-portal-loop-web-alpha-v13-structural-final/hero-portal-loop-poster.png"
+                alt=""
+                width="1600"
+                height="1013"
+                fetchpriority="high"
+              >
+              <canvas class="hero-portal-canvas" width="1600" height="1013"></canvas>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -2435,42 +4494,28 @@
           <div class="story-sticky">
             <div class="story-copy">
               <h2>Access yield through Cores.</h2>
-              <p>Cores package multiple Solana yield sources into clear allocation paths, with Auto Stack for SOL accumulation and Account for position tracking.</p>
+              <p>Cores package multiple Solana yield sources into clear allocation paths. Accumulate SOL with Auto Stack and track every position from one account.</p>
             </div>
-            <div class="story-visual" data-scene="cores" aria-label="Abstract Core allocation visual">
-              <div class="scene-grid"></div>
-              <svg class="scene-svg" viewBox="0 0 600 360" aria-hidden="true">
-                <circle class="ghost" cx="300" cy="180" r="126"></circle>
-                <circle class="ghost" cx="300" cy="180" r="82"></circle>
-                <path class="scene-path soft" d="M112 181 C196 174 238 176 300 180 S422 188 504 177"></path>
-                <path class="scene-path" pathLength="1" style="--path-color:var(--green);--path-glow:rgba(20,241,149,0.36);" d="M92 86 C170 98 216 138 300 180"></path>
-                <path class="scene-path" pathLength="1" style="--path-color:var(--cyan);--path-glow:rgba(0,194,255,0.34);" d="M88 270 C168 248 220 214 300 180"></path>
-                <path class="scene-path" pathLength="1" style="--path-color:var(--pink);--path-glow:rgba(255,79,216,0.34);" d="M512 92 C434 108 382 140 300 180"></path>
-                <path class="scene-path" pathLength="1" style="--path-color:var(--coral);--path-glow:rgba(255,107,74,0.3);" d="M504 268 C424 250 374 214 300 180"></path>
-                <path class="scene-fill" d="M263 156 L337 156 L352 180 L337 204 L263 204 L248 180 Z"></path>
-              </svg>
-              <div class="scene-artifact source-streams" aria-hidden="true">
-                <span class="source-lens"></span>
-                <span class="source-signal one"></span>
-                <span class="source-signal two"></span>
-                <span class="source-signal three"></span>
-                <span class="source-signal four"></span>
-                <span class="source-spark one"></span>
-                <span class="source-spark two"></span>
-                <span class="source-spark three"></span>
-                <span class="source-spark four"></span>
-                <span class="stream-band stream-one"></span>
-                <span class="stream-band stream-two"></span>
-                <span class="stream-band stream-three"></span>
-                <span class="stream-band stream-four"></span>
-                <span class="stream-band stream-five"></span>
-                <span class="core-emblem"><span></span></span>
+            <div class="story-visual" data-scene="cores" aria-label="Core module allocation visual">
+              <div class="metaphor-stage core-stage" aria-hidden="true">
+                <span class="metaphor-haze"></span>
+                <span class="core-source source-a"></span>
+                <span class="core-source source-b"></span>
+                <span class="core-source source-c"></span>
+                <span class="core-source source-d"></span>
+                <span class="core-source source-e"></span>
+                <span class="core-output"></span>
+                <span class="core-lock one"></span>
+                <span class="core-lock two"></span>
+                <span class="core-cartridge">
+                  <i></i><i></i><i></i><i></i><b></b>
+                </span>
               </div>
             </div>
           </div>
         </div>
         <div class="product-grid">
-          <article class="product-card is-active" data-product-card="cores" tabindex="0">
+          <article class="product-card is-active" data-product-card="cores" data-card-href="cores.html" role="link" aria-label="Open Cores landing page" tabindex="0">
             <div class="card-visual visual-cores" aria-hidden="true">
               <span class="mini-stream"></span>
               <span class="mini-stream"></span>
@@ -2483,13 +4528,16 @@
               <p>Compare curated Solana yield allocations by APY, risk, liquidity, source mix, and strategy intent.</p>
             </div>
           </article>
-          <article class="product-card" data-product-card="autostack" tabindex="0">
+          <article class="product-card" data-product-card="autostack" data-card-href="autostack.html" role="link" aria-label="Open Auto Stack landing page" tabindex="0">
             <div class="card-visual visual-autostack" aria-hidden="true">
-              <div class="mini-barset">
-                <span></span><span></span><span></span><span></span><span></span>
-                <span></span><span></span><span></span><span></span>
-              </div>
-              <span class="mini-marker"></span>
+              <span class="auto-path"></span>
+              <span class="auto-coin auto-usdc"><img src="assets/coin-marks/motion/usdc.svg" alt=""></span>
+              <span class="auto-yield one"></span>
+              <span class="auto-yield two"></span>
+              <span class="auto-yield three"></span>
+              <span class="auto-yield four"></span>
+              <span class="auto-yield five"></span>
+              <span class="auto-coin auto-sol"><img src="assets/coin-marks/motion/sol.svg" alt=""></span>
             </div>
             <div class="product-copy">
               <h3>Auto Stack</h3>
@@ -2506,7 +4554,7 @@
             </div>
             <div class="product-copy">
               <h3>Account</h3>
-              <p>See every position, pending execution, allocation, activity, and earned yield from one connected-wallet view.</p>
+              <p>Manage positions, pending executions, allocations, activity, and earnings from one account.</p>
             </div>
           </article>
         </div>
@@ -2518,33 +4566,32 @@
         <div class="story-panel scroll-story" data-scroll-scene="model">
           <div class="story-sticky">
             <div class="story-copy">
-              <h2>Model a Core before you allocate.</h2>
-              <p>Set a lump sum, add a monthly commitment, and compare how different Cores project over time at current APY.</p>
+              <h2>Simulate yield,<br>build conviction</h2>
+              <p>Set a lump sum, add a monthly goal, and compare how different Cores compound.</p>
             </div>
-            <div class="story-visual" data-scene="model" aria-label="Abstract yield modeling visual">
-              <div class="scene-grid"></div>
-              <svg class="scene-svg" viewBox="0 0 600 360" aria-hidden="true">
-                <path class="model-band" d="M72 282 C160 258 214 230 280 204 C354 174 416 132 528 74 L528 292 L72 292 Z"></path>
-                <path class="ghost" d="M78 292 H536"></path>
-                <path class="ghost" d="M78 232 H536"></path>
-                <path class="ghost" d="M78 172 H536"></path>
-                <path class="ghost" d="M78 112 H536"></path>
-                <path class="scene-path soft" d="M72 250 C156 236 226 220 286 190 C354 156 424 122 528 102"></path>
-                <path class="scene-path model-curve" pathLength="1" style="--path-color:var(--accent);--path-glow:rgba(143,70,255,0.42);" d="M72 282 C150 266 220 234 282 204 C358 168 422 118 528 74"></path>
-                <path class="scene-path" pathLength="1" style="--path-color:var(--green);--path-glow:rgba(20,241,149,0.28);--path-width:1.3;" d="M96 274 C176 252 226 226 292 204"></path>
-              </svg>
-              <div class="scene-artifact model-artifact" aria-hidden="true">
-                <span class="projection-halo"></span>
-                <div class="compound-bars">
-                  <span></span><span></span><span></span><span></span>
-                  <span></span><span></span><span></span><span></span>
-                  <span></span><span></span><span></span><span></span>
+            <div class="story-visual" data-scene="model" aria-label="Core projection chamber visual">
+              <div class="metaphor-stage projection-stage" aria-hidden="true">
+                <span class="projection-field"></span>
+                <svg class="projection-chart" viewBox="0 0 600 360">
+                  <path class="chart-guide" d="M74 286 H532"></path>
+                  <path class="chart-guide" d="M74 218 H532"></path>
+                  <path class="chart-guide" d="M74 150 H532"></path>
+                  <path class="chart-guide" d="M74 82 H532"></path>
+                  <path class="chart-curve secondary" pathLength="1" d="M82 278 C162 256 220 230 286 202 C360 170 430 134 520 106"></path>
+                  <path class="chart-curve" pathLength="1" d="M82 302 C168 280 232 244 296 204 C376 154 444 104 526 56"></path>
+                </svg>
+                <div class="projection-columns">
+                  <span></span><span></span><span></span><span></span><span></span>
+                  <span></span><span></span><span></span><span></span><span></span>
                 </div>
-                <span class="deposit-pulse one"></span>
-                <span class="deposit-pulse two"></span>
-                <span class="deposit-pulse three"></span>
-                <span class="deposit-pulse four"></span>
-                <span class="projection-marker"></span>
+                <span class="projection-core">
+                  <i></i><i></i><i></i><i></i>
+                </span>
+                <span class="commitment-node one"></span>
+                <span class="commitment-node two"></span>
+                <span class="commitment-node three"></span>
+                <span class="commitment-node four"></span>
+                <span class="projection-cursor"></span>
               </div>
             </div>
           </div>
@@ -2602,27 +4649,49 @@
           </div>
 
           <aside class="simulator" id="simulator" aria-label="Growth simulator">
-            <div class="sim-top">
-              <div>
-                <div class="eyebrow">Growth simulator</div>
-                <h3>Model yield by Core.</h3>
+            <div class="sim-chart-card" aria-label="Yield comparison chart">
+              <div class="sim-projection-summary">
+                <span class="sim-projection-label">Projected earnings</span>
+                <strong class="projected-total" id="projectedValue">$44,720</strong>
+                <p class="sim-earned-line"><strong id="earnedValue">$9,720</strong> earned in <span id="earnedYears">5 years</span></p>
               </div>
-              <div class="sim-meta">
-                <span>Selected Core</span>
-                <strong><span id="coreName">Balanced</span> / <span id="apyText">9.8%</span> APY</strong>
-              </div>
-            </div>
-
-            <div class="ring-wrap">
-              <div class="ring" id="ring">
-                <svg viewBox="0 0 222 222" aria-hidden="true">
-                  <circle class="ring-track" cx="111" cy="111" r="94"></circle>
-                  <circle class="ring-progress" id="ringProgress" cx="111" cy="111" r="94"></circle>
+              <div class="sim-chart-wrap">
+                <svg class="sim-chart" viewBox="0 0 420 250" role="img" aria-label="Projected yield compared with savings and idle cash">
+                  <defs>
+                    <linearGradient id="coreChartFill" x1="0" x2="0" y1="0" y2="1">
+                      <stop offset="0%" stop-color="rgba(20,241,149,0.28)"></stop>
+                      <stop offset="100%" stop-color="rgba(20,241,149,0)"></stop>
+                    </linearGradient>
+                  </defs>
+                  <rect class="chart-hit-area" x="0" y="0" width="420" height="250"></rect>
+                  <g id="chartGrid" class="chart-grid"></g>
+                  <g id="chartYAxis" class="chart-y-axis"></g>
+                  <g id="chartYearMarkers" class="chart-year-markers"></g>
+                  <g class="chart-x-axis">
+                    <text id="chartXStart" x="54" y="224">1Y</text>
+                    <text id="chartXMid" x="210" y="224" text-anchor="middle">3Y</text>
+                    <text id="chartXEnd" x="392" y="224" text-anchor="end">5Y</text>
+                  </g>
+                  <path id="coreChartArea" class="chart-area" d=""></path>
+                  <path id="benchmarkChartPath" class="chart-path chart-path-benchmark" d=""></path>
+                  <path id="inflationChartPath" class="chart-path chart-path-inflation" d=""></path>
+                  <path id="coreChartPath" class="chart-path chart-path-core" d=""></path>
+                  <circle id="coreChartEnd" class="chart-end chart-end-core" cx="392" cy="40" r="3.5"></circle>
+                  <circle id="benchmarkChartEnd" class="chart-end chart-end-benchmark" cx="392" cy="60" r="2.8"></circle>
+                  <circle id="inflationChartEnd" class="chart-end chart-end-inflation" cx="392" cy="80" r="2.8"></circle>
+                  <g id="chartHoverMark" class="chart-hover-mark" aria-hidden="true">
+                    <line id="chartHoverLine" class="chart-hover-line" x1="54" x2="54" y1="20" y2="198"></line>
+                    <circle id="chartHoverDot" class="chart-hover-dot" cx="54" cy="198" r="3.2"></circle>
+                  </g>
                 </svg>
-                <div class="ring-inner">
-                  <span>Projected value</span>
-                  <strong id="projectedValue">$44,720</strong>
+                <div class="chart-tooltip" id="chartTooltip">
+                  <div class="chart-tooltip-row"><span class="chart-tooltip-label"><i class="chart-tooltip-dot"></i>Added</span><strong id="chartTooltipAdded">$0</strong></div>
+                  <div class="chart-tooltip-row"><span class="chart-tooltip-label"><i class="chart-tooltip-dot earned"></i>Earned</span><strong id="chartTooltipEarned">$0</strong></div>
                 </div>
+              </div>
+              <div class="chart-legend" aria-hidden="true">
+                <span><i class="legend-benchmark"></i>Savings <strong id="chartBenchmarkValue">$44,901</strong></span>
+                <span><i class="legend-inflation"></i>Idle <strong id="chartIdleValue">$32,410</strong></span>
               </div>
             </div>
 
@@ -2643,31 +4712,33 @@
                 <input id="monthly" type="range" min="100" max="2000" step="50" value="500">
               </label>
               <div>
-                <span class="control-label"><span>Time horizon</span><output id="horizonOut">5Y</output></span>
-                <div class="segments" role="group" aria-label="Time horizon">
-                  <button class="segment" type="button" data-years="1">1Y</button>
-                  <button class="segment active" type="button" data-years="5">5Y</button>
-                  <button class="segment" type="button" data-years="10">10Y</button>
-                  <button class="segment" type="button" data-years="15">15Y</button>
-                </div>
+                <label>
+                  <span class="control-label"><span>Time horizon</span><output id="horizonOut">5 years</output></span>
+                  <input id="horizon" type="range" min="1" max="15" step="1" value="5" aria-label="Time horizon in years">
+                </label>
               </div>
             </div>
 
             <div class="sim-summary">
-              <div class="summary-cell"><span>Your deposits</span><strong id="depositValue">$35,000</strong></div>
+              <div class="summary-cell"><span>You deposit</span><strong id="depositValue">$35,000</strong></div>
               <div class="summary-cell"><span>Estimated yield</span><strong id="yieldValue">$9,720</strong></div>
+              <div class="summary-cell"><span>Savings</span><strong id="benchmarkValue">$35,000</strong></div>
+              <div class="summary-cell"><span>Inflation Rate</span><strong id="inflationValue">$35,000</strong></div>
             </div>
-            <p class="disclaimer">Projected with the selected Core's current APY<br>(APY changes over time. This is an estimate, not a forecast)</p>
+            <div class="sim-reward-note">
+              <p>You're earning a base of <span class="reward-rate" id="baseApyValue">9.8% APY</span> plus <span class="reward-rate">0.5%</span> in rewards.</p>
+              <p>Rates may vary. <a href="#" aria-label="Learn more about SolStacker rewards">Learn more</a></p>
+            </div>
           </aside>
         </div>
       </div>
     </section>
 
-    <section class="section light process-section" data-process-scene>
+    <section class="section process-section" data-process-scene>
       <div class="wrap">
         <div class="section-head">
-          <h2>From Core to Account.</h2>
-          <p>Choose the allocation that matches your intent, review where yield comes from, then track the position as it performs.</p>
+          <h2>One Account, Infinite Yield</h2>
+          <p>Choose a Core that fits your goals, verify the sources, then track its performance.</p>
         </div>
         <div class="process-grid">
           <article class="process-card core-process">
@@ -2689,8 +4760,8 @@
               </svg>
             </div>
             <div>
-              <h3>Choose a Core</h3>
-              <p class="muted" style="margin-top:10px;">Start from an allocation style: Simple, SOL, RWA, Markets, Active, or High Yield.</p>
+              <h3>Browse Cores</h3>
+              <p class="muted" style="margin-top:10px;">Start from an allocation style: Simple, SOL, RWA, Markets, Active or High Yield.</p>
             </div>
           </article>
           <article class="process-card mix-process">
@@ -2708,8 +4779,8 @@
               </svg>
             </div>
             <div>
-              <h3>Review the mix</h3>
-              <p class="muted" style="margin-top:10px;">See sources, assets, APY, risk, and liquidity profile before committing capital.</p>
+              <h3>Transparent Data</h3>
+              <p class="muted" style="margin-top:10px;">View sources, assets, APY, risk, and liquidity profile for every yield source.</p>
             </div>
           </article>
           <article class="process-card account-process">
@@ -2733,48 +4804,10 @@
               </svg>
             </div>
             <div>
-              <h3>Track in Account</h3>
-              <p class="muted" style="margin-top:10px;">Follow positions, pending executions, allocation, activity, and earned yield from one wallet view.</p>
+              <h3>Universal Account</h3>
+              <p class="muted" style="margin-top:10px;">Track your activity and every dollar earned from one global portfolio</p>
             </div>
           </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="account">
-      <div class="wrap">
-        <div class="story-panel scroll-story" data-scroll-scene="account">
-          <div class="story-sticky">
-            <div class="story-copy">
-              <h2>Your SolStacker position, in one Account.</h2>
-              <p>Connect your wallet to track Cores, Auto Stack, allocation, activity, pending executions, and yield earned over time.</p>
-            </div>
-            <div class="story-visual" data-scene="account" aria-label="Abstract account aggregation visual">
-              <div class="scene-grid"></div>
-              <svg class="scene-svg" viewBox="0 0 600 360" aria-hidden="true">
-                <circle class="ghost" cx="300" cy="180" r="92"></circle>
-                <path class="ghost" d="M226 180 C254 142 346 142 374 180 C346 218 254 218 226 180 Z"></path>
-                <path class="scene-path" pathLength="1" style="--path-color:var(--accent);--path-glow:rgba(143,70,255,0.36);" d="M82 88 C158 112 202 136 300 180"></path>
-                <path class="scene-path" pathLength="1" style="--path-color:var(--green);--path-glow:rgba(20,241,149,0.34);" d="M96 274 C164 236 220 210 300 180"></path>
-                <path class="scene-path" pathLength="1" style="--path-color:var(--cyan);--path-glow:rgba(0,194,255,0.32);" d="M514 92 C438 124 386 150 300 180"></path>
-                <path class="scene-path" pathLength="1" style="--path-color:var(--pink);--path-glow:rgba(255,79,216,0.32);" d="M500 270 C424 236 376 208 300 180"></path>
-                <path class="scene-fill" d="M250 134 H350 V154 H250 Z M230 172 H370 V192 H230 Z M250 210 H350 V230 H250 Z"></path>
-              </svg>
-              <div class="scene-artifact account-ledger" aria-hidden="true">
-                <span class="account-shell"></span>
-                <span class="account-packet one"></span>
-                <span class="account-packet two"></span>
-                <span class="account-packet three"></span>
-                <span class="account-packet four"></span>
-                <span class="account-row one"></span>
-                <span class="account-row two"></span>
-                <span class="account-row three"></span>
-                <span class="account-row four"></span>
-                <span class="account-row five"></span>
-                <span class="account-emblem"><span></span></span>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </section>
@@ -2795,13 +4828,30 @@
     <div class="wrap">
       <div class="footer-brand">
         <strong>SolStacker</strong>
-        <p>SolStacker organizes Solana yield into curated Cores, helping users allocate, accumulate, and track yield from one Account.</p>
+        <p>SolStacker organizes Solana strategies into curated Cores, helping users allocate, accumulate, and track yield from one Account.</p>
+        <div class="footer-socials" aria-label="SolStacker social links">
+          <a class="footer-social" href="https://x.com/SolstackerOS" target="_blank" rel="noreferrer" aria-label="SolStacker on X">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4.5 4.5h4.1l3.9 5.1 4.5-5.1h2.6l-5.9 6.7 6.3 8.3h-4.1l-4.3-5.6-5 5.6H4l6.4-7.2L4.5 4.5Zm2.8 1.4 9.3 12.2h1.1L8.4 5.9H7.3Z" fill="currentColor"></path>
+            </svg>
+          </a>
+          <span class="footer-social is-disabled is-discord" aria-label="Discord">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8.1 8.2c1.1-.5 2.3-.7 3.9-.7s2.8.2 3.9.7c1.4 1 2.3 3.1 2.6 6.1-.9.8-1.9 1.4-3.1 1.8-.4-.5-.7-.9-.9-1.3.5-.2.9-.4 1.2-.7-.4.2-1.4.8-3.7.8s-3.3-.6-3.7-.8c.3.3.7.5 1.2.7-.2.4-.5.8-.9 1.3-1.2-.4-2.2-1-3.1-1.8.3-3 1.2-5.1 2.6-6.1Zm2.1 4.5c.6 0 1-.5 1-1.1s-.4-1.1-1-1.1-1 .5-1 1.1.4 1.1 1 1.1Zm3.6 0c.6 0 1-.5 1-1.1s-.4-1.1-1-1.1-1 .5-1 1.1.4 1.1 1 1.1Z" fill="currentColor"></path>
+            </svg>
+          </span>
+          <span class="footer-social is-disabled" aria-label="Telegram">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M19.7 5.1 4.6 10.9c-.9.4-.9 1 0 1.3l3.8 1.2 1.5 4.7c.2.6.6.7 1 .2l2.2-2.1 4 2.9c.7.4 1.2.2 1.4-.7l2.4-11.8c.2-1-.3-1.4-1.2-1Zm-3.1 3.2-6 5.4-.2 2.5-.9-3.1 7.1-4.8Z" fill="currentColor"></path>
+            </svg>
+          </span>
+        </div>
       </div>
       <div class="footer-col">
         <strong>Product</strong>
         <a href="#top">Home</a>
         <a href="#cores">Cores</a>
-        <a href="#products">Auto Stack</a>
+        <a href="autostack.html">Auto Stack</a>
         <a href="stats.html">Stats</a>
       </div>
       <div class="footer-col">
@@ -2832,7 +4882,7 @@
       <div class="ticker-group">
         <span class="ticker-item"><span class="ticker-source">Kamino</span><span>USDC Lend</span><span class="ticker-yield">9.42%</span></span>
         <span class="ticker-item"><span class="ticker-source">Marinade</span><span>mSOL Native</span><span class="ticker-yield">7.18%</span></span>
-        <span class="ticker-item"><span class="ticker-source">Drift</span><span>USDC Insurance</span><span class="ticker-yield">12.4%</span></span>
+        <span class="ticker-item"><span class="ticker-source">Ondo</span><span>OUSG RWA</span><span class="ticker-yield">5.2%</span></span>
         <span class="ticker-item"><span class="ticker-source">Elemental</span><span>SOL Looped</span><span class="ticker-yield">13.2%</span></span>
         <span class="ticker-item"><span class="ticker-source">Sanctum</span><span>INF LST</span><span class="ticker-yield">8.71%</span></span>
         <span class="ticker-item"><span class="ticker-source">Loopscale</span><span>SOL Supply</span><span class="ticker-yield">10.6%</span></span>
@@ -2842,7 +4892,7 @@
       <div class="ticker-group">
         <span class="ticker-item"><span class="ticker-source">Kamino</span><span>USDC Lend</span><span class="ticker-yield">9.42%</span></span>
         <span class="ticker-item"><span class="ticker-source">Marinade</span><span>mSOL Native</span><span class="ticker-yield">7.18%</span></span>
-        <span class="ticker-item"><span class="ticker-source">Drift</span><span>USDC Insurance</span><span class="ticker-yield">12.4%</span></span>
+        <span class="ticker-item"><span class="ticker-source">Ondo</span><span>OUSG RWA</span><span class="ticker-yield">5.2%</span></span>
         <span class="ticker-item"><span class="ticker-source">Elemental</span><span>SOL Looped</span><span class="ticker-yield">13.2%</span></span>
         <span class="ticker-item"><span class="ticker-source">Sanctum</span><span>INF LST</span><span class="ticker-yield">8.71%</span></span>
         <span class="ticker-item"><span class="ticker-source">Loopscale</span><span>SOL Supply</span><span class="ticker-yield">10.6%</span></span>
@@ -2871,18 +4921,46 @@
       maximumFractionDigits: 1,
     });
 
+    const HIGH_YIELD_SAVINGS_APY = 0.041;
+    const INFLATION_APY = 0.038;
+
     const lump = document.querySelector("#lump");
     const monthly = document.querySelector("#monthly");
+    const horizon = document.querySelector("#horizon");
     const lumpOut = document.querySelector("#lumpOut");
     const monthlyOut = document.querySelector("#monthlyOut");
     const horizonOut = document.querySelector("#horizonOut");
     const projectedValue = document.querySelector("#projectedValue");
+    const earnedValue = document.querySelector("#earnedValue");
+    const earnedYears = document.querySelector("#earnedYears");
+    const baseApyValue = document.querySelector("#baseApyValue");
+    const chartBenchmarkValue = document.querySelector("#chartBenchmarkValue");
+    const chartIdleValue = document.querySelector("#chartIdleValue");
     const depositValue = document.querySelector("#depositValue");
     const yieldValue = document.querySelector("#yieldValue");
-    const ringProgress = document.querySelector("#ringProgress");
-    const coreName = document.querySelector("#coreName");
-    const apyText = document.querySelector("#apyText");
-    const segments = Array.from(document.querySelectorAll(".segment"));
+    const benchmarkValue = document.querySelector("#benchmarkValue");
+    const inflationValue = document.querySelector("#inflationValue");
+    const simChartCard = document.querySelector(".sim-chart-card");
+    const simChart = document.querySelector(".sim-chart");
+    const simChartWrap = document.querySelector(".sim-chart-wrap");
+    const chartTooltip = document.querySelector("#chartTooltip");
+    const chartTooltipAdded = document.querySelector("#chartTooltipAdded");
+    const chartTooltipEarned = document.querySelector("#chartTooltipEarned");
+    const chartGrid = document.querySelector("#chartGrid");
+    const chartYAxis = document.querySelector("#chartYAxis");
+    const chartYearMarkers = document.querySelector("#chartYearMarkers");
+    const chartXStart = document.querySelector("#chartXStart");
+    const chartXMid = document.querySelector("#chartXMid");
+    const chartXEnd = document.querySelector("#chartXEnd");
+    const coreChartPath = document.querySelector("#coreChartPath");
+    const coreChartArea = document.querySelector("#coreChartArea");
+    const benchmarkChartPath = document.querySelector("#benchmarkChartPath");
+    const inflationChartPath = document.querySelector("#inflationChartPath");
+    const coreChartEnd = document.querySelector("#coreChartEnd");
+    const benchmarkChartEnd = document.querySelector("#benchmarkChartEnd");
+    const inflationChartEnd = document.querySelector("#inflationChartEnd");
+    const chartHoverLine = document.querySelector("#chartHoverLine");
+    const chartHoverDot = document.querySelector("#chartHoverDot");
     const cards = Array.from(document.querySelectorAll(".featured-card"));
     const coreOptions = Array.from(document.querySelectorAll(".core-option"));
     const productCards = Array.from(document.querySelectorAll("[data-product-card]"));
@@ -2890,21 +4968,802 @@
     const processScenes = Array.from(document.querySelectorAll("[data-process-scene]"));
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const desktopMotion = window.matchMedia("(min-width: 641px)");
-    const ringRadius = 94;
-    const ringCircumference = 2 * Math.PI * ringRadius;
+    const chartBox = { left: 54, right: 392, top: 20, bottom: 198 };
+    let chartSnapshot = null;
+    let hoverFrame = null;
+    let hoverCurrent = null;
+    let hoverTarget = null;
+    let hoverStart = null;
+    let hoverStepIndex = -1;
     let productCardIndex = 0;
     let productCycleTimer = null;
     let scrollTicking = false;
+
+    function startLiquidGlassControls() {
+      if (reduceMotion.matches || !("PointerEvent" in window)) return;
+      if (document.documentElement.classList.contains("svg-glass-ready")) return;
+
+      const controls = Array.from(document.querySelectorAll(".button, .core-option"));
+      if (controls.length === 0) return;
+      const elasticity = 0.15;
+
+      function setGlassPosition(control, event) {
+        const rect = control.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
+
+        const x = Math.max(0, Math.min(100, ((event.clientX - rect.left) / rect.width) * 100));
+        const y = Math.max(0, Math.min(100, ((event.clientY - rect.top) / rect.height) * 100));
+        const offsetX = (x - 50) / 50;
+        const offsetY = (y - 50) / 50;
+        const pullX = offsetX * elasticity * 9;
+        const pullY = offsetY * elasticity * 7;
+        const warpX = offsetX * elasticity * -10;
+        const warpY = offsetY * elasticity * -8;
+        const scaleX = 1 + Math.abs(offsetX) * elasticity * 0.018 - Math.abs(offsetY) * elasticity * 0.006;
+        const scaleY = 1 + Math.abs(offsetY) * elasticity * 0.018 - Math.abs(offsetX) * elasticity * 0.006;
+        const rimAngle = 135 + offsetX * 70 + offsetY * 10;
+
+        control.style.setProperty("--glass-x", `${x.toFixed(1)}%`);
+        control.style.setProperty("--glass-y", `${y.toFixed(1)}%`);
+        control.style.setProperty("--glass-pull-x", `${pullX.toFixed(2)}px`);
+        control.style.setProperty("--glass-pull-y", `${pullY.toFixed(2)}px`);
+        control.style.setProperty("--glass-warp-x", `${warpX.toFixed(2)}px`);
+        control.style.setProperty("--glass-warp-y", `${warpY.toFixed(2)}px`);
+        control.style.setProperty("--glass-scale-x", `${Math.max(0.996, scaleX).toFixed(4)}`);
+        control.style.setProperty("--glass-scale-y", `${Math.max(0.996, scaleY).toFixed(4)}`);
+        control.style.setProperty("--glass-rim-angle", `${rimAngle.toFixed(1)}deg`);
+      }
+
+      function resetGlassPosition(control) {
+        control.style.setProperty("--glass-x", "50%");
+        control.style.setProperty("--glass-y", "16%");
+        control.style.setProperty("--glass-pull-x", "0px");
+        control.style.setProperty("--glass-pull-y", "0px");
+        control.style.setProperty("--glass-warp-x", "0px");
+        control.style.setProperty("--glass-warp-y", "0px");
+        control.style.setProperty("--glass-scale-x", "1");
+        control.style.setProperty("--glass-scale-y", "1");
+        control.style.setProperty("--glass-rim-angle", "135deg");
+      }
+
+      controls.forEach((control) => {
+        control.addEventListener("pointerenter", (event) => setGlassPosition(control, event));
+        control.addEventListener("pointermove", (event) => setGlassPosition(control, event));
+        control.addEventListener("pointerleave", () => resetGlassPosition(control));
+        control.addEventListener("pointercancel", () => resetGlassPosition(control));
+      });
+    }
+
+    function startTextMicroReveals() {
+      const groupSelectors = [
+        ".hero-copy",
+        ".core-copy",
+        ".story-copy",
+        ".section-head",
+        ".yield-sources-head",
+        ".final-cta .wrap",
+      ];
+      const excludedSelector = "footer, .site-header, .yield-ticker, .top-logo-reel, .source-logo-marquee";
+      const groups = Array.from(document.querySelectorAll(groupSelectors.join(",")))
+        .filter((group) => !group.closest(excludedSelector))
+        .map((group) => ({
+          group,
+          items: Array.from(group.children).filter((child) => child.matches("h1, h2, p, .lead, .hero-actions")),
+        }))
+        .filter(({ items }) => items.length > 0);
+
+      if (groups.length === 0) return;
+
+      groups.forEach(({ items }) => {
+        items.forEach((item, index) => {
+          item.classList.add("micro-reveal");
+          item.style.setProperty("--micro-reveal-index", index);
+        });
+      });
+
+      function revealGroup(group) {
+        const items = groups.find((entry) => entry.group === group)?.items || [];
+        items.forEach((item) => item.classList.add("is-visible"));
+      }
+
+      if (reduceMotion.matches || !("IntersectionObserver" in window)) {
+        groups.forEach(({ group }) => revealGroup(group));
+        return;
+      }
+
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+      const initialGroups = new Set(groups
+        .filter(({ group }) => {
+          const rect = group.getBoundingClientRect();
+          return rect.top < viewportHeight * 0.92 && rect.bottom > viewportHeight * 0.08;
+        })
+        .map(({ group }) => group));
+
+      if (initialGroups.size > 0) {
+        window.requestAnimationFrame(() => {
+          window.requestAnimationFrame(() => {
+            initialGroups.forEach((group) => revealGroup(group));
+          });
+        });
+      }
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          revealGroup(entry.target);
+          observer.unobserve(entry.target);
+        });
+      }, {
+        threshold: 0.18,
+        rootMargin: "0px 0px -10% 0px",
+      });
+
+      groups.forEach(({ group }) => {
+        if (!initialGroups.has(group)) observer.observe(group);
+      });
+    }
+
+    function startHeaderScrollState() {
+      const header = document.querySelector(".site-header");
+      if (!header) return;
+      let lastScrollY = window.scrollY;
+
+      function updateHeaderState() {
+        const nextScrollY = Math.max(0, window.scrollY);
+        const scrollingDown = nextScrollY > lastScrollY + 4;
+        const scrollingUp = nextScrollY < lastScrollY - 4;
+
+        if (nextScrollY <= 16 || scrollingUp) {
+          header.classList.remove("is-header-hidden");
+        } else if (scrollingDown) {
+          header.classList.add("is-header-hidden");
+        }
+
+        lastScrollY = nextScrollY;
+      }
+
+      window.addEventListener("scroll", updateHeaderState, { passive: true });
+      updateHeaderState();
+    }
+
+    function startTickerViewportLock() {
+      const ticker = document.querySelector(".yield-ticker");
+      if (!ticker) return;
+      let frame = null;
+
+      function updateTickerOffset() {
+        frame = null;
+        const viewport = window.visualViewport;
+        const offset = viewport
+          ? Math.max(0, Math.round(window.innerHeight - viewport.height - viewport.offsetTop))
+          : 0;
+        document.documentElement.style.setProperty("--ticker-bottom-offset", `${offset}px`);
+      }
+
+      function requestTickerOffset() {
+        if (frame !== null) return;
+        frame = window.requestAnimationFrame(updateTickerOffset);
+      }
+
+      updateTickerOffset();
+      window.addEventListener("resize", requestTickerOffset, { passive: true });
+      window.addEventListener("orientationchange", requestTickerOffset, { passive: true });
+
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", requestTickerOffset, { passive: true });
+        window.visualViewport.addEventListener("scroll", requestTickerOffset, { passive: true });
+      }
+
+      window.setTimeout(updateTickerOffset, 120);
+      window.setTimeout(updateTickerOffset, 600);
+    }
+
+    function startHeroTypewriter() {
+      const target = document.querySelector("[data-hero-typewriter]");
+      if (!target) return;
+      const headline = target.closest(".hero-headline");
+
+      const words = (target.dataset.heroTypewriterWords || "")
+        .split("|")
+        .map((word) => word.trim())
+        .filter(Boolean);
+
+      if (words.length === 0) return;
+
+      const measureCanvas = document.createElement("canvas");
+      const measureContext = measureCanvas.getContext("2d");
+      const widthCache = new Map();
+      let balanceWord = words[0];
+      let wordIndex = 0;
+      let characterIndex = words[0].length;
+      let isDeleting = true;
+      let timer = null;
+
+      function getTargetFont() {
+        const styles = window.getComputedStyle(target);
+        return `${styles.fontStyle} ${styles.fontVariant} ${styles.fontWeight} ${styles.fontSize} ${styles.fontFamily}`;
+      }
+
+      function measureWord(word) {
+        if (!measureContext) return 0;
+        const font = getTargetFont();
+        const key = `${font}|${word}`;
+        if (!widthCache.has(key)) {
+          measureContext.font = font;
+          widthCache.set(key, measureContext.measureText(word).width);
+        }
+        return widthCache.get(key);
+      }
+
+      function setBalanceWord(word) {
+        if (!headline) return;
+        balanceWord = word;
+        const reservedWidth = Math.max(...words.map((entry) => measureWord(entry)));
+        const currentWidth = measureWord(word);
+        headline.style.setProperty("--hero-typewriter-reserved-width", `${reservedWidth.toFixed(2)}px`);
+        headline.style.setProperty("--hero-current-typewriter-width", `${currentWidth.toFixed(2)}px`);
+      }
+
+      function stop() {
+        if (!timer) return;
+        window.clearTimeout(timer);
+        timer = null;
+      }
+
+      function schedule(delay) {
+        stop();
+        timer = window.setTimeout(tick, delay);
+      }
+
+      function setDeletingCursor(active) {
+        target.classList.toggle("is-deleting", active && !reduceMotion.matches);
+      }
+
+      function tick() {
+        if (reduceMotion.matches) {
+          target.textContent = words[0];
+          setDeletingCursor(false);
+          stop();
+          return;
+        }
+
+        const word = words[wordIndex];
+
+        if (isDeleting) {
+          setDeletingCursor(true);
+          characterIndex -= 1;
+          const visibleWord = word.slice(0, Math.max(0, characterIndex));
+          target.textContent = visibleWord;
+          setBalanceWord(visibleWord);
+
+          if (characterIndex <= 0) {
+            setDeletingCursor(false);
+            isDeleting = false;
+            wordIndex = (wordIndex + 1) % words.length;
+            schedule(260);
+            return;
+          }
+
+          schedule(44);
+          return;
+        }
+
+        setDeletingCursor(false);
+        characterIndex += 1;
+        const nextWord = words[wordIndex];
+        const visibleWord = nextWord.slice(0, characterIndex);
+        target.textContent = visibleWord;
+        setBalanceWord(visibleWord);
+
+        if (characterIndex >= nextWord.length) {
+          characterIndex = nextWord.length;
+          isDeleting = true;
+          schedule(wordIndex === words.length - 1 ? 5000 : 1500);
+          return;
+        }
+
+        schedule(74);
+      }
+
+      function restart() {
+        stop();
+        setDeletingCursor(false);
+        target.textContent = words[0];
+        widthCache.clear();
+        setBalanceWord(words[0]);
+
+        if (reduceMotion.matches) return;
+
+        wordIndex = 0;
+        characterIndex = words[0].length;
+        isDeleting = true;
+        schedule(1200);
+      }
+
+      function refreshBalance() {
+        widthCache.clear();
+        setBalanceWord(balanceWord);
+      }
+
+      window.addEventListener("resize", refreshBalance);
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(refreshBalance);
+      }
+      reduceMotion.addEventListener("change", restart);
+      restart();
+    }
+
+    function startHeroSignalCanvas() {
+      const canvas = document.querySelector("[data-hero-signal-canvas]");
+      if (!canvas) return;
+
+      const context = canvas.getContext("2d", { alpha: true });
+      if (!context) return;
+
+      let viewWidth = 0;
+      let viewHeight = 0;
+      let animationFrame = null;
+      let lastDrawTime = 0;
+      let isVisible = true;
+      let points = [];
+      const frameInterval = 1000 / 24;
+
+      function resizeCanvas() {
+        const rect = canvas.getBoundingClientRect();
+        const dpr = 1;
+        viewWidth = Math.max(1, rect.width);
+        viewHeight = Math.max(1, rect.height);
+        canvas.width = Math.round(viewWidth * dpr);
+        canvas.height = Math.round(viewHeight * dpr);
+        context.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        const spacingX = viewWidth < 420 ? 14 : 18;
+        const spacingY = viewWidth < 420 ? 15 : 18;
+        const tickWidth = viewWidth < 420 ? 2 : 2.2;
+        const columns = Math.ceil(viewWidth / spacingX) + 1;
+        const rows = Math.ceil(viewHeight / spacingY) + 1;
+
+        points = [];
+
+        for (let row = 0; row < rows; row += 1) {
+          const y = row * spacingY + 4;
+          const verticalFade = clamp((y - 8) / 70) * clamp((viewHeight - y) / 86);
+
+          for (let column = 0; column < columns; column += 1) {
+            const x = column * spacingX + 4;
+            const horizontalFade = clamp((x + 34) / 84) * clamp((viewWidth - x + 26) / 90);
+
+            points.push({
+              x,
+              y,
+              fade: verticalFade * horizontalFade,
+              grain: 0.5 + 0.5 * Math.sin(column * 2.17 + row * 1.31),
+              phaseSeed: column * 0.78 + row * 0.44,
+              rowWave: row * 0.2,
+              rowWaveAlt: row * 0.18,
+              tickWidth,
+            });
+          }
+        }
+      }
+
+      function softBand(value, center, width) {
+        const distance = Math.abs(value - center);
+        if (distance >= width) return 0;
+        const normalized = 1 - distance / width;
+        return normalized * normalized * (3 - 2 * normalized);
+      }
+
+      function softSpot(x, y, centerX, centerY, radiusX, radiusY) {
+        const dx = (x - centerX) / radiusX;
+        const dy = (y - centerY) / radiusY;
+        const distance = dx * dx + dy * dy;
+        if (distance >= 1) return 0;
+        const normalized = 1 - distance;
+        return normalized * normalized;
+      }
+
+      function draw(time = 0) {
+        if (!viewWidth || !viewHeight) resizeCanvas();
+
+        const seconds = time * 0.001;
+        const sweepA = ((seconds * 42) % (viewWidth + 260)) - 130;
+        const sweepB = viewWidth - (((seconds * 31 + 160) % (viewWidth + 260)) - 130);
+        const sweepC = ((seconds * 24 + 90) % (viewWidth + 220)) - 110;
+        const rowSweep = ((seconds * 20 + 80) % (viewHeight + 160)) - 80;
+
+        context.clearRect(0, 0, viewWidth, viewHeight);
+        context.shadowBlur = 0;
+        context.globalAlpha = 1;
+        context.globalCompositeOperation = "source-over";
+
+        for (let index = 0; index < points.length; index += 1) {
+          const point = points[index];
+          const phase = Math.sin(point.phaseSeed + seconds * 0.72);
+          const columnA = softBand(point.x, sweepA + Math.sin(point.rowWave + seconds) * 24, 54);
+          const columnB = softBand(point.x, sweepB + Math.cos(point.rowWaveAlt + seconds * 0.8) * 30, 62);
+          const columnC = softBand(point.x, sweepC, 44) * softBand(point.y, rowSweep, 110);
+          const spotA = softSpot(
+            point.x,
+            point.y,
+            viewWidth * (0.22 + 0.08 * Math.sin(seconds * 0.48)),
+            viewHeight * (0.72 + 0.12 * Math.cos(seconds * 0.4)),
+            128,
+            78
+          );
+          const spotB = softSpot(
+            point.x,
+            point.y,
+            viewWidth * (0.68 + 0.12 * Math.cos(seconds * 0.36)),
+            viewHeight * (0.42 + 0.14 * Math.sin(seconds * 0.52)),
+            118,
+            92
+          );
+          const base = 0.06 + point.grain * 0.07 + Math.max(0, phase) * 0.025;
+          const intensity = base + columnA * 0.46 + columnB * 0.38 + columnC * 0.42 + spotA * 0.36 + spotB * 0.32;
+          const alpha = clamp(intensity * point.fade, 0, 0.82);
+
+          if (alpha < 0.04) continue;
+
+          const tickHeight = 4 + Math.min(alpha, 0.7) * 7;
+          context.globalAlpha = alpha;
+          context.fillStyle = alpha > 0.42 ? "rgb(244, 239, 255)" : "rgb(166, 112, 255)";
+          context.fillRect(point.x, point.y - tickHeight / 2, point.tickWidth, tickHeight);
+        }
+
+        context.globalAlpha = 1;
+      }
+
+      function loop(time) {
+        if (reduceMotion.matches || !isVisible || document.hidden) {
+          animationFrame = null;
+          return;
+        }
+
+        if (time - lastDrawTime >= frameInterval) {
+          draw(time);
+          lastDrawTime = time;
+        }
+
+        animationFrame = window.requestAnimationFrame(loop);
+      }
+
+      function startLoop() {
+        if (animationFrame || reduceMotion.matches || !isVisible || document.hidden) return;
+        animationFrame = window.requestAnimationFrame(loop);
+      }
+
+      function stopLoop() {
+        if (!animationFrame) return;
+        window.cancelAnimationFrame(animationFrame);
+        animationFrame = null;
+      }
+
+      function restart() {
+        stopLoop();
+        resizeCanvas();
+        draw(0);
+        lastDrawTime = 0;
+        startLoop();
+      }
+
+      window.addEventListener("resize", restart);
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+          stopLoop();
+          return;
+        }
+
+        startLoop();
+      });
+
+      if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver((entries) => {
+          isVisible = entries.some((entry) => entry.isIntersecting);
+
+          if (isVisible) {
+            startLoop();
+            return;
+          }
+
+          stopLoop();
+        }, { rootMargin: "160px" });
+
+        observer.observe(canvas);
+      }
+
+      reduceMotion.addEventListener("change", restart);
+      restart();
+    }
+
+    function startHeroPortalSequence() {
+      const scene = document.querySelector("[data-hero-sequence]");
+      const canvas = scene?.querySelector(".hero-portal-canvas");
+      const frame = scene?.querySelector(".hero-portal-frame");
+      if (!scene || !canvas || !frame || reduceMotion.matches) return;
+
+      const context = canvas.getContext("2d", { alpha: true });
+      if (!context) return;
+
+      const frameCount = Number(scene.dataset.frameCount || 0);
+      const fps = Number(scene.dataset.fps || 16);
+      const prefix = scene.dataset.framePrefix || "";
+      const extension = scene.dataset.frameExt || ".png";
+      if (!frameCount || !prefix) return;
+
+      const frameMs = 1000 / fps;
+      const lookAhead = Math.min(56, frameCount);
+      const lookBehind = Math.min(10, frameCount);
+      const images = new Map();
+      const loading = new Set();
+      let current = 0;
+      let rafId = 0;
+      let lastTime = performance.now();
+      let carry = 0;
+      let visible = true;
+      let started = false;
+
+      function normalize(index) {
+        return ((index % frameCount) + frameCount) % frameCount;
+      }
+
+      function framePath(index) {
+        return `${prefix}${String(index + 1).padStart(4, "0")}${extension}`;
+      }
+
+      function shouldKeep(index) {
+        const forward = normalize(index - current);
+        const backward = normalize(current - index);
+        return forward <= lookAhead || backward <= lookBehind;
+      }
+
+      function trimCache() {
+        if (images.size <= lookAhead + lookBehind + 12) return;
+        images.forEach((_, index) => {
+          if (!shouldKeep(index)) images.delete(index);
+        });
+      }
+
+      function loadFrame(index) {
+        const normalizedIndex = normalize(index);
+        if (images.has(normalizedIndex) || loading.has(normalizedIndex)) return;
+
+        const image = new Image();
+        image.decoding = "async";
+        loading.add(normalizedIndex);
+        image.onload = () => {
+          loading.delete(normalizedIndex);
+          images.set(normalizedIndex, image);
+          if (normalizedIndex === 0 && !started) start();
+        };
+        image.onerror = () => {
+          loading.delete(normalizedIndex);
+        };
+        image.src = framePath(normalizedIndex);
+      }
+
+      function primeWindow(index) {
+        for (let offset = -lookBehind; offset <= lookAhead; offset += 1) {
+          loadFrame(index + offset);
+        }
+        trimCache();
+      }
+
+      function draw(index) {
+        const image = images.get(index);
+        if (!image || !image.complete || image.naturalWidth === 0) {
+          loadFrame(index);
+          return false;
+        }
+
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+        canvas.classList.add("is-ready");
+        frame.classList.add("is-playing");
+        return true;
+      }
+
+      function tick(now) {
+        if (!started) return;
+
+        if (visible && !document.hidden) {
+          carry += now - lastTime;
+          while (carry >= frameMs) {
+            current = normalize(current + 1);
+            carry -= frameMs;
+          }
+          primeWindow(current);
+          draw(current);
+        }
+
+        lastTime = now;
+        rafId = window.requestAnimationFrame(tick);
+      }
+
+      function start() {
+        if (started || !draw(0)) return;
+        started = true;
+        primeWindow(0);
+        lastTime = performance.now();
+        rafId = window.requestAnimationFrame(tick);
+      }
+
+      loadFrame(0);
+      primeWindow(0);
+
+      if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver((entries) => {
+          visible = entries.some((entry) => entry.isIntersecting);
+          lastTime = performance.now();
+          carry = 0;
+        }, { rootMargin: "180px", threshold: 0.04 });
+        observer.observe(scene);
+      }
+
+      document.addEventListener("visibilitychange", () => {
+        lastTime = performance.now();
+        carry = 0;
+      });
+
+      reduceMotion.addEventListener("change", () => {
+        if (reduceMotion.matches && rafId) window.cancelAnimationFrame(rafId);
+      });
+    }
 
     function clamp(value, min = 0, max = 1) {
       return Math.max(min, Math.min(max, value));
     }
 
-    ringProgress.style.strokeDasharray = `${ringCircumference}`;
-    ringProgress.style.strokeDashoffset = `${ringCircumference}`;
+    function startSmartHeroLayout() {
+      const heroes = Array.from(document.querySelectorAll("[data-smart-hero]"));
+      if (heroes.length === 0) return;
 
-    function project(initialDeposit, monthlyDeposit, apy, years) {
-      const months = years * 12;
+      const measureCanvas = document.createElement("canvas");
+      const measureContext = measureCanvas.getContext("2d");
+      const measureCache = new Map();
+      let layoutFrame = null;
+
+      function getTitleFont(title) {
+        const styles = window.getComputedStyle(title);
+        return `${styles.fontStyle} ${styles.fontVariant} ${styles.fontWeight} ${styles.fontSize} ${styles.fontFamily}`;
+      }
+
+      function measureTitleText(title, text) {
+        const font = getTitleFont(title);
+        const key = `${font}|${text}`;
+        if (!measureCache.has(key)) {
+          measureContext.font = font;
+          measureCache.set(key, measureContext.measureText(text).width);
+        }
+        return measureCache.get(key);
+      }
+
+      function getTypewriterMaxWidth(title, target, dataKey) {
+        const words = (target?.dataset[dataKey] || "")
+          .split("|")
+          .map((word) => word.trim())
+          .filter(Boolean);
+
+        if (words.length === 0) return 0;
+        return Math.max(...words.map((word) => measureTitleText(title, word)));
+      }
+
+      function fitHomeHeadline(title) {
+        const typewriter = title.querySelector("[data-hero-typewriter]");
+        if (!typewriter) return 1;
+
+        const titleWidth = title.getBoundingClientRect().width;
+        const styles = window.getComputedStyle(title);
+        const gap = (parseFloat(styles.fontSize) || 42) * 0.22;
+        const dynamicWidth = getTypewriterMaxWidth(title, typewriter, "heroTypewriterWords");
+        const intelligentWidth = measureTitleText(title, "Intelligent");
+        const onYourWidth = measureTitleText(title, "on your");
+        const seekerWidth = measureTitleText(title, "Seeker");
+        const twoLineWidth = Math.max(intelligentWidth + gap + dynamicWidth, onYourWidth + gap + seekerWidth);
+        const threeLineWidth = Math.max(intelligentWidth + gap + dynamicWidth, onYourWidth, seekerWidth);
+        const fourLineWidth = Math.max(intelligentWidth, dynamicWidth, onYourWidth, seekerWidth);
+
+        if (titleWidth >= twoLineWidth * 0.9) {
+          title.dataset.titleFit = "home-2";
+          return clamp(titleWidth / twoLineWidth, 0.9, 1);
+        }
+
+        if (titleWidth >= threeLineWidth * 0.92) {
+          title.dataset.titleFit = "home-3";
+          return clamp(titleWidth / threeLineWidth, 0.92, 1);
+        }
+
+        title.dataset.titleFit = "home-4";
+        return clamp(titleWidth / fourLineWidth, 0.88, 1);
+      }
+
+      function fitSmartTitle(title) {
+        title.style.removeProperty("--smart-title-scale");
+        title.dataset.titleFit = "home-2";
+
+        const scale = fitHomeHeadline(title);
+        title.style.setProperty("--smart-title-scale", scale.toFixed(3));
+        return scale;
+      }
+
+      function countTextLines(element) {
+        const range = document.createRange();
+        range.selectNodeContents(element);
+        const rects = Array.from(range.getClientRects())
+          .filter((rect) => rect.width > 1 && rect.height > 1);
+        range.detach();
+
+        const lines = [];
+
+        rects.forEach((rect) => {
+          const top = Math.round(rect.top);
+          if (!lines.some((lineTop) => Math.abs(lineTop - top) < 4)) {
+            lines.push(top);
+          }
+        });
+
+        return Math.max(1, lines.length);
+      }
+
+      function updateSmartHeroLayout() {
+        layoutFrame = null;
+
+        heroes.forEach((hero) => {
+          const title = hero.querySelector("h1");
+          const copy = hero.querySelector("[data-smart-copy]");
+          const visual = hero.querySelector("[data-smart-visual]");
+          if (!title || !copy || !visual) return;
+
+          fitSmartTitle(title);
+
+          const viewportWidth = window.innerWidth;
+          const titleLines = countTextLines(title);
+          const copyHeight = copy.getBoundingClientRect().height;
+
+          if (viewportWidth <= 640) {
+            const visualHeight = clamp(290 - Math.max(0, titleLines - 3) * 24 - Math.max(0, copyHeight - 390) * 0.12, 210, 290);
+            const visualScale = clamp(0.96 - Math.max(0, titleLines - 3) * 0.035, 0.84, 1);
+            hero.style.setProperty("--smart-visual-height", `${Math.round(visualHeight)}px`);
+            hero.style.setProperty("--smart-visual-scale", visualScale.toFixed(3));
+            hero.style.removeProperty("--smart-hero-min-height");
+            hero.style.removeProperty("--smart-visual-top");
+            return;
+          }
+
+          if (viewportWidth <= 980) {
+            const visualHeight = clamp(360 - Math.max(0, titleLines - 2) * 22 - Math.max(0, copyHeight - 360) * 0.08, 280, 360);
+            const visualScale = clamp(0.94 - Math.max(0, titleLines - 2) * 0.03 - Math.max(0, copyHeight - 360) * 0.0005, 0.84, 0.94);
+            hero.style.setProperty("--smart-visual-height", `${Math.round(visualHeight)}px`);
+            hero.style.setProperty("--smart-visual-scale", visualScale.toFixed(3));
+            hero.style.removeProperty("--smart-visual-top");
+            hero.style.removeProperty("--smart-hero-min-height");
+            return;
+          }
+
+          hero.style.removeProperty("--smart-visual-height");
+          hero.style.removeProperty("--smart-visual-scale");
+          hero.style.removeProperty("--smart-visual-top");
+          hero.style.removeProperty("--smart-hero-min-height");
+        });
+      }
+
+      function requestSmartHeroLayout() {
+        if (layoutFrame) return;
+        layoutFrame = window.requestAnimationFrame(updateSmartHeroLayout);
+      }
+
+      window.addEventListener("resize", requestSmartHeroLayout);
+      window.addEventListener("load", requestSmartHeroLayout);
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(() => {
+          measureCache.clear();
+          requestSmartHeroLayout();
+        });
+      }
+      requestSmartHeroLayout();
+    }
+
+    function projectMonths(initialDeposit, monthlyDeposit, apy, months) {
       const monthlyRate = Math.pow(1 + apy, 1 / 12) - 1;
       let value = initialDeposit;
       let deposits = initialDeposit;
@@ -2922,54 +5781,325 @@
       };
     }
 
-    function getSimulatorValueBounds() {
-      const apys = coreOptions.map((option) => Number(option.dataset.apy));
-      const years = segments.map((segment) => Number(segment.dataset.years));
-      const minLump = Number(lump.min);
-      const maxLump = Number(lump.max);
-      const minMonthly = Number(monthly.min);
-      const maxMonthly = Number(monthly.max);
-      const values = [];
+    function project(initialDeposit, monthlyDeposit, apy, years) {
+      return projectMonths(initialDeposit, monthlyDeposit, apy, years * 12);
+    }
 
-      apys.forEach((apy) => {
-        years.forEach((year) => {
-          values.push(project(minLump, minMonthly, apy, year).value);
-          values.push(project(maxLump, maxMonthly, apy, year).value);
-        });
-      });
+    function getProjectionSeries(initialDeposit, monthlyDeposit, apy, years, startMonth = 0) {
+      const totalMonths = years * 12;
+      const steps = Math.max(12, Math.min(60, years * 6));
+      const months = [];
+
+      for (let i = 0; i <= steps; i += 1) {
+        const month = Math.round(startMonth + ((totalMonths - startMonth) * i) / steps);
+        if (months[months.length - 1] !== month) months.push(month);
+      }
+
+      return months.map((month) => ({
+        month,
+        ...projectMonths(initialDeposit, monthlyDeposit, apy, month),
+      }));
+    }
+
+    function getInflationAdjustedValue(value, months) {
+      return value / Math.pow(1 + INFLATION_APY, months / 12);
+    }
+
+    function getIdleAdjustedValue(initialDeposit, monthlyDeposit, months) {
+      let value = getInflationAdjustedValue(initialDeposit, months);
+
+      for (let i = 0; i < months; i += 1) {
+        const remainingMonths = Math.max(0, months - i - 1);
+        value += getInflationAdjustedValue(monthlyDeposit, remainingMonths);
+      }
+
+      return value;
+    }
+
+    function getNiceStep(roughStep) {
+      const magnitude = Math.pow(10, Math.floor(Math.log10(Math.max(roughStep, 1))));
+      const normalized = roughStep / magnitude;
+      const nice = normalized <= 1 ? 1 : normalized <= 2 ? 2 : normalized <= 5 ? 5 : 10;
+      return nice * magnitude;
+    }
+
+    function getChartTicks(values) {
+      const minValue = Math.min(...values);
+      const maxValue = Math.max(...values);
+      const lowerTarget = Math.max(0, minValue * 0.92);
+      const upperTarget = Math.max(maxValue * 1.06, lowerTarget + 1);
+      const step = getNiceStep((upperTarget - lowerTarget) / 3);
+      const lower = Math.max(0, Math.floor(lowerTarget / step) * step);
+      const upper = Math.ceil(upperTarget / step) * step;
+      const ticks = [];
+
+      for (let value = lower; value <= upper + step * 0.5; value += step) {
+        ticks.push(value);
+      }
+
+      return ticks.length >= 3 ? ticks : [lower, lower + step, lower + step * 2];
+    }
+
+    function formatAxisCurrency(value) {
+      if (value >= 1000000) return `$${Math.round(value / 100000) / 10}M`;
+      if (value >= 1000) return `$${Math.round(value / 1000)}k`;
+      return formatter.format(value);
+    }
+
+    function getChartPath(series, minValue, maxValue, startMonth, endMonth) {
+      const width = chartBox.right - chartBox.left;
+      const height = chartBox.bottom - chartBox.top;
+      const range = Math.max(1, maxValue - minValue);
+      const monthRange = Math.max(1, endMonth - startMonth);
+
+      return series.map((point, index) => {
+        const x = chartBox.left + ((point.month - startMonth) / monthRange) * width;
+        const y = chartBox.bottom - ((point.value - minValue) / range) * height;
+        return `${index === 0 ? "M" : "L"} ${x.toFixed(1)} ${y.toFixed(1)}`;
+      }).join(" ");
+    }
+
+    function getChartPoint(point, minValue, maxValue, startMonth, endMonth) {
+      const width = chartBox.right - chartBox.left;
+      const height = chartBox.bottom - chartBox.top;
+      const range = Math.max(1, maxValue - minValue);
+      const monthRange = Math.max(1, endMonth - startMonth);
 
       return {
-        min: Math.max(1, Math.min(...values)),
-        max: Math.max(...values),
+        x: chartBox.left + ((point.month - startMonth) / monthRange) * width,
+        y: chartBox.bottom - ((point.value - minValue) / range) * height,
       };
     }
 
-    const simulatorValueBounds = getSimulatorValueBounds();
+    function setChartEndpoint(element, point, minValue, maxValue, startMonth, endMonth) {
+      const position = getChartPoint(point, minValue, maxValue, startMonth, endMonth);
+      element.setAttribute("cx", position.x.toFixed(1));
+      element.setAttribute("cy", position.y.toFixed(1));
+    }
 
-    function getProjectedValueProgress(value) {
-      const min = simulatorValueBounds.min;
-      const max = Math.max(min + 1, simulatorValueBounds.max);
-      const normalized = (Math.log(Math.max(value, min)) - Math.log(min)) / (Math.log(max) - Math.log(min));
-      return 0.08 + clamp(normalized) * 0.84;
+    function renderChartYearMarkers(startMonth, endMonth) {
+      const startYear = Math.max(1, Math.round(startMonth / 12));
+      const endYear = Math.max(startYear, Math.round(endMonth / 12));
+      const yearRange = Math.max(1, endYear - startYear);
+      chartYearMarkers.innerHTML = Array.from({ length: endYear - startYear + 1 }, (_, index) => {
+        const year = startYear + index;
+        const x = chartBox.left + ((year - startYear) / yearRange) * (chartBox.right - chartBox.left);
+        const isEdge = year === startYear || year === endYear;
+        const markerHeight = isEdge ? 10 : 6;
+        return `<line class="chart-year-marker" x1="${x.toFixed(1)}" x2="${x.toFixed(1)}" y1="${chartBox.bottom + 5}" y2="${chartBox.bottom + 5 + markerHeight}"></line>`;
+      }).join("");
+    }
+
+    function renderComparisonChart(initialDeposit, monthlyDeposit, result, benchmarkResult, idleAdjustedValue) {
+      const totalMonths = state.years * 12;
+      const startMonth = Math.min(12, totalMonths);
+      const coreSeries = getProjectionSeries(initialDeposit, monthlyDeposit, state.apy, state.years, startMonth);
+      const benchmarkSeries = getProjectionSeries(initialDeposit, monthlyDeposit, HIGH_YIELD_SAVINGS_APY, state.years, startMonth);
+      const idleSeries = coreSeries.map((point) => ({
+        ...point,
+        value: getIdleAdjustedValue(initialDeposit, monthlyDeposit, point.month),
+      }));
+      const values = [
+        ...coreSeries.map((point) => point.value),
+        ...benchmarkSeries.map((point) => point.value),
+        ...idleSeries.map((point) => point.value),
+      ];
+      const ticks = getChartTicks(values);
+      const minValue = ticks[0];
+      const maxValue = ticks[ticks.length - 1];
+      const gridWidth = chartBox.right - chartBox.left;
+      const corePath = getChartPath(coreSeries, minValue, maxValue, startMonth, totalMonths);
+      const benchmarkPath = getChartPath(benchmarkSeries, minValue, maxValue, startMonth, totalMonths);
+      const idlePath = getChartPath(idleSeries, minValue, maxValue, startMonth, totalMonths);
+      const firstCorePoint = getChartPoint(coreSeries[0], minValue, maxValue, startMonth, totalMonths);
+      const lastCorePoint = getChartPoint(coreSeries[coreSeries.length - 1], minValue, maxValue, startMonth, totalMonths);
+      chartSnapshot = { initialDeposit, monthlyDeposit, startMonth, totalMonths, minValue, maxValue };
+
+      chartGrid.innerHTML = ticks.map((tick) => {
+        const y = getChartPoint({ month: startMonth, value: tick }, minValue, maxValue, startMonth, totalMonths).y;
+        return `<line class="chart-grid-line" x1="${chartBox.left}" x2="${chartBox.right}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}"></line>`;
+      }).join("");
+
+      chartYAxis.innerHTML = ticks.map((tick) => {
+        const y = getChartPoint({ month: startMonth, value: tick }, minValue, maxValue, startMonth, totalMonths).y;
+        return `<text x="${chartBox.left - 10}" y="${(y + 3).toFixed(1)}" text-anchor="end">${formatAxisCurrency(tick)}</text>`;
+      }).join("");
+
+      renderChartYearMarkers(startMonth, totalMonths);
+      coreChartPath.setAttribute("d", corePath);
+      benchmarkChartPath.setAttribute("d", benchmarkPath);
+      inflationChartPath.setAttribute("d", idlePath);
+      coreChartArea.setAttribute("d", `${corePath} L ${lastCorePoint.x.toFixed(1)} ${chartBox.bottom} L ${firstCorePoint.x.toFixed(1)} ${chartBox.bottom} Z`);
+      setChartEndpoint(coreChartEnd, coreSeries[coreSeries.length - 1], minValue, maxValue, startMonth, totalMonths);
+      setChartEndpoint(benchmarkChartEnd, benchmarkSeries[benchmarkSeries.length - 1], minValue, maxValue, startMonth, totalMonths);
+      setChartEndpoint(inflationChartEnd, idleSeries[idleSeries.length - 1], minValue, maxValue, startMonth, totalMonths);
+
+      const chartStartYear = 1;
+      const chartMidYear = Math.max(chartStartYear, Math.round((chartStartYear + state.years) / 2));
+      chartXStart.textContent = `${chartStartYear}Y`;
+      chartXMid.textContent = `${chartMidYear}Y`;
+      chartXEnd.textContent = `${state.years}Y`;
+      chartXMid.setAttribute("x", `${chartBox.left + gridWidth / 2}`);
+      chartXEnd.setAttribute("x", `${chartBox.right}`);
+      chartBenchmarkValue.textContent = formatter.format(benchmarkResult.value);
+      chartIdleValue.textContent = formatter.format(idleAdjustedValue);
+    }
+
+    function hideChartTooltip() {
+      if (!chartTooltip || !simChartCard) return;
+      if (hoverFrame) window.cancelAnimationFrame(hoverFrame);
+      simChartCard.classList.remove("is-hovering");
+      hoverFrame = null;
+      hoverCurrent = null;
+      hoverTarget = null;
+      hoverStepIndex = -1;
+    }
+
+    function easeOutCubic(t) {
+      return 1 - Math.pow(1 - t, 3);
+    }
+
+    function applyHoverPosition(position) {
+      chartHoverLine.setAttribute("x1", position.x.toFixed(1));
+      chartHoverLine.setAttribute("x2", position.x.toFixed(1));
+      chartHoverDot.setAttribute("cx", position.x.toFixed(1));
+      chartHoverDot.setAttribute("cy", position.y.toFixed(1));
+      chartTooltip.style.setProperty("--tooltip-x", `${position.tooltipX.toFixed(1)}px`);
+      chartTooltip.style.setProperty("--tooltip-y", `${position.tooltipY.toFixed(1)}px`);
+      chartTooltip.style.setProperty("--tooltip-arrow-x", `${position.arrowX.toFixed(1)}px`);
+    }
+
+    function animateHoverTo(target) {
+      if (hoverFrame) window.cancelAnimationFrame(hoverFrame);
+
+      if (!hoverCurrent || reduceMotion.matches) {
+        hoverCurrent = { ...target };
+        applyHoverPosition(hoverCurrent);
+        return;
+      }
+
+      const start = { ...hoverCurrent };
+      hoverTarget = { ...target };
+      hoverStart = performance.now();
+
+      function tick(now) {
+        const progress = clamp((now - hoverStart) / 130);
+        const eased = easeOutCubic(progress);
+
+        hoverCurrent = {
+          x: start.x + (hoverTarget.x - start.x) * eased,
+          y: start.y + (hoverTarget.y - start.y) * eased,
+          tooltipX: start.tooltipX + (hoverTarget.tooltipX - start.tooltipX) * eased,
+          tooltipY: start.tooltipY + (hoverTarget.tooltipY - start.tooltipY) * eased,
+          arrowX: start.arrowX + (hoverTarget.arrowX - start.arrowX) * eased,
+        };
+
+        applyHoverPosition(hoverCurrent);
+
+        if (progress < 1) {
+          hoverFrame = window.requestAnimationFrame(tick);
+        } else {
+          hoverCurrent = { ...hoverTarget };
+          hoverFrame = null;
+        }
+      }
+
+      hoverFrame = window.requestAnimationFrame(tick);
+    }
+
+    function getChartHoverGeometry(event) {
+      if (!chartSnapshot || !simChart || !simChartWrap || !chartTooltip) return;
+      const chartRect = simChart.getBoundingClientRect();
+      const wrapRect = simChartWrap.getBoundingClientRect();
+      if (!chartRect.width || !chartRect.height || !wrapRect.width) return null;
+
+      const viewX = ((event.clientX - chartRect.left) / chartRect.width) * 420;
+      const normalized = clamp((viewX - chartBox.left) / (chartBox.right - chartBox.left), 0, 1);
+      const startYear = Math.max(1, Math.round(chartSnapshot.startMonth / 12));
+      const endYear = Math.max(startYear, Math.round(chartSnapshot.totalMonths / 12));
+      const yearRange = Math.max(0, endYear - startYear);
+      const stepIndex = clamp(Math.round(normalized * yearRange), 0, yearRange);
+      const month = (startYear + stepIndex) * 12;
+      const point = {
+        month,
+        ...projectMonths(chartSnapshot.initialDeposit, chartSnapshot.monthlyDeposit, state.apy, month),
+      };
+      const position = getChartPoint(point, chartSnapshot.minValue, chartSnapshot.maxValue, chartSnapshot.startMonth, chartSnapshot.totalMonths);
+      const screenX = chartRect.left + (position.x / 420) * chartRect.width;
+      const screenY = chartRect.top + (position.y / 250) * chartRect.height;
+
+      return {
+        stepIndex,
+        point,
+        position,
+        tooltipX: screenX - wrapRect.left,
+        tooltipY: screenY - wrapRect.top,
+        wrapWidth: wrapRect.width,
+      };
+    }
+
+    function updateChartTooltip(event) {
+      const hover = getChartHoverGeometry(event);
+      if (!hover) return;
+
+      const tooltipWidth = chartTooltip.offsetWidth || 150;
+      const tooltipX = clamp(hover.tooltipX, tooltipWidth / 2 + 10, hover.wrapWidth - tooltipWidth / 2 - 10);
+      const arrowX = clamp(hover.tooltipX - tooltipX + tooltipWidth / 2, 14, tooltipWidth - 14);
+      chartTooltipAdded.textContent = formatter.format(chartSnapshot.monthlyDeposit * 12);
+      chartTooltipEarned.textContent = formatter.format(Math.max(0, hover.point.yieldEarned));
+      simChartCard.classList.add("is-hovering");
+
+      if (hoverStepIndex === hover.stepIndex && hoverCurrent) return;
+      hoverStepIndex = hover.stepIndex;
+      animateHoverTo({
+        x: hover.position.x,
+        y: hover.position.y,
+        tooltipX,
+        tooltipY: hover.tooltipY,
+        arrowX,
+      });
+    }
+
+    function pulseProjectedValue() {
+      if (!projectedValue || reduceMotion.matches) return;
+      projectedValue.classList.remove("is-updating");
+      void projectedValue.offsetWidth;
+      projectedValue.classList.add("is-updating");
+      window.setTimeout(() => projectedValue.classList.remove("is-updating"), 180);
+    }
+
+    function setDeltaValue(element, value) {
+      element.textContent = formatter.format(value);
+      element.classList.toggle("is-negative", value < 0);
     }
 
     function update() {
+      state.years = Number(horizon.value);
       const initialDeposit = Number(lump.value);
       const monthlyDeposit = Number(monthly.value);
       const result = project(initialDeposit, monthlyDeposit, state.apy, state.years);
-      const progress = getProjectedValueProgress(result.value);
+      const benchmarkResult = project(initialDeposit, monthlyDeposit, HIGH_YIELD_SAVINGS_APY, state.years);
+      const idleAdjusted = getIdleAdjustedValue(initialDeposit, monthlyDeposit, state.years * 12);
+      const benchmarkDelta = benchmarkResult.value - result.deposits;
+      const inflationDelta = idleAdjusted - result.deposits;
 
       lumpOut.textContent = formatter.format(initialDeposit);
       monthlyOut.textContent = formatter.format(monthlyDeposit);
-      horizonOut.textContent = `${state.years}Y`;
-      coreName.textContent = state.core;
-      apyText.textContent = percentFormatter.format(state.apy);
+      horizonOut.textContent = `${state.years} ${state.years === 1 ? "year" : "years"}`;
       projectedValue.textContent = formatter.format(result.value);
+      earnedValue.textContent = formatter.format(Math.max(0, result.yieldEarned));
+      earnedYears.textContent = `${state.years} ${state.years === 1 ? "year" : "years"}`;
+      baseApyValue.textContent = `${percentFormatter.format(state.apy)} APY`;
       depositValue.textContent = formatter.format(result.deposits);
       yieldValue.textContent = formatter.format(Math.max(0, result.yieldEarned));
-      ringProgress.style.strokeDashoffset = `${ringCircumference * (1 - progress)}`;
+      setDeltaValue(benchmarkValue, benchmarkDelta);
+      setDeltaValue(inflationValue, inflationDelta);
+      renderComparisonChart(initialDeposit, monthlyDeposit, result, benchmarkResult, idleAdjusted);
+      hideChartTooltip();
+      pulseProjectedValue();
       setRangeFill(lump);
       setRangeFill(monthly);
+      setRangeFill(horizon);
     }
 
     function setRangeFill(input) {
@@ -3004,6 +6134,13 @@
     function selectProductCard(card) {
       productCardIndex = Math.max(0, productCards.indexOf(card));
       animateProductCard(card);
+    }
+
+    function navigateProductCard(card) {
+      const href = card.dataset.cardHref;
+      if (!href) return false;
+      window.location.href = href;
+      return true;
     }
 
     function startProductCardCycle() {
@@ -3064,6 +6201,7 @@
       scene.style.setProperty("--packet-opacity", (0.24 + eased * 0.46).toFixed(3));
       scene.style.setProperty("--account-progress", (0.2 + eased * 0.8).toFixed(3));
       scene.style.setProperty("--account-node-x", `${eased * 84}px`);
+      scene.style.setProperty("--account-node-x-reverse", `${eased * -84}px`);
     }
 
     function updateScrollScenes() {
@@ -3114,15 +6252,15 @@
 
     lump.addEventListener("input", update);
     monthly.addEventListener("input", update);
+    horizon.addEventListener("input", update);
 
-    segments.forEach((segment) => {
-      segment.addEventListener("click", () => {
-        segments.forEach((item) => item.classList.remove("active"));
-        segment.classList.add("active");
-        state.years = Number(segment.dataset.years);
-        update();
+    if (simChartWrap) {
+      simChartWrap.addEventListener("pointermove", (event) => {
+        updateChartTooltip(event);
       });
-    });
+      simChartWrap.addEventListener("pointerleave", hideChartTooltip);
+      simChartWrap.addEventListener("pointercancel", hideChartTooltip);
+    }
 
     cards.forEach((card) => {
       card.addEventListener("click", () => {
@@ -3148,8 +6286,15 @@
       });
       card.addEventListener("blur", startProductCardCycle);
       card.addEventListener("click", () => {
+        if (navigateProductCard(card)) return;
         stopProductCardCycle();
         selectProductCard(card);
+      });
+      card.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        if (!card.dataset.cardHref) return;
+        event.preventDefault();
+        navigateProductCard(card);
       });
     });
 
@@ -3167,6 +6312,14 @@
     window.addEventListener("scroll", requestScrollSceneUpdate, { passive: true });
     window.addEventListener("resize", requestScrollSceneUpdate);
 
+    startSmartHeroLayout();
+    startHeaderScrollState();
+    startTickerViewportLock();
+    startLiquidGlassControls();
+    startTextMicroReveals();
+    startHeroTypewriter();
+    startHeroSignalCanvas();
+    startHeroPortalSequence();
     update();
     if (productCards[0]) animateProductCard(productCards[0]);
     startProductCardCycle();
